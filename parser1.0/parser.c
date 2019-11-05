@@ -82,7 +82,7 @@ struct PolyTerm *parseTerm(char *str) {
         term->vars[j] = item;
         break;
       } else if (item->varNum == term->vars[j-1]->varNum) {
-        printf("\n\nWARNING: Input contains duplicate variables in a monomial. x%d^%d and x%d^%d\n\n", term->vars[j-1]->varNum, term->vars[j-1]->varPow, item->varNum, item->varPow);
+        perror("WARNING: Input contains duplicate variables in a monomial.");
         term->vars[j] = item;
         break;
       } else if (item->varNum < term->vars[j-1]->varNum) {
@@ -99,7 +99,7 @@ struct PolyTerm *parseTerm(char *str) {
   return term;
 }
 
-struct Polynomial *parsePoly(char *str, int mono_order)
+struct Polynomial *parsePoly(char *str)
 {
   char* buffer;
   int startSearchIndex = 0;
@@ -136,10 +136,7 @@ struct Polynomial *parsePoly(char *str, int mono_order)
       struct PolyTerm *cmp = poly->head;
 
       while (cmp != poly->tail) {
-        if ((mono_order==0 && grevlex_cmp(term, cmp) > 0) ||
-          (mono_order==1 && grlex_cmp(term, cmp) > 0) ||
-          (mono_order==2 && lex_cmp(term, cmp) > 0) )
-        {
+        if (grevlex_cmp(term, cmp) > 0) {
           if(cmp == poly->head)
             poly->head = term;
           else
@@ -153,10 +150,7 @@ struct Polynomial *parsePoly(char *str, int mono_order)
         cmp = cmp->next;
       }
 
-      if ((mono_order==0 && grevlex_cmp(term, cmp) > 0) ||
-        (mono_order==1 && grlex_cmp(term, cmp) > 0) ||
-        (mono_order==2 && lex_cmp(term, cmp) > 0) )
-      {
+      if (cmp == poly->tail && grevlex_cmp(term, cmp) > 0) {
         if (cmp == poly->head)
           poly->head = term;
         else
@@ -164,20 +158,7 @@ struct Polynomial *parsePoly(char *str, int mono_order)
 
         term->next = cmp;
         cmp->prev = term;
-      } else if (cmp == poly->tail && (
-        (mono_order==0 && grevlex_cmp(term, cmp) < 0) ||
-        (mono_order==1 && grlex_cmp(term, cmp) < 0) ||
-        (mono_order==2 && lex_cmp(term, cmp) < 0) ) )
-      {
-        term->prev = cmp;
-        cmp->next = term;
-        poly->tail = term;
-      } else {
-        printf("\nThere are duplicate monomials in a polynomial.");
-        printTerm(term);
-        printf(" and ");
-        printTerm(cmp);
-        printf("\n\n");
+      } else if (cmp == poly->tail && grevlex_cmp(term, cmp) <= 0) {
         term->prev = cmp;
         cmp->next = term;
         poly->tail = term;
