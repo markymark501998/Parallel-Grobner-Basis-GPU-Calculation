@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
 	printf("=============================================================\n");
 
 	int debug = 0;
+	int mono_order = 0;		//default: 0-grevlex, 1-grlex, 2-lex
 	int failState = 0;
 	char failMessage[1000];
 	struct PolynomialSystem system;
@@ -26,6 +27,12 @@ int main(int argc, char* argv[]) {
 		if (strcmp(argv[i], "-d") == 0) {
 			debug = 1;
 			continue;
+		} else if (strcmp(argv[i], "-grevlex") == 0) {
+			mono_order = 0;
+		} else if (strcmp(argv[i], "-grlex") == 0) {
+			mono_order = 1;
+		} else if (strcmp(argv[i], "-lex") == 0) {
+			mono_order = 2;
 		}
 	}
 
@@ -50,7 +57,7 @@ int main(int argc, char* argv[]) {
 			while (fgets(str, MAXCHAR, file) != NULL) {
 				printf("%s\n", str);
 
-				struct Polynomial *poly = parsePoly(str);
+				struct Polynomial *poly = parsePoly(str, mono_order);
 
 				if (size == 0) {
 					system.head = poly;

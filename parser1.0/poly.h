@@ -23,9 +23,10 @@ struct VarItem {
 	int varPow;
 };
 
-struct Polynomial * parsePoly(char *);
 void printTerm(struct PolyTerm *);
 void printPoly(struct Polynomial *);
 void sortPoly(struct Polynomial *);
 int grevlex_cmp(struct PolyTerm *, struct PolyTerm *);
+int grlex_cmp(struct PolyTerm *, struct PolyTerm *);
+int lex_cmp(struct PolyTerm *, struct PolyTerm *);
 struct PolyTerm *findLargestTerm(struct Polynomial *, int);
