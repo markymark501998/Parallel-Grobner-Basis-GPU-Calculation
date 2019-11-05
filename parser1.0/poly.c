@@ -51,3 +51,32 @@ int grevlex_cmp(struct PolyTerm *a, struct PolyTerm *b) {
   else
     return 0;
 }
+
+// Outputs: 1 if a > b, -1 if a < b, 0 if equal according to grevlex,
+//  max(totalDegree), if equal, least-powered right-most variable
+int grlex_cmp(struct PolyTerm *a, struct PolyTerm *b) {
+  int tda = totalDegree(a);
+  int tdb = totalDegree(b);
+
+  if (tda > tdb)
+    return 1;
+  else if (tda < tdb)
+    return -1;
+  else if (a->vars[0]->varNum < b->vars[0]->varNum)
+    return 1;
+  else if (a->vars[0]->varNum > b->vars[0]->varNum)
+    return -1;
+  else
+    return 0;
+}
+
+// Outputs: 1 if a > b, -1 if a < b, 0 if equal according to grevlex,
+//  max(totalDegree), if equal, least-powered right-most variable
+int lex_cmp(struct PolyTerm *a, struct PolyTerm *b) {
+  if (a->vars[0]->varNum < b->vars[0]->varNum)
+    return 1;
+  else if (a->vars[0]->varNum > b->vars[0]->varNum)
+    return -1;
+  else
+    return 0;
+}
