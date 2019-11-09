@@ -3,6 +3,7 @@
 #include <string.h>
 #include "poly.h"
 #include "utility.h"
+#define MAXCHAR 100000
 
 struct VarItem *parseVar(char *str) {
   struct VarItem* var;
@@ -191,4 +192,28 @@ struct Polynomial *parsePoly(char *str, int mono_order)
   //for a single polynomial (aka: a single row of the input text file)
 
   return poly;
+}
+
+struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
+  char str[MAXCHAR];
+  struct PolynomialSystem *system = (struct PolynomialSystem*) malloc (sizeof(struct PolynomialSystem));
+
+  system->size = 0;
+
+  while (fgets(str, MAXCHAR, f) != NULL) {
+    struct Polynomial *poly = parsePoly(str, mono_order);
+
+    if (system->size == 0) {
+      system->head = poly;
+      system->tail = poly;
+    } else {
+      poly->prev = system->tail;
+      system->tail->next = poly;
+      system->tail = poly;
+    }
+
+    system->size++;
+  }
+
+  return system;
 }

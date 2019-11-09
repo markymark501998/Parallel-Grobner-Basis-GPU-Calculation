@@ -2,6 +2,17 @@
 #include <stdlib.h>
 #include "poly.h"
 
+void printPolySystem(struct PolynomialSystem *system) {
+  struct Polynomial *poly = system->head;
+  int i;
+  for(i=0; i<system->size; i++) {
+    printf("%d : ", i);
+    printPoly(poly);
+
+    poly = poly->next;
+  }
+}
+
 void printTerm(struct PolyTerm *term) {
   printf("%f", term->coeff);
 
@@ -11,7 +22,6 @@ void printTerm(struct PolyTerm *term) {
 }
 
 void printPoly(struct Polynomial *poly) {
-  //Print the Polynomial
   struct PolyTerm* term;
   term = poly->head;
 

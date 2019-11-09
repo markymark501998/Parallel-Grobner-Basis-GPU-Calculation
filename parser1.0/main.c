@@ -4,10 +4,7 @@
 #include "poly.h"
 #include "parser.h"
 
-#define MAXCHAR 100000
-
 int main(int argc, char* argv[]) {
-	char str[MAXCHAR];
 	int i = 0;
 
 	printf("\n");
@@ -20,8 +17,7 @@ int main(int argc, char* argv[]) {
 	int mono_order = 0;		//default: 0-grevlex, 1-grlex, 2-lex
 	int failState = 0;
 	char failMessage[1000];
-	struct PolynomialSystem system;
-	int size = 0;
+	struct PolynomialSystem *system;
 
 	for (i = 2; i < argc; i++) {
 		if (strcmp(argv[i], "-d") == 0) {
@@ -51,35 +47,12 @@ int main(int argc, char* argv[]) {
     }
     else
     {
-			printf("File Contents:\n");
+			printf("Building system.");
+			system = buildPolySystem(file, mono_order);
 
 			//Build system from file
-			while (fgets(str, MAXCHAR, file) != NULL) {
-				printf("%s\n", str);
-
-				struct Polynomial *poly = parsePoly(str, mono_order);
-
-				if (size == 0) {
-					system.head = poly;
-					system.tail = poly;
-				} else {
-					poly->prev = system.tail;
-					system.tail->next = poly;
-					system.tail = poly;
-				}
-
-				size++;
-			}
 			printf("Printing the System...\n");
-			struct Polynomial *poly = system.head;
-			int i;
-			for(i=0; i<size; i++) {
-				printf("%d : ", i);
-				printPoly(poly);
-
-				poly = poly->next;
-			}
-
+			printPolySystem(system);
 			//check failState
 			if(failState == 1)
 			{
