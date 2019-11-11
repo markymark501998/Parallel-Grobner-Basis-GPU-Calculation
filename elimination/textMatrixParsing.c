@@ -40,8 +40,9 @@ float** parseInputMatrix(FILE *f, int maxLineSize, int* resultRows, int* resultC
 
 void printMatrix(float **input, int rows, int cols) {
     int i = 0;
-    int j = 0;    
+    int j = 0;
 
+    printf("Input Matrix:\n");
     printf("Rows: %d\n", rows);
     printf("Columns: %d\n", cols);
 
@@ -49,6 +50,23 @@ void printMatrix(float **input, int rows, int cols) {
         for(j = 0; j < cols; j++) {
             printf("%-15f ", input[i][j]);
         }
-        printf("\n");
+        printf("\n\n");
     }
+}
+
+void printCublasMatrixArray(float * input, int length) {
+    int i;
+    int counter = 0;
+    printf("CUBLAS Matrix Array (Column Major Storage): \n");   
+    
+    for(i = 0; i < length; i++) {
+        printf("%-15f ", input[i]);
+        counter++;
+
+        if((counter % 7) == 0) {
+            printf("\n");
+        }
+    }
+
+    printf("\n\n");
 }
