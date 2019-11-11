@@ -33,20 +33,20 @@ int main(int argc, char* argv[]) {
 	}
 
 	if ( argc <= 1 )
-  {
-    //Error
-		printf("Please enter a filename in the command line: ./main [filename] [other arguments]\n");
-  }
-  else
 	{
-  	FILE *file = fopen( argv[1], "r" );
+		//Error
+			printf("Please enter a filename in the command line: ./main [filename] [other arguments]\n");
+	}
+	else
+	{
+		FILE *file = fopen( argv[1], "r" );
 
-    if ( file == 0 )
-    {
-      printf( "Could not open file\n" );
-    }
-    else
-    {
+		if ( file == 0 )
+		{
+			printf( "Could not open file\n" );
+		}
+		else
+		{
 			printf("Building system.");
 			system = buildPolySystem(file, mono_order);
 
@@ -64,8 +64,8 @@ int main(int argc, char* argv[]) {
 			}
 
 			fclose(file);
-    }
-  }
+		}
+	}
 
 	printf("\n");
 
