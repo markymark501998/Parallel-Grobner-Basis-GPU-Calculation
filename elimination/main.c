@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include <string.h>
 #include "common.h"
+#include <time.h>
 #define MAXCHAR 100000
 
 int main(int argc, char* argv[]) {
@@ -12,10 +13,18 @@ int main(int argc, char* argv[]) {
 	printf("Note: the Matrix on the host will exist in the 'CUDA' way (just one array) and in float** format\n");
 	printf("Of course the final format will not follow this as it 'doubles up' on storage space on the host which is uneccessary [get Mark H. to fix it when this goes to implementation]\n\n");
 
+	double time_elapsed = 0.0;
 	int i, j;
 	float** inputMatrix;
 	int rows = 0;
 	int cols = 0;
+	int dontPrint = 0;
+
+	for(i = 0; i < argc; i++) {
+		if(strcmp(argv[i], "-dontPrint") == 0) {
+			dontPrint = 1;
+		}
+	}
 	
 	if ( argc <= 1 )
 	{
@@ -32,13 +41,24 @@ int main(int argc, char* argv[]) {
 		}
 		else
 		{
+			clock_t begin = clock();
+			
 			inputMatrix = parseInputMatrix(file, MAXCHAR, &rows, &cols);
 			fclose(file);			
-			printMatrix(inputMatrix, rows, cols);
-			
+
+			if(dontPrint == 0)
+				printMatrixWithLimits(inputMatrix, rows, cols, 12);	
+
 			GuassianEliminationV1(inputMatrix, rows, cols);
 
+			if(dontPrint == 0)
+				printMatrixWithLimits(inputMatrix, rows, cols, 12);
+
 			printf("Done\n");
+
+			clock_t end = clock();
+			time_elapsed += (double)(end - begin) / CLOCKS_PER_SEC;
+			printf("Execution Time: %f seconds\n", time_elapsed);
 		}
 	}
 

@@ -50,8 +50,36 @@ void printMatrix(float **input, int rows, int cols) {
         for(j = 0; j < cols; j++) {
             printf("%-15f ", input[i][j]);
         }
-        printf("\n\n");
+        printf("\n");
     }
+
+    printf("\n");
+}
+
+void printMatrixWithLimits(float **input, int rows, int cols, int limit) {
+    int i = 0;
+    int j = 0;
+
+    printf("Input Matrix (Upper Limit = 12):\n");
+    printf("Rows: %d\n", rows);
+    printf("Columns: %d\n", cols);
+
+    if(rows > limit) {
+        rows = limit;
+    }
+
+    if(cols > limit) {
+        cols = limit;
+    }
+
+    for(i = 0; i < rows; i ++) {
+        for(j = 0; j < cols; j++) {
+            printf("%-11f ", input[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\n");
 }
 
 void printCublasMatrixArray(float * input, int length) {
