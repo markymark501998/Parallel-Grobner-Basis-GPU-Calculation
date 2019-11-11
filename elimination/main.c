@@ -14,6 +14,8 @@ int main(int argc, char* argv[]) {
 	printf("Of course the final format will not follow this as it 'doubles up' on storage space on the host which is uneccessary [get Mark H. to fix it when this goes to implementation]\n\n");
 
 	double time_elapsed = 0.0;
+	double time_elapsed_parse = 0.0;
+	double time_elapsed_device = 0.0;
 	int i, j;
 	float** inputMatrix;
 	int rows = 0;
@@ -42,23 +44,35 @@ int main(int argc, char* argv[]) {
 		else
 		{
 			clock_t begin = clock();
+			clock_t beginParse = clock();
 			
 			inputMatrix = parseInputMatrix(file, MAXCHAR, &rows, &cols);
-			fclose(file);			
+			fclose(file);	
+
+			clock_t endParse = clock();	
+			clock_t beginDeivce = clock();	
 
 			if(dontPrint == 0)
 				printMatrixWithLimits(inputMatrix, rows, cols, 12);	
 
 			GuassianEliminationV1(inputMatrix, rows, cols);
 
+			clock_t endDeivce = clock();	
+
 			if(dontPrint == 0)
 				printMatrixWithLimits(inputMatrix, rows, cols, 12);
 
-			printf("Done\n");
-
 			clock_t end = clock();
+			printf("Done\n=============================================================\n");
+			
 			time_elapsed += (double)(end - begin) / CLOCKS_PER_SEC;
-			printf("Execution Time: %f seconds\n", time_elapsed);
+			time_elapsed_parse += (double)(endParse - beginParse) / CLOCKS_PER_SEC;
+			time_elapsed_device += (double)(endDeivce - beginDeivce) / CLOCKS_PER_SEC;
+			printf("Parsing Execution Time: %f seconds\n", time_elapsed_parse);
+			printf("Device (GPU) Execution Time: %f seconds\n\n", time_elapsed_device);
+			printf("Total Execution Time: %f seconds\n", time_elapsed);
+
+			printf("\n\n");
 		}
 	}
 

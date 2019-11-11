@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include <string.h>
 #include "common.h"
+#define IDX2C(i,j,ld) (((j)*(ld))+(i))
 
 float** parseInputMatrix(FILE *f, int maxLineSize, int* resultRows, int* resultCols) {
     float** resultMatrix;
@@ -94,6 +95,20 @@ void printCublasMatrixArray(float * input, int length) {
         if((counter % 7) == 0) {
             printf("\n");
         }
+    }
+
+    printf("\n\n");
+}
+
+void printCublasMatrixArrayConverted (float* input, int rows, int cols) {
+    int i, j;
+
+    for(i = 0; i < rows; i++) {
+        for(j = 0; j < cols; j++) {
+            printf("%f ", input[IDX2C(i,j,rows)]);
+        }
+
+        printf("\n");
     }
 
     printf("\n\n");
