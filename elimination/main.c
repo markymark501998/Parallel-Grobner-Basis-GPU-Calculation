@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 			if(dontPrint == 0)
 				printMatrixWithLimits(inputMatrix, rows, cols, 12);	
 
-			GuassianEliminationV1(inputMatrix, rows, cols);
+			GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
 
 			clock_t endDeivce = clock();	
 

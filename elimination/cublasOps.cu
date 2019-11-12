@@ -10,6 +10,8 @@ extern "C" {
     #include "common.h"
 }
 
+//Test Code
+//==================================================================================================================================
 /*
 static __inline__ void modify (cublasHandle_t handle, float *m, int ldm, int n, int p, int q, float alpha, float beta){
     cublasSscal (handle, n-q, &alpha, &m[IDX2C(p,q,ldm)], ldm);
@@ -68,7 +70,7 @@ static __inline__ int GuassianEliminationDeviceFunction(cublasHandle_t handle, f
 */
 
 extern "C"
-int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
+int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrint) {
     float *hostMatrix = 0;
 	float *deviceMatrix = 0;
 	cudaError_t cudaStat;
@@ -77,30 +79,35 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
 
     int i, j, k;
 
+    //Initialize Array for the Host Matrix
     hostMatrix = (float *)malloc(rows * cols * sizeof(float));
     if (!hostMatrix) {
         printf ("host memory allocation failed\n");
         return EXIT_FAILURE;
     }
 
+    //Populate the Host Matrix Array in CuBLAS format
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
             hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
         }
     }
     
+    //Allocate memory for Device Matrix Array
     cudaStat = cudaMalloc ((void**) &deviceMatrix, rows * cols * sizeof(*hostMatrix));
     if (cudaStat != cudaSuccess) {
         printf ("device memory allocation failed\n");
         return EXIT_FAILURE;
     }
     
+    //Initialize CuBLAS object
     stat = cublasCreate(&handle);
     if (stat != CUBLAS_STATUS_SUCCESS) {
         printf ("CUBLAS initialization failed\n");
         return EXIT_FAILURE;
     }
 
+    //Push data to the Device
     stat = cublasSetMatrix (rows, cols, sizeof(*hostMatrix), hostMatrix, rows, deviceMatrix, rows);
     if (stat != CUBLAS_STATUS_SUCCESS) {
         printf ("Data download failed\n");
@@ -110,8 +117,8 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
     }
 
 
-
-
+    //This is all test code
+    //==================================================================================================================================
     //If you are gonna use this command, uncomment this function "modify" at the top of this file, else it won't work
     //modify (handle, deviceMatrix, rows, cols, 1, 2, 16.0f, 12.0f);    
 
@@ -126,6 +133,8 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
     //GuassianEliminationDeviceFunction(handle, deviceMatrix, rows, cols);
 
     //cublasSaxpy(handle, cols, &scalar, &deviceMatrix[IDX2C(1,0,rows)], rows, &deviceMatrix[IDX2C(2,0,rows)], rows);
+    //==================================================================================================================================
+
     
     int rank = 0;
     float scalar = 0.0f;
@@ -141,7 +150,8 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
             //Download A[j,i]
             Aji = (float *) malloc (sizeof(float));
             cudaMemcpy(Aji, &deviceMatrix[IDX2C(j,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
-            //printf("Aji: %f\n", *Aji);
+            if(dontPrint == 0)
+                printf("Aji: %f\n", *Aji);
             
             if(*Aji != 0.0f) {
                 rank++;    
@@ -171,7 +181,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
                 break;
             }
         }
-
+        
         /*        
         printf("piv_found: %d\n", piv_found);
         stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
@@ -203,6 +213,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
         }
     }    
 
+    //Download Matrix from the Device -> Host
     stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
     if (stat != CUBLAS_STATUS_SUCCESS) {
         printf ("Data upload failed");
@@ -211,11 +222,13 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
         return EXIT_FAILURE;
     }
 
+    //Sync up the device (not necessary with CuBLAS but here for good measure)
     cudaDeviceSynchronize();
 
     cudaFree (deviceMatrix);
     cublasDestroy(handle);
 
+    //Bring Data back to Main function through inputMatrix variable
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
             inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];
@@ -226,7 +239,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
             }
         }
     }
-
+    
     free(hostMatrix);
 
     return 0;
