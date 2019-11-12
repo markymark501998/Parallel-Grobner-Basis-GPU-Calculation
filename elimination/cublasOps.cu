@@ -125,6 +125,8 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
     
     //GuassianEliminationDeviceFunction(handle, deviceMatrix, rows, cols);
 
+    //cublasSaxpy(handle, cols, &scalar, &deviceMatrix[IDX2C(1,0,rows)], rows, &deviceMatrix[IDX2C(2,0,rows)], rows);
+    
     int rank = 0;
     float scalar = 0.0f;
     float *Aji;
@@ -139,7 +141,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
             //Download A[j,i]
             Aji = (float *) malloc (sizeof(float));
             cudaMemcpy(Aji, &deviceMatrix[IDX2C(j,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
-            //printf("Aji: %f\n", *Aji);            
+            printf("Aji: %f\n", *Aji);
             
             if(*Aji != 0.0f) {
                 rank++;    
@@ -180,7 +182,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
             return EXIT_FAILURE;
         }
         printCublasMatrixArrayConverted(hostMatrix, rows, cols);
-        */
+        */        
 
         if(piv_found == 1) {
             for(k = (rank + 1); k < rows; k++) {   
@@ -199,8 +201,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
                 free(Aki);
             }
         }
-    }
-
+    }    
 
     stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
     if (stat != CUBLAS_STATUS_SUCCESS) {
@@ -218,7 +219,8 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
             inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];
-
+            
+            //Get rid of -0.0 's, they look weird in the console
             if(inputMatrix[i][j] == -0.0f) {
                 inputMatrix[i][j] = 0.0f;
             }
