@@ -141,7 +141,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols) {
             //Download A[j,i]
             Aji = (float *) malloc (sizeof(float));
             cudaMemcpy(Aji, &deviceMatrix[IDX2C(j,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
-            printf("Aji: %f\n", *Aji);
+            //printf("Aji: %f\n", *Aji);
             
             if(*Aji != 0.0f) {
                 rank++;    
