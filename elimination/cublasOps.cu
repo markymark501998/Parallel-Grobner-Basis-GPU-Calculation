@@ -142,7 +142,9 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
     float *Aki;
     float *Aranki;
 
+    //The FGL Paper says to start this at 1 and I don't know if that is correct. The first column starts at index "0"
     for(i = 0; i < cols; i++) {
+    //for(i = 1; i < cols; i++) {
         int piv_found = 0;
         
         for(j = (rank + 1); j < rows; j++) {            
@@ -178,6 +180,9 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
                 piv_found = 1;
                 free(Aranki);
                 free(Aji);
+
+                //This break was never in the FGL algorithm. I added it because it just was not working before (still logically not 
+                //working but hey its a work in progress).
                 break;
             }
         }
@@ -234,12 +239,12 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
             inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];
             
             //Get rid of -0.0 's, they look weird in the console
-            if(inputMatrix[i][j] == -0.0f) {
+            if(inputMatrix[i][j] == -0.000000f) {
                 inputMatrix[i][j] = 0.0f;
             }
         }
     }
-    
+
     free(hostMatrix);
 
     return 0;

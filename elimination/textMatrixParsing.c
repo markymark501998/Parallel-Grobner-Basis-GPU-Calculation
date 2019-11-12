@@ -61,7 +61,7 @@ void printMatrixWithLimits(float **input, int rows, int cols, int limit) {
     int i = 0;
     int j = 0;
 
-    printf("Input Matrix (Display Limit = 12 rows/columns):\n");
+    printf("Matrix (Display Limit = 12 rows/columns):\n");
     printf("Rows: %d\n", rows);
     printf("Columns: %d\n", cols);
 

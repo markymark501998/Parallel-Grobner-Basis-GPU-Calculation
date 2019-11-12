@@ -52,15 +52,12 @@ int main(int argc, char* argv[]) {
 			clock_t endParse = clock();	
 			clock_t beginDeivce = clock();	
 
-			if(dontPrint == 0)
-				printMatrixWithLimits(inputMatrix, rows, cols, 12);	
-
+			printf("Input:\n");
+			printMatrixWithLimits(inputMatrix, rows, cols, 12);	
 			GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
-
-			clock_t endDeivce = clock();	
-
-			if(dontPrint == 0)
-				printMatrixWithLimits(inputMatrix, rows, cols, 12);
+			clock_t endDeivce = clock();
+			printf("Output:\n");	
+			printMatrixWithLimits(inputMatrix, rows, cols, 12);
 
 			clock_t end = clock();
 			printf("Done\n=============================================================\n");
