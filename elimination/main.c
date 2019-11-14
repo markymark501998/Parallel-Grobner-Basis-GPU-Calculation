@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 			fclose(file);	
 
 			clock_t endParse = clock();	
-			clock_t beginDeivce = clock();	
+			clock_t beginDeivce = clock();	 
 
 			printf("Input:\n");
 			printMatrixWithLimits(inputMatrix, rows, cols, 12);	

@@ -136,7 +136,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
     //==================================================================================================================================
 
     
-    int rank = 0;
+    int rank = -1;
     float scalar = 0.0f;
     float *Aji;
     float *Aki;
@@ -158,7 +158,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
             if(*Aji != 0.0f) {
                 rank++;    
 
-                stat = cublasSswap(handle, cols, &deviceMatrix[IDX2C(j,0,rows)], rows, &deviceMatrix[IDX2C(rank,0,rows)], rows);
+                stat = cublasSswap(handle, cols, &deviceMatrix[IDX2C(rank,0,rows)], rows, &deviceMatrix[IDX2C(j,0,rows)], rows);
                 if (stat != CUBLAS_STATUS_SUCCESS) {
                     printf ("Device operation failed (vector swap)\n");
                     return EXIT_FAILURE;
