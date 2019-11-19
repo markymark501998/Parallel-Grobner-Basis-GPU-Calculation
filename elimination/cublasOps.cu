@@ -250,7 +250,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
 }
 
 extern "C"
-int GuassianEliminationV1Ref (float** inputMatrix, int rows, int cols, int dontPrint) {
+int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dontPrint) {
     float *hostMatrix = 0;
 	float *deviceMatrix = 0;
 	cudaError_t cudaStat;

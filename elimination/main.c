@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
 			printMatrixWithLimits(inputMatrix, rows, cols, 12);	
 
 			if(rrefForm == 1) {
-				GuassianEliminationV1Ref(inputMatrix, rows, cols, dontPrint);
+				GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint);
 			} else if(fgl == 1) {
 				FGL_Algorithm(inputMatrix, rows, cols, dontPrint);
 			} else {
