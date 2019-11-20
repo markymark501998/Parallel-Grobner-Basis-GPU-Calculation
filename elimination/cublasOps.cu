@@ -446,7 +446,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
     }
 
     //FGL Here
-    
+    //
 
 
 
