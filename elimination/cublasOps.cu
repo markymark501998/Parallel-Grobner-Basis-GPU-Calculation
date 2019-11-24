@@ -412,8 +412,9 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
     int* cPiv;
     int* rPiv;
 
-    int i, j, k;
-    int rowColMax = new_max(rows, cols);
+    int i, j;
+    //int rowColMax = new_max(rows, cols);
+    int rowColMax = 0;
     int nPiv;
 
     //Initialize Array for the Host Matrix
@@ -428,21 +429,22 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
         for(i = 0; i < rows; i++) {
             hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
         }
-    } 
-    
+    }
+
     //FLG Analysis Phase (Algorithm 1.5 in the FGL paper)
-    cPiv = (int *)malloc(rowColMax * sizeof(int));
-    rPiv = (int *)malloc(rowColMax * sizeof(int));
-    nPiv = 0;
+    cPiv = (int *)malloc(cols * sizeof(int));
+    rPiv = (int *)malloc(rows * sizeof(int));
+    nPiv = -1;
 
     for (i = 0; i < cols; i++) {
-        for (j = 0; j < rows) {
+        for (j = 0; j < rows; j++) {
             if (hostMatrix[IDX2C(i,j,rows)] != 0) {
                 nPiv++;
 
                 cPiv[nPiv] = i;
                 rPiv[nPiv] = j;
                 
+                break;
             }
         }
     }
@@ -453,8 +455,6 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
         printf("rPiv:\n");
         printStandardIntArray(rPiv, nPiv);
     }
-
-    
     
     //Allocate memory for Device Matrix Array
     cudaStat = cudaMalloc ((void**) &deviceMatrix, rows * cols * sizeof(*hostMatrix));
@@ -481,7 +481,9 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
 
     //FGL Here
     //
-
+     
+    
+    
 
 
     //Download Matrix from the Device -> Host
