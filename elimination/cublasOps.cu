@@ -5,6 +5,7 @@
 #include <cuda_runtime.h>
 #include "cublas_v2.h"
 #define IDX2C(i,j,ld) (((j)*(ld))+(i))
+#define new_max(x,y) ((x) >= (y)) ? (x) : (y)
 
 extern "C" {
     #include "common.h"
@@ -151,6 +152,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
             //Download A[j,i]
             Aji = (float *) malloc (sizeof(float));
             cudaMemcpy(Aji, &deviceMatrix[IDX2C(j,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
+            
             if(dontPrint == 0)
                 printf("Aji: %f\n", *Aji);
             
@@ -310,6 +312,7 @@ int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dont
             //Download A[j,i]
             Aji = (float *) malloc (sizeof(float));
             cudaMemcpy(Aji, &deviceMatrix[IDX2C(j,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
+            
             if(dontPrint == 0)
                 printf("Aji: %f\n", *Aji);
             
@@ -404,9 +407,14 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
 	float *deviceMatrix = 0;
 	cudaError_t cudaStat;
 	cublasStatus_t stat;
-	cublasHandle_t handle;
+    cublasHandle_t handle;
+    
+    int* cPiv;
+    int* rPiv;
 
     int i, j, k;
+    int rowColMax = new_max(rows, cols);
+    int nPiv;
 
     //Initialize Array for the Host Matrix
     hostMatrix = (float *)malloc(rows * cols * sizeof(float));
@@ -420,7 +428,33 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
         for(i = 0; i < rows; i++) {
             hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
         }
+    } 
+    
+    //FLG Analysis Phase (Algorithm 1.5 in the FGL paper)
+    cPiv = (int *)malloc(rowColMax * sizeof(int));
+    rPiv = (int *)malloc(rowColMax * sizeof(int));
+    nPiv = 0;
+
+    for (i = 0; i < cols; i++) {
+        for (j = 0; j < rows) {
+            if (hostMatrix[IDX2C(i,j,rows)] != 0) {
+                nPiv++;
+
+                cPiv[nPiv] = i;
+                rPiv[nPiv] = j;
+                
+            }
+        }
     }
+
+    if(dontPrint == 0) {
+        printf("cPiv:\n");
+        printStandardIntArray(cPiv, nPiv);
+        printf("rPiv:\n");
+        printStandardIntArray(rPiv, nPiv);
+    }
+
+    
     
     //Allocate memory for Device Matrix Array
     cudaStat = cudaMalloc ((void**) &deviceMatrix, rows * cols * sizeof(*hostMatrix));
@@ -449,81 +483,6 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
     //
 
 
-
-
-
-
-
-    
-    int rank = -1;
-    float scalar = 0.0f;
-    float *Aji;
-    float *Aki;
-    float *Aranki;
-
-    //The FGL Paper says to start this at 1 and I don't know if that is correct. The first column starts at index "0"
-    for(i = 0; i < cols; i++) {
-        int piv_found = 0;
-        
-        for(j = (rank + 1); j < rows; j++) {         
-            //Download A[j,i]
-            Aji = (float *) malloc (sizeof(float));
-            cudaMemcpy(Aji, &deviceMatrix[IDX2C(j,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
-            if(dontPrint == 0)
-                printf("Aji: %f\n", *Aji);
-            
-            if(*Aji != 0.0f) {
-                rank++;    
-
-                stat = cublasSswap(handle, cols, &deviceMatrix[IDX2C(rank,0,rows)], rows, &deviceMatrix[IDX2C(j,0,rows)], rows);
-                if (stat != CUBLAS_STATUS_SUCCESS) {
-                    printf ("Device operation failed (vector swap)\n");
-                    return EXIT_FAILURE;
-                }
-                
-                //Download A[rank, i]
-                Aranki = (float *) malloc (sizeof(float));
-                cudaMemcpy(Aranki, &deviceMatrix[IDX2C(rank,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
-
-                scalar = *Aranki;
-                scalar = powf(scalar, -1);
-
-                stat = cublasSscal (handle, cols, &scalar, &deviceMatrix[IDX2C(rank,0,rows)], rows);
-                if (stat != CUBLAS_STATUS_SUCCESS) {
-                    printf ("Device operation failed (row scalar x inverse)\n");
-                    return EXIT_FAILURE;
-                }
-
-                piv_found = 1;
-                free(Aranki);
-                free(Aji);
-
-                //This break was never in the FGL algorithm. I added it because it just was not working before (still logically not 
-                //working but hey its a work in progress).
-                break;
-            }
-        }     
-
-        if(piv_found == 1) {
-            //for(k = (rank + 1); k < rows; k++) { 
-            for(k = 0; k < rows; k++) { 
-                if(k != rank) {
-                    //Download A[j,i]
-                    Aki = (float *) malloc (sizeof(float));
-                    cudaMemcpy(Aki, &deviceMatrix[IDX2C(k,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
-                    *Aki = -*Aki;
-                    
-                    stat = cublasSaxpy(handle, cols, Aki, &deviceMatrix[IDX2C(rank,0,rows)], rows, &deviceMatrix[IDX2C(k,0,rows)], rows);
-                    if (stat != CUBLAS_STATUS_SUCCESS) {
-                        printf ("Device operation failed (axpy)\n");
-                        return EXIT_FAILURE;
-                    }
-
-                    free(Aki);
-                }                
-            }
-        }
-    }    
 
     //Download Matrix from the Device -> Host
     stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
