@@ -412,7 +412,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
     int* cPiv;
     int* rPiv;
 
-    int i, j;
+    int i, j, k;
     int rowColMax = new_max(rows, cols);
     printf("RowColMax: %d\n", rowColMax);
     int nPiv;
@@ -431,31 +431,55 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
         }
     }
 
+
+
+
+
     //FLG Analysis Phase (Algorithm 1.5 in the FGL paper)
     cPiv = (int *)malloc(rowColMax * sizeof(int));
     rPiv = (int *)malloc(rowColMax * sizeof(int));
     nPiv = -1;
 
+    for (i = 0; i < rowColMax; i++) {
+        cPiv[i] = -1.0;
+        rPiv[i] = -1.0;
+    }
+
     for (i = 0; i < cols; i++) {
         for (j = 0; j < rows; j++) {
             if (hostMatrix[IDX2C(j,i,rows)] != 0) {
-                nPiv++;
+                int canPick = 1;
 
-                if(nPiv < rowColMax) {
-                    cPiv[nPiv] = i;
-                    rPiv[nPiv] = j;
-                }                
+                for (k = 0; k < rowColMax; k++) {
+                    if(rPiv[k] == j) {
+                        canPick = 0;
+                        break;
+                    }
+                }
                 
-                break;
+                if(canPick == 1) {
+                    nPiv++;
+
+                    if(nPiv < rowColMax) {
+                        cPiv[nPiv] = i;
+                        rPiv[nPiv] = j;
+                    }  
+
+                    break;
+                }   
             }
         }
     }
 
+
+
+
+
     if(dontPrint == 0) {
         printf("cPiv:\n");
-        printStandardIntArray(cPiv, nPiv);
+        printStandardIntArray(cPiv, nPiv + 1);
         printf("rPiv:\n");
-        printStandardIntArray(rPiv, nPiv);
+        printStandardIntArray(rPiv, nPiv + 1);
     }
     
     //Allocate memory for Device Matrix Array

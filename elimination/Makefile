@@ -1,10 +1,10 @@
 CC=nvcc
 CC2=gcc
 TARGET=elim
-TARGET_UTILITY=matrixUtil
+TARGET_UTILITY=util
 
 all:
-	$(CC) main.c cublasOps.cu textMatrixParsing.c -lcublas -o $(TARGET)
+	$(CC) main.c cublasOps.cu textMatrixParsing.c -lcublas -lcusparse -o $(TARGET)
 	$(CC2) util.c -o $(TARGET_UTILITY)
 
 clean:

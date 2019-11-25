@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
 			clock_t beginDeivce = clock();	 
 
 			printf("Input:\n");
-			printMatrixWithLimits(inputMatrix, rows, cols, 12);	
+			printMatrixWithLimits(inputMatrix, rows, cols, 16);	
 
 			if(rrefForm == 1) {
 				GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint);
@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
 
 			clock_t endDeivce = clock();
 			printf("Output:\n");	
-			printMatrixWithLimits(inputMatrix, rows, cols, 12);
+			printMatrixWithLimits(inputMatrix, rows, cols, 16);
 
 			clock_t end = clock();
 			printf("Done\n=============================================================\n");
