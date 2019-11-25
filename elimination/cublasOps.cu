@@ -413,8 +413,8 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
     int* rPiv;
 
     int i, j;
-    //int rowColMax = new_max(rows, cols);
-    int rowColMax = 0;
+    int rowColMax = new_max(rows, cols);
+    printf("RowColMax: %d\n", rowColMax);
     int nPiv;
 
     //Initialize Array for the Host Matrix
@@ -432,17 +432,19 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
     }
 
     //FLG Analysis Phase (Algorithm 1.5 in the FGL paper)
-    cPiv = (int *)malloc(cols * sizeof(int));
-    rPiv = (int *)malloc(rows * sizeof(int));
+    cPiv = (int *)malloc(rowColMax * sizeof(int));
+    rPiv = (int *)malloc(rowColMax * sizeof(int));
     nPiv = -1;
 
     for (i = 0; i < cols; i++) {
         for (j = 0; j < rows; j++) {
-            if (hostMatrix[IDX2C(i,j,rows)] != 0) {
+            if (hostMatrix[IDX2C(j,i,rows)] != 0) {
                 nPiv++;
 
-                cPiv[nPiv] = i;
-                rPiv[nPiv] = j;
+                if(nPiv < rowColMax) {
+                    cPiv[nPiv] = i;
+                    rPiv[nPiv] = j;
+                }                
                 
                 break;
             }
