@@ -3,6 +3,7 @@
 #include <string.h>
 #include "poly.h"
 #include "parser.h"
+#include "macaulay.h"
 
 int main(int argc, char* argv[]) {
 	int i = 0;
@@ -47,12 +48,18 @@ int main(int argc, char* argv[]) {
 		}
 		else
 		{
-			printf("Building system.");
 			system = buildPolySystem(file, mono_order);
 
-			//Build system from file
-			printf("Printing the System...\n");
 			printPolySystem(system);
+
+			printf("Building matrix");
+
+			struct Macaulay *matrix = buildMacaulay(system, mono_order);
+
+			printf("\nSuccess!!\nMatrix count: %d\n", matrix->mono_count);
+
+			printMacaulay(matrix);
+
 			//check failState
 			if(failState == 1)
 			{

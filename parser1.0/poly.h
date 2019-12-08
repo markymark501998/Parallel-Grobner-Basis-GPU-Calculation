@@ -1,22 +1,23 @@
 struct PolynomialSystem {
-	struct Polynomial *head;
-	struct Polynomial *tail;
-	int size;
+	struct Polynomial *head, *tail;
+	int *variables, dimension, degree, size;
 };
 
 struct Polynomial {
-	struct PolyTerm *head;
-	struct PolyTerm *tail;
-	struct Polynomial *next;
-  struct Polynomial *prev;
+	int size;
+	struct PolyTerm *head, *tail;
+	struct Polynomial *next, *prev;
 };
 
 struct PolyTerm {
 	float coeff;
+	struct Monomial *monomial;
+	struct PolyTerm *next, *prev;
+};
+
+struct Monomial {
 	int num_vars;
 	struct VarItem **vars;
-	struct PolyTerm *next;
-  struct PolyTerm *prev;
 };
 
 struct VarItem {
@@ -27,6 +28,8 @@ struct VarItem {
 void printPolySystem(struct PolynomialSystem *);
 void printTerm(struct PolyTerm *);
 void printPoly(struct Polynomial *);
-int grevlex_cmp(struct PolyTerm *, struct PolyTerm *);
-int grlex_cmp(struct PolyTerm *, struct PolyTerm *);
-int lex_cmp(struct PolyTerm *, struct PolyTerm *);
+void printMonomial(struct Monomial *);
+int grevlex_cmp(struct Monomial *, struct Monomial *);
+int grlex_cmp(struct Monomial *, struct Monomial *);
+int lex_cmp(struct Monomial *, struct Monomial *);
+int totalDegree(struct Monomial *);

@@ -35,6 +35,15 @@ struct VarItem *parseVar(char *str) {
   return var;
 }
 
+int var_compare( const void* a, const void* b)
+{
+     struct VarItem *var_a = (struct VarItem *)a;
+     struct VarItem *var_b = (struct VarItem *)b;
+
+     if ( var_a->varNum == var_b->varNum ) return 0;
+     else if ( var_a->varNum < var_b->varNum ) return -1;
+     else return 1;
+}
 
 struct PolyTerm *parseTerm(char *str) {
   struct PolyTerm *term = (struct PolyTerm *) malloc (sizeof(struct PolyTerm));
@@ -52,7 +61,7 @@ struct PolyTerm *parseTerm(char *str) {
   term->coeff = strtof(buffer, NULL);
   free(buffer);
 
-
+  term->monomial = (struct Monomial *) malloc (sizeof(struct Monomial));
   int size = 0, startIndex = indexOfStart(str,'x', startSearchIndex);
 
   // calculate size of array: num_vars
@@ -61,10 +70,10 @@ struct PolyTerm *parseTerm(char *str) {
     startIndex = indexOfStart(str, 'x', startIndex+1);
   }
 
-  term->num_vars=size;
+  term->monomial->num_vars=size;
 
   //construct the vars array
-  term->vars = (struct VarItem **) malloc (size * sizeof(struct VarItem *));
+  term->monomial->vars = (struct VarItem **) malloc (size * sizeof(struct VarItem *));
   startIndex = indexOfStart(str, 'x', startSearchIndex);
 
   for (int i = 0; i < size; i++) {
@@ -80,22 +89,24 @@ struct PolyTerm *parseTerm(char *str) {
     free(buffer);
     for (int j=i; j>=0; j--) {
       if (j == 0) {
-        term->vars[j] = item;
+        term->monomial->vars[j] = item;
         break;
-      } else if (item->varNum == term->vars[j-1]->varNum) {
-        printf("\n\nWARNING: Input contains duplicate variables in a monomial. x%d^%d and x%d^%d\n\n", term->vars[j-1]->varNum, term->vars[j-1]->varPow, item->varNum, item->varPow);
-        term->vars[j] = item;
+      } else if (item->varNum == term->monomial->vars[j-1]->varNum) {
+        printf("\n\nWARNING: Input contains duplicate variables in a monomial. x%d^%d and x%d^%d\n\n", term->monomial->vars[j-1]->varNum, term->monomial->vars[j-1]->varPow, item->varNum, item->varPow);
+        term->monomial->vars[j] = item;
         break;
-      } else if (item->varNum < term->vars[j-1]->varNum) {
-        term->vars[j] = term->vars[j-1];
+      } else if (item->varNum < term->monomial->vars[j-1]->varNum) {
+        term->monomial->vars[j] = term->monomial->vars[j-1];
       } else {
-        term->vars[j] = item;
+        term->monomial->vars[j] = item;
         break;
       }
     }
 
     startIndex = index;
   }
+
+  qsort(term->monomial->vars, term->monomial->num_vars, sizeof(struct VarItem *), var_compare);
 
   return term;
 }
@@ -107,8 +118,8 @@ struct Polynomial *parsePoly(char *str, int mono_order)
 
   struct Polynomial *poly;
   poly = (struct Polynomial*) malloc (sizeof(struct Polynomial));
+  poly->size = 0;
   int doneParsingPoly = 0;
-  int firstTermFlag = 1;
 
   struct PolyTerm* currentTerm;
 
@@ -129,17 +140,21 @@ struct Polynomial *parsePoly(char *str, int mono_order)
     free(buffer);
 
     //insert term into polynomial
-    if (firstTermFlag==1) {
+    if (poly->size==0) {
       poly->head = term;
       poly->tail = term;
-      firstTermFlag=0;
     } else {
       struct PolyTerm *cmp = poly->head;
+      int diff;
+      if (mono_order==0)
+        diff = grevlex_cmp(term->monomial, cmp->monomial);
+      else if (mono_order==1)
+        diff = grlex_cmp(term->monomial, cmp->monomial);
+      else
+        diff = lex_cmp(term->monomial, cmp->monomial);
 
       while (cmp != poly->tail) {
-        if ((mono_order==0 && grevlex_cmp(term, cmp) > 0) ||
-          (mono_order==1 && grlex_cmp(term, cmp) > 0) ||
-          (mono_order==2 && lex_cmp(term, cmp) > 0) )
+        if (diff > 0)
         {
           if(cmp == poly->head)
             poly->head = term;
@@ -154,9 +169,7 @@ struct Polynomial *parsePoly(char *str, int mono_order)
         cmp = cmp->next;
       }
 
-      if ((mono_order==0 && grevlex_cmp(term, cmp) > 0) ||
-        (mono_order==1 && grlex_cmp(term, cmp) > 0) ||
-        (mono_order==2 && lex_cmp(term, cmp) > 0) )
+      if ( diff > 0 )
       {
         if (cmp == poly->head)
           poly->head = term;
@@ -165,10 +178,7 @@ struct Polynomial *parsePoly(char *str, int mono_order)
 
         term->next = cmp;
         cmp->prev = term;
-      } else if (cmp == poly->tail && (
-        (mono_order==0 && grevlex_cmp(term, cmp) < 0) ||
-        (mono_order==1 && grlex_cmp(term, cmp) < 0) ||
-        (mono_order==2 && lex_cmp(term, cmp) < 0) ) )
+      } else if (cmp == poly->tail && diff < 0 )
       {
         term->prev = cmp;
         cmp->next = term;
@@ -184,7 +194,7 @@ struct Polynomial *parsePoly(char *str, int mono_order)
         poly->tail = term;
       }
     }
-
+    poly->size++;
     startSearchIndex = termBreakIndex+1;
   }
 
@@ -194,22 +204,90 @@ struct Polynomial *parsePoly(char *str, int mono_order)
   return poly;
 }
 
+int int_compare ( const void *aa, const void *bb ) {
+  const int *a = aa, *b = bb;
+  return (*a < *b) ? -1 : (*a > *b);
+}
+
 struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
   char str[MAXCHAR];
   struct PolynomialSystem *system = (struct PolynomialSystem*) malloc (sizeof(struct PolynomialSystem));
 
-  system->size = 0;
+  system->size = -1;
 
   while (fgets(str, MAXCHAR, f) != NULL) {
-    struct Polynomial *poly = parsePoly(str, mono_order);
 
-    if (system->size == 0) {
-      system->head = poly;
-      system->tail = poly;
+    // if first line, get the dimension/variables of the system
+    // else build polynomial and add it to the system
+    if (system->size == -1) {
+      int dim = 0;
+      int startSearchIndex=0;
+      char *buffer;
+      int varLen, indexOfVarEnd, indexOfVarStart = indexOfStart(str, '[', startSearchIndex);
+
+      while (indexOfVarStart != -1 ) {
+        dim++;
+        startSearchIndex = indexOfVarStart + 1;
+        indexOfVarStart = indexOfStart(str, '[', startSearchIndex);
+      }
+
+      system->dimension = dim;
+      system->variables = (int *) malloc (dim*sizeof(int));
+      system->degree = 0;
+
+      startSearchIndex = 0;
+
+      for (int i=0; i<system->dimension; i++) {
+        indexOfVarStart = indexOfStart(str, '[', startSearchIndex);
+        indexOfVarEnd = indexOfStart(str, ']', startSearchIndex);
+        varLen = indexOfVarEnd - indexOfVarStart - 1;
+
+        buffer = (char*) malloc(varLen * sizeof(char));
+        substring(str, buffer, (indexOfVarStart + 1), varLen);
+
+        system->variables[i] = atoi(buffer);
+        free(buffer);
+
+        startSearchIndex = indexOfVarEnd + 1;
+      }
+
+      qsort(system->variables, system->dimension, sizeof(int), int_compare);
+
     } else {
-      poly->prev = system->tail;
-      system->tail->next = poly;
-      system->tail = poly;
+      struct Polynomial *poly = parsePoly(str, mono_order);
+
+      if (system->size == 0) {
+        system->head = poly;
+        system->tail = poly;
+      } else {
+        poly->prev = system->tail;
+        system->tail->next = poly;
+        system->tail = poly;
+      }
+
+      int d = totalDegree(poly->head->monomial);
+      if (d > system->degree)
+        system->degree = d;
+
+      struct PolyTerm *term = poly->head;
+      for (int i=0; i<poly->size; i++) {
+        struct Monomial *mono = term->monomial;
+        for (int j=0; j<mono->num_vars; j++) {
+          int matched = 0;
+          for (int k=0; k<system->dimension; k++) {
+            if (mono->vars[j]->varNum == system->variables[k]) {
+              matched = 1;
+              break;
+            }
+          }
+          if (matched == 0) {
+            printf("WARNING: Variable number does not exist in defined dimesion\n\tLine: %d\n\tMonomial: ", i+4);
+            printTerm(term);
+            printf("\n");
+          }
+        }
+        term = term->next;
+      }
     }
 
     system->size++;
