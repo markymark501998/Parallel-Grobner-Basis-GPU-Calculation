@@ -252,7 +252,7 @@ int GuassianEliminationV1 (float** inputMatrix, int rows, int cols, int dontPrin
 }
 
 extern "C"
-int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dontPrint) {
+int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dontPrint, int roundFactor) {
     float *hostMatrix = 0;
 	float *deviceMatrix = 0;
 	cudaError_t cudaStat;
@@ -330,7 +330,13 @@ int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dont
                 cudaMemcpy(Aranki, &deviceMatrix[IDX2C(rank,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
 
                 scalar = *Aranki;
+                //scalar = 1 / scalar;
+
                 scalar = powf(scalar, -1);
+
+                //double tempScalar = (double)scalar;
+                //tempScalar = 1 / tempScalar;                
+                //scalar = (float)tempScalar;
 
                 stat = cublasSscal (handle, cols, &scalar, &deviceMatrix[IDX2C(rank,0,rows)], rows);
                 if (stat != CUBLAS_STATUS_SUCCESS) {
@@ -393,6 +399,9 @@ int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dont
             if(inputMatrix[i][j] == -0.000000f) {
                 inputMatrix[i][j] = 0.0f;
             }
+
+            int floatFactor = pow(10, roundFactor);
+            inputMatrix[i][j] = roundf(inputMatrix[i][j] * floatFactor) / floatFactor;
         }
     }
 
@@ -402,7 +411,7 @@ int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dont
 }
 
 extern "C"
-int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint) {
+int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int roundFactor) {
     float *hostMatrix = 0;
 	float *deviceMatrix = 0;
 	cudaError_t cudaStat;

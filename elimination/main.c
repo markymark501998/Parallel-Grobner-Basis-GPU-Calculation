@@ -33,10 +33,12 @@ int main(int argc, char* argv[]) {
 	printf("Input Matrix file must be in this form:\n\n[rows (int)]\n[columns (int)]\n[float + 'space' + float + 'space' + ...]\n[......]\n\n");
 	printf("Note: the Matrix on the host will exist in the 'CUDA' way (just one array) and in float** format\n");
 	printf("Of course the final format will not follow this as it 'doubles up' on storage space on the host which is uneccessary [get Mark H. to fix it when this goes to implementation]\n\n");
-	printf("Options:\n-dontPrint    (doesn't print extra debugging. Large matrices will overflow the console with repeated logging)\n");
-	printf("-rref         (reduced row echelon form)\n");
-	printf("-fgl          (faugere-lachartre guassian elimination)\n");
-	printf("-output       (outputs execution data to the 'ExecutionLogs' directory)\n\n");
+	printf("Options:\n-printDebug               (doesn't print extra debugging. Large matrices will overflow the console with repeated logging)\n");
+	printf("-rref                     (reduced row echelon form)\n");
+	printf("-fgl                      (faugere-lachartre guassian elimination)\n");
+	printf("-output                   (outputs execution data to the 'ExecutionLogs' directory)\n");
+	printf("-round [precision(int)]   (floating point precision rounding factor)\n");
+	printf("-sparsePrint              (prints the matrix in a denser form to see structure of matrix)\n\n");
 
 	double time_elapsed = 0.0;
 	double time_elapsed_parse = 0.0;
@@ -45,16 +47,18 @@ int main(int argc, char* argv[]) {
 	float** inputMatrix;
 	int rows = 0;
 	int cols = 0;
-	int dontPrint = 0;
+	int dontPrint = 1;
 	int rrefForm = 0;
 	int fgl = 0;
 	int outputExecutionData = 0;
+	int sparsePrint = 0;
+	int roundFactor = 4;
 
 	printf("------------------------------------------------------------\n");
 
 	for(i = 0; i < argc; i++) {
-		if(strcmp(argv[i], "-dontPrint") == 0) {
-			dontPrint = 1;
+		if(strcmp(argv[i], "-printDebug") == 0) {
+			dontPrint = 0;
 		}
 
 		if(strcmp(argv[i], "-rref") == 0) {
@@ -68,9 +72,19 @@ int main(int argc, char* argv[]) {
 		if(strcmp(argv[i], "-output") == 0) {
 			outputExecutionData = 1;			
 		}
+
+		if(strcmp(argv[i], "-sparsePrint") == 0) {
+			sparsePrint = 1;			
+		}
+
+		if(strcmp(argv[i], "-round") == 0) {
+			i++;
+			roundFactor = atoi(argv[i]);			
+		}
 	}
 	
-	printf("-             [Don't Print: %d]\n", dontPrint);
+	printf("-             [Don't Print Debug Info: %d]\n", dontPrint);
+	printf("-             [Floating Point Precision: %d]\n", roundFactor);
 	printf("-             [Reduced Row Echelon Form: %d]\n", rrefForm);
 	printf("-             [Faugere-Lachartre Guassian Elimination: %d]\n", fgl);
 	printf("-             [Output Execution Data -> ExecutionLogs: %d]\n", outputExecutionData);
@@ -99,22 +113,30 @@ int main(int argc, char* argv[]) {
 			fclose(file);	
 
 			clock_t endParse = clock();	
-			clock_t beginDeivce = clock();	 
+			clock_t beginDeivce = clock();
 
 			printf("Input:\n");
-			printMatrixWithLimits(inputMatrix, rows, cols, 16);	
+			if (sparsePrint == 0) {
+				printMatrixWithLimits(inputMatrix, rows, cols, 16);	
+			} else {
+				printSparseMatrixArray(inputMatrix, rows, cols, 160);
+			}
 
 			if(rrefForm == 1) {
-				GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint);
+				GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint, roundFactor);
 			} else if(fgl == 1) {
-				FGL_Algorithm(inputMatrix, rows, cols, dontPrint);
+				FGL_Algorithm(inputMatrix, rows, cols, dontPrint, roundFactor);
 			} else {
 				GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
 			}
 
 			clock_t endDeivce = clock();
-			printf("Output:\n");	
-			printMatrixWithLimits(inputMatrix, rows, cols, 16);
+			printf("Output:\n");
+			if (sparsePrint == 0) {
+				printMatrixWithLimits(inputMatrix, rows, cols, 16);	
+			} else {
+				printSparseMatrixArray(inputMatrix, rows, cols, 160);
+			}
 
 			clock_t end = clock();
 			printf("Done\n=============================================================\n");

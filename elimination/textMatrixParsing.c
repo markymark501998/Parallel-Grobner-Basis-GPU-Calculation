@@ -120,9 +120,84 @@ void printStandardIntArray(int* input, int length) {
 void printCublasMatrixArrayConverted (float* input, int rows, int cols) {
     int i, j;
 
+    printf("Integer Array (converted): \n");
     for(i = 0; i < rows; i++) {
         for(j = 0; j < cols; j++) {
             printf("%f ", input[IDX2C(i,j,rows)]);
+        }
+
+        printf("\n");
+    }
+
+    printf("\n\n");
+}
+
+void printSparseMatrixArray (float** input, int rows, int cols, int lineLimit) {
+    int i, j;
+    if(lineLimit == 0) {
+        lineLimit = 100;
+    }
+
+    printf("num: %f\n", input[40][45]);
+
+    printf("Sparse Matrix(lineLimit = %d): \n", lineLimit);
+    for(i = 0; i < rows; i++) {
+        if(rows >= lineLimit) {
+            break;
+        }
+
+        for(j = 0; j < cols; j++) {
+            if(cols >= lineLimit) {
+                break;
+            } 
+            
+            /*
+            if(input[i][j] == +0.0 || input[i][j] == -0.0) {
+                printf("-");
+            } else {
+                printf("*");
+            }
+            */
+
+            if(input[i][j] > 0) {
+                if(input[i][j] > 0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
+            } else {
+                if(input[i][j] < -0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
+            }
+        }
+
+        printf("\n");
+    }
+
+    printf("\n\n");
+}
+
+void printSparseMatrixArrayConverted (float* input, int rows, int cols, int lineLimit) {
+    int i, j;
+    if(lineLimit == 0) {
+        lineLimit = 100;
+    }
+
+    printf("Sparse Matrix(converted)(lineLimit = %d): \n", lineLimit);
+    for(i = 0; i < rows; i++) {
+        for(j = 0; j < cols; j++) {
+            if(cols >= lineLimit) {
+                break;
+            }
+
+            if(input[IDX2C(i,j,rows)] == +0.0 || input[IDX2C(i,j,rows)] == -0.0) {
+                printf("-");
+            } else {
+                printf("*");
+            }
         }
 
         printf("\n");
