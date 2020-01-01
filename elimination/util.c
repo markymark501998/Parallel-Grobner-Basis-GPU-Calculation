@@ -8,6 +8,8 @@ int main (int argc, char* argv[]) {
     int matrixCreationFlag = 0;
     int matrixCreationFGLFlag = 0;
     int intFlag = 0;
+    int percentageFlag = 0;
+    int percentageFactor = 4;
     int i, j;
 
     int rows = 0;
@@ -36,6 +38,11 @@ int main (int argc, char* argv[]) {
 
         if(strcmp(argv[i], "-int") == 0) {
             intFlag = 1;
+        }
+
+        if(strcmp(argv[i], "-percent") == 0) {
+            i++;
+            percentageFactor = atoi(argv[i]);
         }
     }
 
@@ -78,8 +85,8 @@ int main (int argc, char* argv[]) {
         for(i = 0; i < rows; i++) {
             for(j = 0; j < cols; j ++) {
                 
-                if(j > (i - 3)) {
-                    int flag = (int)(rand() % 4);
+                if(j > (i - 4)) {
+                    int flag = (int)(rand() % percentageFactor);
 
                     if(flag == 1) {
                         if(intFlag == 0) {

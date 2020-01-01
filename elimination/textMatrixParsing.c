@@ -135,19 +135,19 @@ void printCublasMatrixArrayConverted (float* input, int rows, int cols) {
 void printSparseMatrixArray (float** input, int rows, int cols, int lineLimit) {
     int i, j;
     if(lineLimit == 0) {
-        lineLimit = 100;
+        lineLimit = 160;
     }
-
-    printf("num: %f\n", input[40][45]);
 
     printf("Sparse Matrix(lineLimit = %d): \n", lineLimit);
     for(i = 0; i < rows; i++) {
-        if(rows >= lineLimit) {
+        if(i >= lineLimit) {
             break;
         }
 
+        printf("%.5d ", i);
+
         for(j = 0; j < cols; j++) {
-            if(cols >= lineLimit) {
+            if(j >= lineLimit) {
                 break;
             } 
             
@@ -188,15 +188,27 @@ void printSparseMatrixArrayConverted (float* input, int rows, int cols, int line
 
     printf("Sparse Matrix(converted)(lineLimit = %d): \n", lineLimit);
     for(i = 0; i < rows; i++) {
+        if(i >= lineLimit) {
+            break;
+        }
+        
         for(j = 0; j < cols; j++) {
-            if(cols >= lineLimit) {
+            if(j >= lineLimit) {
                 break;
             }
 
-            if(input[IDX2C(i,j,rows)] == +0.0 || input[IDX2C(i,j,rows)] == -0.0) {
-                printf("-");
+            if(input[IDX2C(i,j,rows)] > 0) {
+                if(input[IDX2C(i,j,rows)] > 0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
             } else {
-                printf("*");
+                if(input[IDX2C(i,j,rows)] < -0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
             }
         }
 

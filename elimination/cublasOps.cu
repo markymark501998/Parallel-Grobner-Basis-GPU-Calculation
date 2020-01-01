@@ -271,7 +271,9 @@ int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dont
     //Populate the Host Matrix Array in CuBLAS format
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
-            hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
+            int floatFactor = pow(10, roundFactor);            
+            hostMatrix[IDX2C(i,j,rows)] = roundf(inputMatrix[i][j] * floatFactor) / floatFactor;
+            //hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
         }
     }
     
@@ -330,13 +332,14 @@ int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dont
                 cudaMemcpy(Aranki, &deviceMatrix[IDX2C(rank,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
 
                 scalar = *Aranki;
-                //scalar = 1 / scalar;
-
+                //scalar = 1.0f / scalar;
                 scalar = powf(scalar, -1);
 
-                //double tempScalar = (double)scalar;
-                //tempScalar = 1 / tempScalar;                
-                //scalar = (float)tempScalar;
+
+
+                //printf("New Rank: %.50f\n", (scalar * (*Aranki)));
+
+                
 
                 stat = cublasSscal (handle, cols, &scalar, &deviceMatrix[IDX2C(rank,0,rows)], rows);
                 if (stat != CUBLAS_STATUS_SUCCESS) {
@@ -358,16 +361,37 @@ int GuassianEliminationV1Rref (float** inputMatrix, int rows, int cols, int dont
             //for(k = (rank + 1); k < rows; k++) { 
             for(k = 0; k < rows; k++) { 
                 if(k != rank) {
-                    //Download A[j,i]
+                    //Download A[k,i]
                     Aki = (float *) malloc (sizeof(float));
                     cudaMemcpy(Aki, &deviceMatrix[IDX2C(k,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
-                    *Aki = -*Aki;
-                    
-                    stat = cublasSaxpy(handle, cols, Aki, &deviceMatrix[IDX2C(rank,0,rows)], rows, &deviceMatrix[IDX2C(k,0,rows)], rows);
-                    if (stat != CUBLAS_STATUS_SUCCESS) {
-                        printf ("Device operation failed (axpy)\n");
-                        return EXIT_FAILURE;
+                    *Aki = (*Aki) * -1.0f;
+
+
+
+                    float * tempRank = (float *) malloc (sizeof(float));
+                    cudaMemcpy(tempRank, &deviceMatrix[IDX2C(rank,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
+                    float temp1 = *Aki;
+
+
+
+                    if(*Aki != 0.0f) {
+                        stat = cublasSaxpy(handle, cols, Aki, &deviceMatrix[IDX2C(rank,0,rows)], rows, &deviceMatrix[IDX2C(k,0,rows)], rows);
+                        if (stat != CUBLAS_STATUS_SUCCESS) {
+                            printf ("Device operation failed (axpy)\n");
+                            return EXIT_FAILURE;
+                        }
                     }
+
+
+
+                    cudaMemcpy(Aki, &deviceMatrix[IDX2C(k,i,rows)], sizeof(float), cudaMemcpyDeviceToHost);
+                    float temp2 = *Aki;
+                    if(temp2 != 0.0f) {
+                        //printf("Before/After Aki: %.40f  /  %.40f | rank: %.40f\n", temp1, temp2, *tempRank);
+                    }
+                        
+
+
 
                     free(Aki);
                 }                
@@ -420,11 +444,111 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
     
     int* cPiv;
     int* rPiv;
+    int* chosenPivots;
+
+    float** abcdMatrixWhole;
 
     int i, j, k;
-    int rowColMax = new_max(rows, cols);
-    printf("RowColMax: %d\n", rowColMax);
-    int nPiv;
+    //int rowColMax = new_max(rows, cols);
+    int nPiv = 0;
+
+    
+
+
+    //Make the rows UNITARY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+    //FLG Analysis Phase (Algorithm 1.5 in the FGL paper)
+    cPiv = (int *)malloc(cols * sizeof(int));
+    rPiv = (int *)malloc(cols * sizeof(int));
+    chosenPivots = (int *)malloc(rows * sizeof(int));
+
+    for (i = 0; i < cols; i++) {
+        cPiv[i] = -1;
+        rPiv[i] = -1;
+    }
+
+    for (k = 0; k < rows; k++) {
+        chosenPivots[k] = 0;
+    }
+
+    for (i = 0; i < rows; i++) {
+        for (j = 0; j < cols; j++) {
+            if(inputMatrix[i][j] != 0.0) {
+                if(cPiv[j] == -1) {
+                    //No pivot yet since the entry is -1, make this entry a pivot col/row
+
+                    cPiv[j] = j;
+                    rPiv[j] = i;
+                    chosenPivots[i] = 1;
+
+                    nPiv += 1;
+                }
+
+                break;
+            }
+        }
+    }
+
+    if(dontPrint == 0) {
+        printf("cPiv:\n");
+        printStandardIntArray(cPiv, cols);
+        printf("rPiv:\n");
+        printStandardIntArray(rPiv, cols);
+        printf("\nnPiv: %d\n\n", nPiv);
+        printf("Chosen Pivots: \n");
+        printStandardIntArray(chosenPivots, rows);
+    }
+
+    abcdMatrixWhole = (float**) malloc (rows * sizeof(float*));
+
+    for(i = 0; i < rows; i++) {
+        abcdMatrixWhole[i] = (float *) malloc (cols * sizeof(float));        
+    }
+
+    int counter = 0;
+
+    for(i = 0; i < cols; i++) {
+        printf("Counter: %d, rPiv[i]: %d, i: %d\n", counter, rPiv[i], i);
+        if(rPiv[i] != -1) {
+            for(j = 0; j < cols; j++) {
+                abcdMatrixWhole[counter][j] = inputMatrix[(rPiv[i])][j];
+            }
+
+            counter++;
+        } 
+    }
+
+    printf("Counter: %d\n", counter);
+
+    for(i = 0; i < cols; i++) {
+        if(counter >= rows) {
+            break;
+        }
+        
+        if(chosenPivots[i] == 0) {
+            for(j = 0; j < cols; j++) {
+                abcdMatrixWhole[counter][j] = inputMatrix[i][j];
+            }
+
+            counter++;
+        }
+    }
+    
+
+    printMatrixWithLimits(abcdMatrixWhole, rows, cols, 16);
+    printSparseMatrixArray(abcdMatrixWhole, rows, cols, 160);	
+    
+
+    /*
+    if(dontPrint == 0) {
+        printf("cPiv:\n");
+        printStandardIntArray(cPiv, nPiv + 1);
+        printf("rPiv:\n");
+        printStandardIntArray(rPiv, nPiv + 1);
+    }
+    */
 
     //Initialize Array for the Host Matrix
     hostMatrix = (float *)malloc(rows * cols * sizeof(float));
@@ -438,57 +562,6 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
         for(i = 0; i < rows; i++) {
             hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
         }
-    }
-
-
-
-
-
-    //FLG Analysis Phase (Algorithm 1.5 in the FGL paper)
-    cPiv = (int *)malloc(rowColMax * sizeof(int));
-    rPiv = (int *)malloc(rowColMax * sizeof(int));
-    nPiv = -1;
-
-    for (i = 0; i < rowColMax; i++) {
-        cPiv[i] = -1.0;
-        rPiv[i] = -1.0;
-    }
-
-    for (i = 0; i < cols; i++) {
-        for (j = 0; j < rows; j++) {
-            if (hostMatrix[IDX2C(j,i,rows)] != 0) {
-                int canPick = 1;
-
-                for (k = 0; k < rowColMax; k++) {
-                    if(rPiv[k] == j) {
-                        canPick = 0;
-                        break;
-                    }
-                }
-                
-                if(canPick == 1) {
-                    nPiv++;
-
-                    if(nPiv < rowColMax) {
-                        cPiv[nPiv] = i;
-                        rPiv[nPiv] = j;
-                    }  
-
-                    break;
-                }   
-            }
-        }
-    }
-
-
-
-
-
-    if(dontPrint == 0) {
-        printf("cPiv:\n");
-        printStandardIntArray(cPiv, nPiv + 1);
-        printf("rPiv:\n");
-        printStandardIntArray(rPiv, nPiv + 1);
     }
     
     //Allocate memory for Device Matrix Array
@@ -514,7 +587,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
         return EXIT_FAILURE;
     }
 
-    //FGL Here
+    //FGL algorithm here
     //
      
     

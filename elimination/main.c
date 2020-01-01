@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 	int fgl = 0;
 	int outputExecutionData = 0;
 	int sparsePrint = 0;
-	int roundFactor = 4;
+	int roundFactor = 6;
 
 	printf("------------------------------------------------------------\n");
 
