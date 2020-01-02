@@ -447,21 +447,21 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
     int* chosenPivots;
 
     float** abcdMatrixWhole;
+    int* aColPivLocations;
+
+    //float* testVectorHost;
+    //float* testVectorDevice;
 
     int i, j, k;
     //int rowColMax = new_max(rows, cols);
     int nPiv = 0;
 
-    
-
-
-    //Make the rows UNITARY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-    //FLG Analysis Phase (Algorithm 1.5 in the FGL paper)
+    //Hojnacki FGL
+    //=============================================================================================================
+    //FGL Analysis Phase (Algorithm 1.5 in the FGL paper)
     cPiv = (int *)malloc(cols * sizeof(int));
     rPiv = (int *)malloc(cols * sizeof(int));
+    aColPivLocations = (int *)malloc(rows * sizeof(int));
     chosenPivots = (int *)malloc(rows * sizeof(int));
 
     for (i = 0; i < cols; i++) {
@@ -471,8 +471,10 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
 
     for (k = 0; k < rows; k++) {
         chosenPivots[k] = 0;
+        aColPivLocations[k] = -1;
     }
 
+    //Identify the pivots in the matrix
     for (i = 0; i < rows; i++) {
         for (j = 0; j < cols; j++) {
             if(inputMatrix[i][j] != 0.0) {
@@ -491,16 +493,22 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
         }
     }
 
+    
+
     if(dontPrint == 0) {
+        printf("====================================================================================================================================\n");
+        printf("                                              Begin Analysis and Reconstruct ABCD Matrix\n");
+        printf("====================================================================================================================================\n");
         printf("cPiv:\n");
         printStandardIntArray(cPiv, cols);
         printf("rPiv:\n");
         printStandardIntArray(rPiv, cols);
-        printf("\nnPiv: %d\n\n", nPiv);
+        printf("nPiv: %d\n\n\n", nPiv);
         printf("Chosen Pivots: \n");
         printStandardIntArray(chosenPivots, rows);
     }
 
+    //ABCD Matrix Initialization
     abcdMatrixWhole = (float**) malloc (rows * sizeof(float*));
 
     for(i = 0; i < rows; i++) {
@@ -509,9 +517,14 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
 
     int counter = 0;
 
+    //ABCD Matrix Construction
+
+    //  A B
+    //  C D
+
     for(i = 0; i < cols; i++) {
-        printf("Counter: %d, rPiv[i]: %d, i: %d\n", counter, rPiv[i], i);
         if(rPiv[i] != -1) {
+            aColPivLocations[counter] = cPiv[i];
             for(j = 0; j < cols; j++) {
                 abcdMatrixWhole[counter][j] = inputMatrix[(rPiv[i])][j];
             }
@@ -519,8 +532,6 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
             counter++;
         } 
     }
-
-    printf("Counter: %d\n", counter);
 
     for(i = 0; i < cols; i++) {
         if(counter >= rows) {
@@ -535,20 +546,16 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
             counter++;
         }
     }
-    
 
-    printMatrixWithLimits(abcdMatrixWhole, rows, cols, 16);
-    printSparseMatrixArray(abcdMatrixWhole, rows, cols, 160);	
-    
-
-    /*
     if(dontPrint == 0) {
-        printf("cPiv:\n");
-        printStandardIntArray(cPiv, nPiv + 1);
-        printf("rPiv:\n");
-        printStandardIntArray(rPiv, nPiv + 1);
+        printMatrixWithLimits(abcdMatrixWhole, rows, cols, 16);
+        printSparseMatrixArray(abcdMatrixWhole, rows, cols, 160);
+        printf("A Column Pivot Locations: \n");
+        printStandardIntArray(aColPivLocations, rows);	
+        printf("====================================================================================================================================\n");
+        printf("                                                     Reduce A (read only) and do AXPY on B\n");
+        printf("====================================================================================================================================\n");
     }
-    */
 
     //Initialize Array for the Host Matrix
     hostMatrix = (float *)malloc(rows * cols * sizeof(float));
@@ -560,7 +567,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
     //Populate the Host Matrix Array in CuBLAS format
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
-            hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
+            hostMatrix[IDX2C(i,j,rows)] = abcdMatrixWhole[i][j];
         }
     }
     
@@ -587,11 +594,111 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
         return EXIT_FAILURE;
     }
 
+    //Scale every pivot row so each leading term in submatrix A has a leading term of 1
+    float scalar = 0.0f;
+    for(i = (nPiv - 1); i >= 0; i--) {
+        scalar = abcdMatrixWhole[i][(aColPivLocations[i])];    
+        scalar = powf(scalar, -1);    
+        
+
+        stat = cublasSscal (handle, cols, &scalar, &deviceMatrix[IDX2C(i,0,rows)], rows);
+        if (stat != CUBLAS_STATUS_SUCCESS) {
+            printf ("Device operation failed (row scalar * inverse of leading term)\n");
+            return EXIT_FAILURE;
+        }
+
+        //Because floats suck with inverses it will work to a certain degree of error to just set the pivot value to 1
+        float *inverseRounder = (float *)malloc(sizeof(float));
+        *inverseRounder = 1;
+        cudaMemcpy(&deviceMatrix[IDX2C(i,aColPivLocations[i],rows)], inverseRounder, sizeof(float), cudaMemcpyHostToDevice);
+    }
+
+    //Reduce submatrix A by itself starting from the bottom up
+    float *tempAxpyScal = (float *) malloc (sizeof(float));
+    for(i = (nPiv - 1); i > 0; i--) {
+        float *tempVector = (float *)malloc(rows * sizeof(float));
+
+        stat = cublasGetVector(rows, sizeof(float), &deviceMatrix[IDX2C(0,(aColPivLocations[i]),rows)], 1, tempVector, 1);
+        if (stat != CUBLAS_STATUS_SUCCESS) {
+            printf ("Data Vector download failed");
+            cudaFree (deviceMatrix);
+            cublasDestroy(handle);
+            return EXIT_FAILURE;
+        }
+        
+        for(j = i - 1; j >= 0; j--) {
+            if(tempVector[j] != 0.0f) {
+                *tempAxpyScal = -(tempVector[j]);
+
+                stat = cublasSaxpy(handle, cols, tempAxpyScal, &deviceMatrix[IDX2C(i,0,rows)], rows, &deviceMatrix[IDX2C(j,0,rows)], rows);
+                if (stat != CUBLAS_STATUS_SUCCESS) {
+                    printf ("Device operation failed (axpy)\n");
+                    return EXIT_FAILURE;
+                }
+            }
+        }
+
+        free(tempVector);
+    }
+
+    free(tempAxpyScal);
+    
+
+    //Reduce C by A
+    
+    /* Here */
+
+
+
+    //Analyze Whole Matrix and Reconstruct into ABCD 2.0
+    
+
+    
+
+    //Haven't gotten this far yet lol
+
+
+
+    
+
+    /*
+    if(dontPrint == 0) {
+        printf("cPiv:\n");
+        printStandardIntArray(cPiv, nPiv + 1);
+        printf("rPiv:\n");
+        printStandardIntArray(rPiv, nPiv + 1);
+    }
+    */
+
+    
+
     //FGL algorithm here
     //
+
+
+
+
+
      
-    
-    
+    /*
+    //Test Vector Download
+    testVectorHost = (float *)malloc(rows * sizeof(float));
+
+    //Download Vector from the Device -> Host
+    stat = cublasGetVector(rows, sizeof(float), &deviceMatrix[IDX2C(0,6,rows)], 1, testVectorHost, 1);
+    if (stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("Data Vector download failed");
+        cudaFree (deviceMatrix);
+        cublasDestroy(handle);
+        return EXIT_FAILURE;
+    }
+
+    for(i = 0; i < rows; i++) {
+        printf("Vector[%d]: %f\n", i, testVectorHost[i]);
+    }
+    */
+
+
 
 
     //Download Matrix from the Device -> Host
@@ -622,6 +729,16 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
     }
 
     free(hostMatrix);
+    free(cPiv);
+    free(rPiv);
+    free(chosenPivots);
+    free(aColPivLocations);
+
+    for(i = 0; i < rows; i++) {
+        free(abcdMatrixWhole[i]);
+    }
+
+    free(abcdMatrixWhole);
 
     return 0;
 }
