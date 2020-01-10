@@ -38,7 +38,8 @@ int main(int argc, char* argv[]) {
 	printf("-fgl                      (faugere-lachartre guassian elimination)\n");
 	printf("-output                   (outputs execution data to the 'ExecutionLogs' directory)\n");
 	printf("-round [precision(int)]   (floating point precision rounding factor)\n");
-	printf("-sparsePrint              (prints the matrix in a denser form to see structure of matrix)\n\n");
+	printf("-sparsePrint              (prints the matrix in a denser form to see structure of matrix)\n");
+	printf("-checkRREF                (checks matrix entry by entry to ensure RREF form [WARNING: may cause severe slowdowns])\n\n");
 
 	double time_elapsed = 0.0;
 	double time_elapsed_parse = 0.0;
@@ -53,6 +54,7 @@ int main(int argc, char* argv[]) {
 	int outputExecutionData = 0;
 	int sparsePrint = 0;
 	int roundFactor = 6;
+	int checkRref = 0;
 
 	printf("------------------------------------------------------------\n");
 
@@ -77,6 +79,10 @@ int main(int argc, char* argv[]) {
 			sparsePrint = 1;			
 		}
 
+		if(strcmp(argv[i], "-checkRREF") == 0) {
+			checkRref = 1;			
+		}
+
 		if(strcmp(argv[i], "-round") == 0) {
 			i++;
 			roundFactor = atoi(argv[i]);			
@@ -88,6 +94,7 @@ int main(int argc, char* argv[]) {
 	printf("-             [Reduced Row Echelon Form: %d]\n", rrefForm);
 	printf("-             [Faugere-Lachartre Guassian Elimination: %d]\n", fgl);
 	printf("-             [Output Execution Data -> ExecutionLogs: %d]\n", outputExecutionData);
+	printf("-             [Check RREF Form: %d]\n", checkRref);
 
 	printf("------------------------------------------------------------\n\n");
 	
@@ -125,7 +132,7 @@ int main(int argc, char* argv[]) {
 			if(rrefForm == 1) {
 				GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint, roundFactor);
 			} else if(fgl == 1) {
-				FGL_Algorithm(inputMatrix, rows, cols, dontPrint, roundFactor);
+				FGL_Algorithm(inputMatrix, rows, cols, dontPrint, roundFactor, checkRref);
 			} else {
 				GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
 			}

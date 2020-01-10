@@ -191,6 +191,8 @@ void printSparseMatrixArrayConverted (float* input, int rows, int cols, int line
         if(i >= lineLimit) {
             break;
         }
+
+        printf("%.5d ", i);
         
         for(j = 0; j < cols; j++) {
             if(j >= lineLimit) {
