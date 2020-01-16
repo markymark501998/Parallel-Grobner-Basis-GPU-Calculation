@@ -452,7 +452,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
     //float* testVectorHost;
     //float* testVectorDevice;
 
-    int i, j, k;
+    int i, j, k, m;
     //int rowColMax = new_max(rows, cols);
     int nPiv = 0;
 
@@ -615,8 +615,9 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
         cudaMemcpy(&deviceMatrix[IDX2C(i,aColPivLocations[i],rows)], inverseRounder, sizeof(float), cudaMemcpyHostToDevice);
     }
 
-    int tempFlag = 1;
+    int tempFlag = 0;
     int cnt3 = 0;
+    int cnt4 = 0;
 
     //Reduce submatrix A by itself starting from the bottom up
     float *tempAxpyScal = (float *) malloc (sizeof(float));
@@ -635,6 +636,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
             if(tempVector[j] != 0.0f) {
                 *tempAxpyScal = -(tempVector[j]);
                 
+                /*
                 if(tempFlag == 0) {
                     printf("==============================================BEFORE=======================================================\n");
                     stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
@@ -671,6 +673,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
 
                     printf("=====================================================================================================\n");
                 }
+                */
 
                 stat = cublasSaxpy(handle, cols, tempAxpyScal, &deviceMatrix[IDX2C(i,0,rows)], rows, &deviceMatrix[IDX2C(j,0,rows)], rows);
                 if (stat != CUBLAS_STATUS_SUCCESS) {
@@ -679,7 +682,8 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
                 }
 
                 if(tempFlag == 0) {
-                    printf("==============================================AFTER=======================================================\n");
+                    int foundFalseValue = 0;
+                    //printf("==============================================AFTER=======================================================\n");
                     stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
                     if (stat != CUBLAS_STATUS_SUCCESS) {
                         printf ("Data upload failed");
@@ -688,6 +692,20 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
                         return EXIT_FAILURE;
                     }
 
+                    for (k = 0; k < cols; k++) {
+                        if(!isnan(hostMatrix[IDX2C(j,k,rows)])) {
+                                                                      
+                        } else {
+                            printf("------------------------------------FOUND A BROKEN #-----------------------------------------------\n");
+                            printf("(i = %d)[%d,%d]=%f\n", i, j, k, hostMatrix[IDX2C(j,k,rows)]);
+                            foundFalseValue = 1;
+
+                            printf("---------------------------------------------------------------------------------------------------\n");
+                            break;
+                        }   
+                    }
+
+                    /*
                     printf("-----------------------------------------------------------------------------------\n");
 
                     for (k = 0; k < cols; k+=25) {
@@ -713,11 +731,15 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
                     printf("-----------------------------------------------------------------------------------\n");
 
                     printf("=====================================================================================================\n");
-
-                    //scanf("%d", &tempFlag);
+                    */                    
+                    if(foundFalseValue == 1) {
+                        //scanf("%d", &tempFlag);
+                    }                        
                 }
             }
         }
+
+        printf("i=%d\n", i);
 
         free(tempVector);
     }
@@ -978,32 +1000,6 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
                 if (stat != CUBLAS_STATUS_SUCCESS) {
                     printf ("Device operation failed (row scalar * inverse of leading term)\n");
                     return EXIT_FAILURE;
-                }
-
-                if(i % 25 == 0) {
-                    stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
-                    if (stat != CUBLAS_STATUS_SUCCESS) {
-                        printf ("Data upload failed");
-                        cudaFree (deviceMatrix);
-                        cublasDestroy(handle);
-                        return EXIT_FAILURE;
-                    }
-
-                    printf("=====================================================================================================\n");
-
-                    int cnt2 = 0;
-                    for(j = 0; j < cols; (j+=25)) {
-                        cnt2++;
-                        printf("[%d,%d]=%f ", i, j, hostMatrix[IDX2C(i,j,rows)]);
-
-                        if(cnt2 % 10 == 0) {
-                            printf("\n");
-                        }
-                    }
-
-                    scanf("%d", &cnt2);
-
-                    printf("=====================================================================================================\n");                    
                 }
         
                 //Because floats suck with inverses it will work to a certain degree of error to just set the pivot value to 1 so there are not cascading errors
