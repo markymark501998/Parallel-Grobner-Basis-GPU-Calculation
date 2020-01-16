@@ -66,7 +66,7 @@ int totalDegree(struct Monomial *term) {
  *  0: a = b
  */
 int mono_cmp(int *exp_a, int *exp_b, int d, enum MonomialOrdering order) {
-  int deg_a, deg_b;
+  int deg_a = 0, deg_b = 0;
   if (order == grevlex || order == grlex){
     for (int i=0; i<d; i++) {
       deg_a += exp_a[i];

@@ -184,9 +184,8 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
         printMonomial2(cmp, system->variables, system->dimension);
         printf(" = %d\n", diff);
 
-        //insert term into polynomial
         if ( diff > 0 )
-        {
+        { //monomial comes before cmp
           if (cmp == poly->head)
             poly->head = term;
           else
@@ -199,14 +198,14 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
           cmp->prev = term;
           break;
         } else if (diff < 0 && i == poly->size-1 )
-        {
+        { //monomial comes after the tail
           printf("TAIL..\n");
           term->prev = cmp;
           cmp->next = term;
           poly->tail = term;
           break;
         } else if (diff == 0)
-        {
+        { // monomial is the same as cmp
           printf("\nThere are duplicate monomials in a polynomial.");
           printMonomial2(term, system->variables, system->dimension);
           printf("\nResolving... adding coefficients: %f + %f", term->coeff, cmp->coeff);
@@ -216,7 +215,7 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
 
           break;
         } else
-        {
+        { // monomials location has not been found
           cmp = cmp->next;
         }
       }
