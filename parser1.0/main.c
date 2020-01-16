@@ -49,14 +49,13 @@ int main(int argc, char* argv[]) {
 		else
 		{
 			system = buildPolySystem(file, mono_order);
-
-			printPolySystem(system);
+			printPolySystem2(system);
 
 			printf("Building matrix");
 
 			struct Macaulay *matrix = buildMacaulay(system, mono_order);
 
-			printf("\nSuccess!!\nMatrix count: %d\n", matrix->mono_count);
+			printf("\nSuccess!!\n");
 
 			printMacaulay(matrix);
 

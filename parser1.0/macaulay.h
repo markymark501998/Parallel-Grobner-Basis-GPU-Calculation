@@ -3,7 +3,7 @@
 
 struct Macaulay {
   struct Mat_Monomial *mono_head, *mono_tail;
-  int dimension, mono_count, *variables;
+  int dimension, mono_count, size, *variables;
   float **m;
 };
 

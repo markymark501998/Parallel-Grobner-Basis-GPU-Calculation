@@ -45,7 +45,7 @@ int var_compare( const void* a, const void* b)
      else return 1;
 }
 
-struct PolyTerm *parseTerm(char *str) {
+struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_number) {
   struct PolyTerm *term = (struct PolyTerm *) malloc (sizeof(struct PolyTerm));
   int startSearchIndex=0;
   char *buffer;
@@ -72,6 +72,11 @@ struct PolyTerm *parseTerm(char *str) {
 
   term->monomial->num_vars=size;
 
+  term->exponents = (int *) malloc (sizeof(int)*dimension);
+  for (int i=0; i<dimension; i++)
+    term->exponents[i] = 0;
+  term->degree = 0;
+
   //construct the vars array
   term->monomial->vars = (struct VarItem **) malloc (size * sizeof(struct VarItem *));
   startIndex = indexOfStart(str, 'x', startSearchIndex);
@@ -84,22 +89,42 @@ struct PolyTerm *parseTerm(char *str) {
       length = index-startIndex-1;
     buffer = (char *) malloc (length*sizeof(char));
     substring(str, buffer, startIndex, length);
-
+    //printf("%s\n", buffer);
     struct VarItem *item = parseVar(buffer);
     free(buffer);
+
+    int dim_var = 0;
+    while (item->varNum != variables[dim_var] && dim_var < dimension)
+      dim_var++;
+
+
+    if (dim_var < dimension) {
+      if (term->exponents[dim_var] > 0)
+        printf("WARNING. Duplicate variables in monomial\n\tVariable: x%d\n\tLine: %d\n", item->varNum, line_number);
+      term->exponents[dim_var] += item->varPow;
+      term->degree += item->varPow;
+    } else {
+      printf("ERROR: variable out of dimension bounds\n\tVariable: x%d\n\tLine: %d\n", item->varNum, line_number);
+    }
+
+    //insert VarItem into monomial->vars -- deprecated
     for (int j=i; j>=0; j--) {
       if (j == 0) {
+      // at front of the array
         term->monomial->vars[j] = item;
         break;
-      } else if (item->varNum == term->monomial->vars[j-1]->varNum) {
-        printf("\n\nWARNING: Input contains duplicate variables in a monomial. x%d^%d and x%d^%d\n\n", term->monomial->vars[j-1]->varNum, term->monomial->vars[j-1]->varPow, item->varNum, item->varPow);
-        term->monomial->vars[j] = item;
-        break;
-      } else if (item->varNum < term->monomial->vars[j-1]->varNum) {
-        term->monomial->vars[j] = term->monomial->vars[j-1];
       } else {
-        term->monomial->vars[j] = item;
-        break;
+        if (item->varNum == term->monomial->vars[j-1]->varNum) {
+          term->monomial->vars[j] = item;
+          break;
+        } else if (item->varNum < term->monomial->vars[j-1]->varNum) {
+        // item comes before var at j-1
+          term->monomial->vars[j] = term->monomial->vars[j-1];
+        } else {
+        // item comes after var at j-1
+          term->monomial->vars[j] = item;
+          break;
+        }
       }
     }
 
@@ -111,8 +136,9 @@ struct PolyTerm *parseTerm(char *str) {
   return term;
 }
 
-struct Polynomial *parsePoly(char *str, int mono_order)
+struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
 {
+  int line_number = system->size+2;
   char* buffer;
   int startSearchIndex = 0;
 
@@ -136,62 +162,63 @@ struct Polynomial *parsePoly(char *str, int mono_order)
     buffer = (char*) malloc(termLength * sizeof(char));
     substring(str, buffer, startSearchIndex, termLength);
 
-    struct PolyTerm *term = parseTerm(buffer);
+    struct PolyTerm *term = parseTerm(buffer, system->variables, system->dimension, line_number);
     free(buffer);
 
     //insert term into polynomial
-    if (poly->size==0) {
+    if (poly->size==0)
+    {
       poly->head = term;
       poly->tail = term;
     } else {
       struct PolyTerm *cmp = poly->head;
-      int diff;
-      if (mono_order==0)
-        diff = grevlex_cmp(term->monomial, cmp->monomial);
-      else if (mono_order==1)
-        diff = grlex_cmp(term->monomial, cmp->monomial);
-      else
-        diff = lex_cmp(term->monomial, cmp->monomial);
+      int diff=0;
+      for (int i=0; i<poly->size; i++)
+      {
+        //compare the two monomials according to the monomial ordering
+        diff = mono_cmp(term->exponents, cmp->exponents, system->dimension, system->order);
 
-      while (cmp != poly->tail) {
-        if (diff > 0)
+        //debug printing
+        printMonomial2(term, system->variables, system->dimension);
+        printf(" - ");
+        printMonomial2(cmp, system->variables, system->dimension);
+        printf(" = %d\n", diff);
+
+        //insert term into polynomial
+        if ( diff > 0 )
         {
-          if(cmp == poly->head)
+          if (cmp == poly->head)
             poly->head = term;
           else
+          {
             cmp->prev->next = term;
+            term->prev = cmp->prev;
+          }
 
           term->next = cmp;
           cmp->prev = term;
+          break;
+        } else if (diff < 0 && i == poly->size-1 )
+        {
+          printf("TAIL..\n");
+          term->prev = cmp;
+          cmp->next = term;
+          poly->tail = term;
+          break;
+        } else if (diff == 0)
+        {
+          printf("\nThere are duplicate monomials in a polynomial.");
+          printMonomial2(term, system->variables, system->dimension);
+          printf("\nResolving... adding coefficients: %f + %f", term->coeff, cmp->coeff);
+
+          cmp->coeff += term->coeff;
+          poly->size--;
 
           break;
+        } else
+        {
+          cmp = cmp->next;
         }
-        cmp = cmp->next;
-      }
-
-      if ( diff > 0 )
-      {
-        if (cmp == poly->head)
-          poly->head = term;
-        else
-          cmp->prev->next = term;
-
-        term->next = cmp;
-        cmp->prev = term;
-      } else if (cmp == poly->tail && diff < 0 )
-      {
-        term->prev = cmp;
-        cmp->next = term;
-        poly->tail = term;
-      } else {
-        printf("\nThere are duplicate monomials in a polynomial.");
-        printTerm(term);
-        printf(" and ");
-        printTerm(cmp);
-        printf("\n\n");
-        term->prev = cmp;
-        cmp->next = term;
-        poly->tail = term;
       }
     }
     poly->size++;
@@ -212,6 +239,13 @@ int int_compare ( const void *aa, const void *bb ) {
 struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
   char str[MAXCHAR];
   struct PolynomialSystem *system = (struct PolynomialSystem*) malloc (sizeof(struct PolynomialSystem));
+
+  if (mono_order == 0)
+    system->order = grevlex;
+  else if (mono_order == 1)
+    system->order = grlex;
+  else
+    system->order = lex;
 
   system->size = -1;
 
@@ -254,7 +288,7 @@ struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
       qsort(system->variables, system->dimension, sizeof(int), int_compare);
 
     } else {
-      struct Polynomial *poly = parsePoly(str, mono_order);
+      struct Polynomial *poly = parsePoly(str, system);
 
       if (system->size == 0) {
         system->head = poly;
@@ -281,9 +315,8 @@ struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
             }
           }
           if (matched == 0) {
-            printf("WARNING: Variable number does not exist in defined dimesion\n\tLine: %d\n\tMonomial: ", i+4);
-            printTerm(term);
-            printf("\n");
+            printf("WARNING: Variable number does not exist in defined dimesion\n\tLine: %d\n\tVariable: ", i+4);
+            printf("x%d^%d\n", mono->vars[j]->varNum, mono->vars[j]->varPow);
           }
         }
         term = term->next;
