@@ -48,13 +48,11 @@ void printMonomial2(struct PolyTerm *term, int *variables, int dimension) {
   }
 }
 
-int totalDegree(struct Monomial *term) {
-  int total = 0;
-
-  for (int i = 0; i < term->num_vars; i++)
-    total += term->vars[i]->varPow;
-
-  return total;
+void printMonomial(int *deg, int *var, int n) {
+  for(int i = 0; i<n; i++) {
+    if (deg[i]>0)
+      printf("x%d^%d", var[i], deg[i]);
+  }
 }
 
 /*
@@ -86,55 +84,4 @@ int mono_cmp(int *exp_a, int *exp_b, int d, enum MonomialOrdering order) {
         return exp_b[i]-exp_a[i];
   }
   return 0;
-}
-
-// Outputs: 1 if a > b, -1 if a < b, 0 if equal according to grevlex,
-//  max(totalDegree), if equal, least-powered right-most variable
-int grevlex_cmp(struct Monomial *a, struct Monomial *b) {
-  int tda = totalDegree(a);
-  int tdb = totalDegree(b);
-
-  if (tda > tdb)
-    return 1;
-  else if (tda < tdb)
-    return -1;
-  else if (a->vars[a->num_vars-1]->varNum < b->vars[b->num_vars-1]->varNum)
-    return 1;
-  else if (a->vars[a->num_vars-1]->varNum > b->vars[b->num_vars-1]->varNum)
-    return -1;
-  else if (a->vars[a->num_vars-1]->varPow < b->vars[b->num_vars-1]->varPow)
-    return 1;
-  else if (a->vars[a->num_vars-1]->varPow > b->vars[b->num_vars-1]->varPow)
-    return -1;
-  else
-    return 0;
-}
-
-// Outputs: 1 if a > b, -1 if a < b, 0 if equal according to grevlex,
-//  max(totalDegree), if equal, least-powered right-most variable
-int grlex_cmp(struct Monomial *a, struct Monomial *b) {
-  int tda = totalDegree(a);
-  int tdb = totalDegree(b);
-
-  if (tda > tdb)
-    return 1;
-  else if (tda < tdb)
-    return -1;
-  else if (a->vars[0]->varNum < b->vars[0]->varNum)
-    return 1;
-  else if (a->vars[0]->varNum > b->vars[0]->varNum)
-    return -1;
-  else
-    return 0;
-}
-
-// Outputs: 1 if a > b, -1 if a < b, 0 if equal according to grevlex,
-//  max(totalDegree), if equal, least-powered right-most variable
-int lex_cmp(struct Monomial *a, struct Monomial *b) {
-  if (a->vars[0]->varNum < b->vars[0]->varNum)
-    return 1;
-  else if (a->vars[0]->varNum > b->vars[0]->varNum)
-    return -1;
-  else
-    return 0;
 }

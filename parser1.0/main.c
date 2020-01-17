@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 			system = buildPolySystem(file, mono_order);
 			printPolySystem2(system);
 
-			printf("Building matrix");
+			printf("Building matrix\n");
 
 			struct Macaulay *matrix = buildMacaulay(system, mono_order);
 

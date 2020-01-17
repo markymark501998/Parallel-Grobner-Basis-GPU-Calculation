@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "poly.h"
 #include "macaulay.h"
 
@@ -57,10 +58,7 @@ int mono_eq(int *exp_a, int *exp_b, int d) {
     }
   }
 
-  if (match == 0)
-    return 0;
-  else
-    return 1;
+  return match;
 }
 
 
@@ -69,6 +67,7 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
 
 //  set properties
   matrix->dimension = system->dimension;
+  matrix->degree = system->degree;
   matrix->mono_count = 0;
   matrix->size = system->size;
   matrix->variables = (int *) malloc (sizeof(int)*matrix->dimension);
@@ -77,44 +76,29 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
 
 // build list of monomials
   struct Polynomial * poly = system->head;
+
   for (int o=0; o<system->size; o++) {
     struct PolyTerm *term = poly->head;
+
     for (int p=0; p<poly->size; p++) {
-      struct Monomial *mono = term->monomial;
 
       //build Mat_Monomial
       struct Mat_Monomial *mat_mono = (struct Mat_Monomial *) malloc (sizeof(struct Mat_Monomial));
       mat_mono->total = term->degree;
       mat_mono->exponents = (int *) malloc (sizeof(int)*system->dimension);
-
-      int j, matched;
-      for (int i=0; i<system->dimension; i++) {
+      for (int i=0; i<system->dimension; i++)
         mat_mono->exponents[i] = term->exponents[i];
 
-        // deprecated --start
-        matched = 0;
-        for (j=0; j<mono->num_vars; j++) {
-          if (mono->vars[j]->varNum == system->variables[i]) {
-            matched = 1;
-            break;
-          }
-        }
-        if (matched == 0)
-          mat_mono->exponents[i] = 0;
-        else
-          mat_mono->exponents[i] = mono->vars[j]->varPow;
-        // deprecated --end
-      }
-
+      // add monomial to the monomial list
       if (matrix->mono_count == 0) {
-        // initialize the matrix headers
+        // first monomial, initialize the matrix headers
         matrix->mono_head = mat_mono;
         matrix->mono_tail = mat_mono;
         matrix->mono_count++;
       } else {
-        // check if the matrix header exists
+        // check if this is the location of the monomial
         struct Mat_Monomial *cmp = matrix->mono_head;
-        for(j=0; j<matrix->mono_count; j++) {
+        for(int j=0; j<matrix->mono_count; j++) {
           int diff=0;
           if (mono_order == 0)
             diff = grevlex_mat(mat_mono, cmp, matrix->dimension);
@@ -147,25 +131,71 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
           cmp = cmp->next;
         }
       }
-
+      // the next term will already be ordered < mat_mono
+      // previousMonomial = mat_mono;
       term = term->next;
     }
     poly = poly->next;
   }
 
+  // create the monomial_index
+  matrix->monomial_index = (int *) malloc (sizeof(int)*matrix->degree);
+  for (int i = 0; i<matrix->degree; i++)
+    matrix->monomial_index[i] = -1;
+
+  // build the monomial array and find degree start indices
+  matrix->monomials = (struct Monomial **) malloc (sizeof(struct Monomial *)*matrix->mono_count);
+
+  struct Mat_Monomial *mono = matrix->mono_head;
+
+  for (int i = 0; i<matrix->mono_count; i++) {
+    matrix->monomials[i] = (struct Monomial *) malloc (sizeof(struct Monomial));
+
+    matrix->monomials[i]->degree = mono->total;
+    matrix->monomials[i]->exponents = (int *) malloc (sizeof(int)*matrix->dimension);
+    memcpy(matrix->monomials[i]->exponents, mono->exponents, sizeof(int)*matrix->dimension);
+
+    if (i == 0)
+      matrix->monomial_index[i] = i;
+    else {
+      if (matrix->monomials[i]->degree < matrix->monomials[i-1]->degree)
+        matrix->monomial_index[matrix->degree-matrix->monomials[i]->degree] = i;
+    }
+
+    mono = mono->next;
+  }
+
+  for(int i = 0; i<matrix->degree; i++) {
+    if(matrix->monomial_index[i] == -1)
+      printf("\tNULL");
+    else {
+      printf("\t");
+      printMonomial(matrix->monomials[matrix->monomial_index[i]]->exponents, matrix->variables, matrix->dimension);
+    }
+  }
+  printf("\n");
+
+
+  // build float coeff matrix -- rows = polynomial, cols = monomial
   matrix->m = (float **) malloc (sizeof(float *)*system->size);
 
   poly = system->head;
   for (int i=0; i<system->size; i++)
   {
-    printf("Creating m[%d]\n", i);
+    //printf("Creating m[%d]\n", i);
+
+    // build row of coeff matrix
     matrix->m[i] = (float *) malloc (sizeof(float *)*matrix->mono_count);
 
-    struct Mat_Monomial *mat_mono = matrix->mono_head;
+    struct Mat_Monomial *mat_mono;
     struct PolyTerm *term = poly->head;
     int column = 0;
     for (int j=0; j<poly->size; j++)
     {
+      int match = 0;
+
+
+      /*
       while (mono_eq(term->exponents, mat_mono->exponents, matrix->dimension) == 0)
       {
         if (column >= matrix->mono_count-1)
@@ -189,6 +219,7 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
       matrix->m[i][column] = term->coeff;
 
       term = term->next;
+      */
     }
 
     poly = poly->next;
@@ -209,6 +240,7 @@ void printMacaulay(struct Macaulay *matrix) {
     }
     mono = mono->next;
   }
+  printf("\n");
 
   for (int i=0; i<matrix->size; i++) {
     for (int j=0; j<matrix->mono_count; j++)

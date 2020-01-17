@@ -17,13 +17,10 @@ struct PolyTerm {
 	int degree, *exponents;
 	struct PolyTerm *next, *prev;
 
-	// deprecated
-	struct Monomial *monomial;
 };
 
 struct Monomial {
-	int num_vars;
-	struct VarItem **vars;
+	int *exponents, degree;
 };
 
 struct VarItem {
@@ -33,8 +30,5 @@ struct VarItem {
 
 void printPolySystem2(struct PolynomialSystem *);
 void printMonomial2(struct PolyTerm *, int *, int);
-int grevlex_cmp(struct Monomial *, struct Monomial *);
-int grlex_cmp(struct Monomial *, struct Monomial *);
-int lex_cmp(struct Monomial *, struct Monomial *);
+void printMonomial(int *, int *, int);
 int mono_cmp(int *, int *, int, enum MonomialOrdering);
-int totalDegree(struct Monomial *);

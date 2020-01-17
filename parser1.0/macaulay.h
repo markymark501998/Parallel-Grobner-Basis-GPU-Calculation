@@ -3,7 +3,9 @@
 
 struct Macaulay {
   struct Mat_Monomial *mono_head, *mono_tail;
-  int dimension, mono_count, size, *variables;
+  int dimension, degree, mono_count, size, *variables;
+  struct Monomial **monomials;
+  int *monomial_index; // monomial_index[degree] = index in monomials of the first monomial of that degree
   float **m;
 };
 

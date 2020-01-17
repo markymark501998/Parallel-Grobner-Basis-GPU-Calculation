@@ -61,7 +61,7 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
   term->coeff = strtof(buffer, NULL);
   free(buffer);
 
-  term->monomial = (struct Monomial *) malloc (sizeof(struct Monomial));
+  //term->monomial = (struct Monomial *) malloc (sizeof(struct Monomial));
   int size = 0, startIndex = indexOfStart(str,'x', startSearchIndex);
 
   // calculate size of array: num_vars
@@ -70,7 +70,7 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
     startIndex = indexOfStart(str, 'x', startIndex+1);
   }
 
-  term->monomial->num_vars=size;
+  //term->monomial->num_vars=size;
 
   term->exponents = (int *) malloc (sizeof(int)*dimension);
   for (int i=0; i<dimension; i++)
@@ -78,7 +78,6 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
   term->degree = 0;
 
   //construct the vars array
-  term->monomial->vars = (struct VarItem **) malloc (size * sizeof(struct VarItem *));
   startIndex = indexOfStart(str, 'x', startSearchIndex);
 
   for (int i = 0; i < size; i++) {
@@ -89,7 +88,6 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
       length = index-startIndex-1;
     buffer = (char *) malloc (length*sizeof(char));
     substring(str, buffer, startIndex, length);
-    //printf("%s\n", buffer);
     struct VarItem *item = parseVar(buffer);
     free(buffer);
 
@@ -107,31 +105,8 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
       printf("ERROR: variable out of dimension bounds\n\tVariable: x%d\n\tLine: %d\n", item->varNum, line_number);
     }
 
-    //insert VarItem into monomial->vars -- deprecated
-    for (int j=i; j>=0; j--) {
-      if (j == 0) {
-      // at front of the array
-        term->monomial->vars[j] = item;
-        break;
-      } else {
-        if (item->varNum == term->monomial->vars[j-1]->varNum) {
-          term->monomial->vars[j] = item;
-          break;
-        } else if (item->varNum < term->monomial->vars[j-1]->varNum) {
-        // item comes before var at j-1
-          term->monomial->vars[j] = term->monomial->vars[j-1];
-        } else {
-        // item comes after var at j-1
-          term->monomial->vars[j] = item;
-          break;
-        }
-      }
-    }
-
     startIndex = index;
   }
-
-  qsort(term->monomial->vars, term->monomial->num_vars, sizeof(struct VarItem *), var_compare);
 
   return term;
 }
@@ -284,8 +259,6 @@ struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
         startSearchIndex = indexOfVarEnd + 1;
       }
 
-      qsort(system->variables, system->dimension, sizeof(int), int_compare);
-
     } else {
       struct Polynomial *poly = parsePoly(str, system);
 
@@ -298,28 +271,9 @@ struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
         system->tail = poly;
       }
 
-      int d = totalDegree(poly->head->monomial);
-      if (d > system->degree)
-        system->degree = d;
+      if (poly->head->degree > system->degree)
+        system->degree = poly->head->degree;
 
-      struct PolyTerm *term = poly->head;
-      for (int i=0; i<poly->size; i++) {
-        struct Monomial *mono = term->monomial;
-        for (int j=0; j<mono->num_vars; j++) {
-          int matched = 0;
-          for (int k=0; k<system->dimension; k++) {
-            if (mono->vars[j]->varNum == system->variables[k]) {
-              matched = 1;
-              break;
-            }
-          }
-          if (matched == 0) {
-            printf("WARNING: Variable number does not exist in defined dimesion\n\tLine: %d\n\tVariable: ", i+4);
-            printf("x%d^%d\n", mono->vars[j]->varNum, mono->vars[j]->varPow);
-          }
-        }
-        term = term->next;
-      }
     }
 
     system->size++;
