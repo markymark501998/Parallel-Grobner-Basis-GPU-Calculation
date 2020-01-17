@@ -184,7 +184,6 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
   poly = system->head;
   for (int i=0; i<system->size; i++)
   {
-    //printf("Creating m[%d]\n", i);
 
     // build row of coeff matrix
     matrix->m[i] = (float *) malloc (sizeof(float *)*matrix->mono_count);

@@ -49,28 +49,30 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
   struct PolyTerm *term = (struct PolyTerm *) malloc (sizeof(struct PolyTerm));
   int startSearchIndex=0;
   char *buffer;
-  int indexOfCoeffStart = indexOfStart(str, '[', startSearchIndex);
-  int indexOfCoeffEnd = indexOfStart(str, ']', startSearchIndex);
-  startSearchIndex = indexOfCoeffEnd;
 
-  int coeffLen = indexOfCoeffEnd - indexOfCoeffStart - 1;
+  if (str[0] == '[') {
+    int indexOfCoeffStart = indexOfStart(str, '[', startSearchIndex);
+    int indexOfCoeffEnd = indexOfStart(str, ']', startSearchIndex);
+    startSearchIndex = indexOfCoeffEnd;
 
-  buffer = (char*) malloc(coeffLen * sizeof(char));
-  substring(str, buffer, (indexOfCoeffStart + 1), coeffLen);
+    int coeffLen = indexOfCoeffEnd - indexOfCoeffStart - 1;
 
-  term->coeff = strtof(buffer, NULL);
-  free(buffer);
+    buffer = (char*) malloc(coeffLen * sizeof(char));
+    substring(str, buffer, (indexOfCoeffStart + 1), coeffLen);
 
-  //term->monomial = (struct Monomial *) malloc (sizeof(struct Monomial));
+    term->coeff = strtof(buffer, NULL);
+    free(buffer);
+  } else {
+    term->coeff = 1.0;
+  }
+
   int size = 0, startIndex = indexOfStart(str,'x', startSearchIndex);
 
-  // calculate size of array: num_vars
+  // get number of variables in monomial
   while (startIndex != -1) {
     size++;
     startIndex = indexOfStart(str, 'x', startIndex+1);
   }
-
-  //term->monomial->num_vars=size;
 
   term->exponents = (int *) malloc (sizeof(int)*dimension);
   for (int i=0; i<dimension; i++)
@@ -137,7 +139,7 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
     buffer = (char*) malloc(termLength * sizeof(char));
     substring(str, buffer, startSearchIndex, termLength);
 
-    struct PolyTerm *term = parseTerm(buffer, system->variables, system->dimension, line_number);
+    struct PolyTerm *term = parseTerm(trimwhitespace(buffer), system->variables, system->dimension, line_number);
     free(buffer);
 
     //insert term into polynomial
@@ -154,10 +156,10 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
         diff = mono_cmp(term->exponents, cmp->exponents, system->dimension, system->order);
 
         //debug printing
-        printMonomial2(term, system->variables, system->dimension);
-        printf(" - ");
-        printMonomial2(cmp, system->variables, system->dimension);
-        printf(" = %d\n", diff);
+        //printMonomial2(term, system->variables, system->dimension);
+        //printf(" - ");
+        //printMonomial2(cmp, system->variables, system->dimension);
+        //printf(" = %d\n", diff);
 
         if ( diff > 0 )
         { //monomial comes before cmp
@@ -174,7 +176,6 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
           break;
         } else if (diff < 0 && i == poly->size-1 )
         { //monomial comes after the tail
-          printf("TAIL..\n");
           term->prev = cmp;
           cmp->next = term;
           poly->tail = term;

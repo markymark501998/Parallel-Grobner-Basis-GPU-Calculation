@@ -71,7 +71,9 @@ int mono_cmp(int *exp_a, int *exp_b, int d, enum MonomialOrdering order) {
       deg_b += exp_b[i];
     }
   }
-  printf("\t%d - %d =%d\n",deg_a, deg_b, deg_a-deg_b);
+
+  //printf("\t%d - %d =%d\n",deg_a, deg_b, deg_a-deg_b);
+  
   if ((order == grevlex || order == grlex) && deg_a-deg_b != 0)
     return deg_a-deg_b;
   else if (order == grlex || order == lex) {
