@@ -22,15 +22,19 @@ struct VarItem *parseVar(char *str) {
   var->varNum = atoi(buffer);
   free(buffer);
 
-  bracketStart = indexOfStart(str, '[', startSearchIndex);
-  bracketEnd = indexOfStart(str, ']', startSearchIndex);
-  startSearchIndex = bracketEnd + 1;
-  numLength = bracketEnd - bracketStart - 1;
+  if(indexOf(str, '^') > -1) {
+    bracketStart = indexOfStart(str, '[', startSearchIndex);
+    bracketEnd = indexOfStart(str, ']', startSearchIndex);
+    startSearchIndex = bracketEnd + 1;
+    numLength = bracketEnd - bracketStart - 1;
 
-  buffer = (char*) malloc(numLength * sizeof(char));
-  substring(str, buffer, (bracketStart + 1), numLength);
-  var->varPow = atoi(buffer);
-  free(buffer);
+    buffer = (char*) malloc(numLength * sizeof(char));
+    substring(str, buffer, (bracketStart + 1), numLength);
+    var->varPow = atoi(buffer);
+    free(buffer);
+  } else {
+    var->varPow = 1;
+  }
 
   return var;
 }
