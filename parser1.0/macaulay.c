@@ -165,6 +165,8 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
     mono = mono->next;
   }
 
+  //  printing each monomial_index for validation
+/*
   for(int i = 0; i<matrix->degree; i++) {
     if(matrix->monomial_index[i] == -1)
       printf("\tNULL");
@@ -174,7 +176,7 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
     }
   }
   printf("\n");
-
+*/
 
   // build float coeff matrix -- rows = polynomial, cols = monomial
   matrix->m = (float **) malloc (sizeof(float *)*system->size);
@@ -192,36 +194,21 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
     int column = 0;
     for (int j=0; j<poly->size; j++)
     {
-      int match = 0;
+      int search_index = matrix->monomial_index[matrix->degree-term->degree];
 
-
-      /*
-      while (mono_eq(term->exponents, mat_mono->exponents, matrix->dimension) == 0)
-      {
-        if (column >= matrix->mono_count-1)
-        {
-          printf("ERROR: monomial out of bounds\n\tMonomial: ");
-          printMonomial2(term, matrix->variables, matrix->dimension);
-          printf("\n\tResetting...\n");
-
-          column = 0;
-          mat_mono = matrix->mono_head;
-
-          break;
-        }
-
-        matrix->m[i][column] = (float)0;
-
-        mat_mono = mat_mono->next;
-        column++;
+      while((mono_eq(matrix->monomials[search_index]->exponents, term->exponents, matrix->dimension) == 0) && matrix->monomials[search_index]->degree == term->degree) {
+        matrix->m[i][search_index] = 0;
+        search_index++;
       }
 
-      matrix->m[i][column] = term->coeff;
+      if (matrix->monomials[search_index]->degree == term->degree) {
+        matrix->m[i][search_index] = term->coeff;
+      } else {
+        printf("OHNO\n");
+      }
 
       term = term->next;
-      */
     }
-
     poly = poly->next;
   }
 
