@@ -35,7 +35,6 @@ void substring(char s[], char sub[], int p, int l) {
       sub[c] = s[p+c];
       c++;
    }
-   sub[c] = '\0';
 }
 
 char *trimwhitespace(char *str) {
