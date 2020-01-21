@@ -78,10 +78,12 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
     startIndex = indexOfStart(str, 'x', startIndex+1);
   }
 
-  term->exponents = (int *) malloc (sizeof(int)*dimension);
+  term->monomial = (struct Monomial *) malloc (sizeof(struct Monomial));
+
+  term->monomial->exponents = (int *) malloc (sizeof(int)*dimension);
   for (int i=0; i<dimension; i++)
-    term->exponents[i] = 0;
-  term->degree = 0;
+    term->monomial->exponents[i] = 0;
+  term->monomial->degree = 0;
 
   //construct the vars array
   startIndex = indexOfStart(str, 'x', startSearchIndex);
@@ -103,10 +105,10 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
 
 
     if (dim_var < dimension) {
-      if (term->exponents[dim_var] > 0)
+      if (term->monomial->exponents[dim_var] > 0)
         printf("WARNING. Duplicate variables in monomial\n\tVariable: x%d\n\tLine: %d\n", item->varNum, line_number);
-      term->exponents[dim_var] += item->varPow;
-      term->degree += item->varPow;
+      term->monomial->exponents[dim_var] += item->varPow;
+      term->monomial->degree += item->varPow;
     } else {
       printf("ERROR: variable out of dimension bounds\n\tVariable: x%d\n\tLine: %d\n", item->varNum, line_number);
     }
@@ -157,7 +159,7 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
       for (int i=0; i<poly->size; i++)
       {
         //compare the two monomials according to the monomial ordering
-        diff = mono_cmp(term->exponents, cmp->exponents, system->dimension, system->order);
+        diff = mono_cmp(term->monomial->exponents, cmp->monomial->exponents, system->dimension, system->order);
 
         //debug printing
         //printMonomial2(term, system->variables, system->dimension);
@@ -276,8 +278,8 @@ struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
         system->tail = poly;
       }
 
-      if (poly->head->degree > system->degree)
-        system->degree = poly->head->degree;
+      if (poly->head->monomial->degree > system->degree)
+        system->degree = poly->head->monomial->degree;
 
     }
 

@@ -10,7 +10,7 @@ struct Macaulay {
 };
 
 struct Mat_Monomial {
-  int *exponents, total;
+  struct Monomial *monomial;
   struct Mat_Monomial *next, *prev;
 };
 

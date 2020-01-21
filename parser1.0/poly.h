@@ -14,9 +14,8 @@ struct Polynomial {
 
 struct PolyTerm {
 	float coeff;
-	int degree, *exponents;
 	struct PolyTerm *next, *prev;
-
+	struct Monomial *monomial;
 };
 
 struct Monomial {

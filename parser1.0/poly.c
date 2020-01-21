@@ -39,10 +39,10 @@ void printPolySystem2(struct PolynomialSystem *system) {
 void printMonomial2(struct PolyTerm *term, int *variables, int dimension) {
   int count = 0;
   for (int i=0; i<dimension; i++) {
-    if (term->exponents[i] > 0) {
+    if (term->monomial->exponents[i] > 0) {
       if (count>0)
         printf("*");
-      printf("x%d^%d", variables[i], term->exponents[i]);
+      printf("x%d^%d", variables[i], term->monomial->exponents[i]);
       count++;
     }
   }
