@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "poly.h"
 
 void printPolySystem2(struct PolynomialSystem *system) {
@@ -55,6 +56,18 @@ void printMonomial(int *deg, int *var, int n) {
   }
 }
 
+struct Monomial *mono_copy(struct Monomial *mono, int d) {
+  struct Monomial *copy = (struct Monomial *) malloc (sizeof(struct Monomial *));
+
+  copy->degree = mono->degree;
+
+  copy->exponents = (int *) malloc (sizeof(int)*d);
+
+  memcpy(copy->exponents, mono->exponents, sizeof(int)*d);
+
+  return copy;
+}
+
 /*
  * General monomial compare
  * order = { 0: grevlex, 1: grlex, 2: lex }
@@ -73,7 +86,7 @@ int mono_cmp(int *exp_a, int *exp_b, int d, enum MonomialOrdering order) {
   }
 
   //printf("\t%d - %d =%d\n",deg_a, deg_b, deg_a-deg_b);
-  
+
   if ((order == grevlex || order == grlex) && deg_a-deg_b != 0)
     return deg_a-deg_b;
   else if (order == grlex || order == lex) {

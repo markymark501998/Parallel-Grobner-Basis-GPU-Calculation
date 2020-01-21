@@ -30,4 +30,5 @@ struct VarItem {
 void printPolySystem2(struct PolynomialSystem *);
 void printMonomial2(struct PolyTerm *, int *, int);
 void printMonomial(int *, int *, int);
+struct Monomial *mono_copy(struct Monomial *, int);
 int mono_cmp(int *, int *, int, enum MonomialOrdering);

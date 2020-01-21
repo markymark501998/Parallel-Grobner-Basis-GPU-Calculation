@@ -53,11 +53,19 @@ int main(int argc, char* argv[]) {
 
 			printf("Building matrix\n");
 
-			struct Macaulay *matrix = buildMacaulay(system, mono_order);
+			struct Macaulay *matrix = PolySystem2Macaulay(system);
 
 			printf("\nSuccess!!\n");
 
 			printMacaulay(matrix);
+
+			printf("\nGoing Back!!\n");
+
+			system = Macaulay2PolySystem(matrix);
+
+			printf("\nSuccess!!\n");
+
+			printPolySystem2(system);
 
 			//check failState
 			if(failState == 1)

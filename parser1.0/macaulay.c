@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "poly.h"
 #include "macaulay.h"
 
@@ -62,10 +61,11 @@ int mono_eq(int *exp_a, int *exp_b, int d) {
 }
 
 
-struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) {
+struct Macaulay *PolySystem2Macaulay(struct PolynomialSystem *system) {
   struct Macaulay *matrix = (struct Macaulay *) malloc (sizeof(struct Macaulay));
 
 //  set properties
+  matrix->order = system->order;
   matrix->dimension = system->dimension;
   matrix->degree = system->degree;
   matrix->mono_count = 0;
@@ -85,6 +85,10 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
       //build Mat_Monomial
       struct Mat_Monomial *mat_mono = (struct Mat_Monomial *) malloc (sizeof(struct Mat_Monomial));
 
+      mat_mono->monomial = mono_copy(term->monomial, system->dimension);
+
+/*
+
       mat_mono->monomial = (struct Monomial *) malloc (sizeof(struct Monomial));
 
       mat_mono->monomial->degree = term->monomial->degree;
@@ -92,6 +96,7 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
       mat_mono->monomial->exponents = (int *) malloc (sizeof(int)*system->dimension);
       memcpy(mat_mono->monomial->exponents, term->monomial->exponents, sizeof(int)*matrix->dimension);
 
+*/
       // add monomial to the monomial list
       if (matrix->mono_count == 0) {
         // first monomial, initialize the matrix headers
@@ -103,9 +108,9 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
         struct Mat_Monomial *cmp = matrix->mono_head;
         for(int j=0; j<matrix->mono_count; j++) {
           int diff=0;
-          if (mono_order == 0)
+          if (matrix->order == grevlex)
             diff = grevlex_mat(mat_mono, cmp, matrix->dimension);
-          else if (mono_order == 1)
+          else if (matrix->order == grlex)
             diff = grlex_mat(mat_mono, cmp, matrix->dimension);
           else
             diff = lex_mat(mat_mono, cmp, matrix->dimension);
@@ -220,6 +225,65 @@ struct Macaulay *buildMacaulay(struct PolynomialSystem *system, int mono_order) 
   }
 
   return matrix;
+}
+
+struct PolynomialSystem *Macaulay2PolySystem(struct Macaulay *matrix) {
+  // initialize system
+  struct PolynomialSystem *system = (struct PolynomialSystem *) malloc (sizeof(struct PolynomialSystem));
+
+  // set properties
+  system->order = matrix->order;
+  system->dimension = matrix->dimension;
+  system->degree = matrix->degree;
+  system->size = matrix->size;
+  system->variables = (int *) malloc (sizeof(int)*system->dimension);
+  for(int i=0; i<system->dimension; i++)
+    system->variables[i] = matrix->variables[i];
+
+  // build polynomials
+  for (int r = 0; r < system->size; r++) {
+    // initialize poly
+    struct Polynomial *poly = (struct Polynomial *) malloc (sizeof(struct Polynomial));
+
+    // set properties
+    poly->size = 0;
+
+    int c = 0;
+    while (c < matrix->mono_count) {
+      if (matrix->m[r][c] != 0) {
+        // create term
+        struct PolyTerm *term = (struct PolyTerm *) malloc (sizeof(struct PolyTerm));
+
+        term->coeff = matrix->m[r][c];
+
+        term->monomial = mono_copy(matrix->monomials[c], matrix->dimension);
+
+        if (poly->size == 0) {
+          poly->head = term;
+          poly->tail = term;
+        } else {
+          poly->tail->next = term;
+          term->prev = poly->tail;
+          poly->tail = term;
+        }
+
+        poly->size++;
+      }
+
+      c++;
+    }
+
+    if (r == 0) {
+      system->head = poly;
+      system->tail = poly;
+    } else {
+      system->tail->next = poly;
+      poly->prev = system->tail;
+      system->tail = poly;
+    }
+  }
+
+  return system;
 }
 
 

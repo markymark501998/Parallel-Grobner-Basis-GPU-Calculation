@@ -2,6 +2,7 @@
 // limits: left: x1^d, right: xn^d
 
 struct Macaulay {
+  enum MonomialOrdering order;
   struct Mat_Monomial *mono_head, *mono_tail;
   int dimension, degree, mono_count, size, *variables;
   struct Monomial **monomials;
@@ -14,7 +15,8 @@ struct Mat_Monomial {
   struct Mat_Monomial *next, *prev;
 };
 
-struct Macaulay *buildMacaulay(struct PolynomialSystem *, int);
+struct Macaulay *PolySystem2Macaulay(struct PolynomialSystem *);
+struct PolynomialSystem *Macaulay2PolySystem(struct Macaulay *);
 void printMacaulay(struct Macaulay *);
 int grevlex_mat(struct Mat_Monomial *, struct Mat_Monomial *, int);
 int grlex_mat(struct Mat_Monomial *, struct Mat_Monomial *, int);
