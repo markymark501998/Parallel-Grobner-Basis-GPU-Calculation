@@ -83,6 +83,32 @@ void printMatrixWithLimits(float **input, int rows, int cols, int limit) {
     printf("\n");
 }
 
+void printMatrixWithLimitsDouble(double **input, int rows, int cols, int limit) {
+    int i = 0;
+    int j = 0;
+
+    printf("Matrix (Display Limit = %d rows/columns):\n", limit);
+    printf("Rows: %d\n", rows);
+    printf("Columns: %d\n", cols);
+
+    if(rows > limit) {
+        rows = limit;
+    }
+
+    if(cols > limit) {
+        cols = limit;
+    }
+
+    for(i = 0; i < rows; i ++) {
+        for(j = 0; j < cols; j++) {
+            printf("%-11lf ", input[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\n");
+}
+
 void printCublasMatrixArray(float * input, int length) {
     int i;
     int counter = 0;
@@ -180,7 +206,95 @@ void printSparseMatrixArray (float** input, int rows, int cols, int lineLimit) {
     printf("\n\n");
 }
 
+void printSparseMatrixArrayDouble (double** input, int rows, int cols, int lineLimit) {
+    int i, j;
+    if(lineLimit == 0) {
+        lineLimit = 160;
+    }
+
+    printf("Sparse Matrix(lineLimit = %d): \n", lineLimit);
+    for(i = 0; i < rows; i++) {
+        if(i >= lineLimit) {
+            break;
+        }
+
+        printf("%.5d ", i);
+
+        for(j = 0; j < cols; j++) {
+            if(j >= lineLimit) {
+                break;
+            } 
+            
+            /*
+            if(input[i][j] == +0.0 || input[i][j] == -0.0) {
+                printf("-");
+            } else {
+                printf("*");
+            }
+            */
+
+            if(input[i][j] > 0) {
+                if(input[i][j] > 0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
+            } else {
+                if(input[i][j] < -0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
+            }
+        }
+
+        printf("\n");
+    }
+
+    printf("\n\n");
+}
+
 void printSparseMatrixArrayConverted (float* input, int rows, int cols, int lineLimit) {
+    int i, j;
+    if(lineLimit == 0) {
+        lineLimit = 100;
+    }
+
+    printf("Sparse Matrix(converted)(lineLimit = %d): \n", lineLimit);
+    for(i = 0; i < rows; i++) {
+        if(i >= lineLimit) {
+            break;
+        }
+
+        printf("%.5d ", i);
+        
+        for(j = 0; j < cols; j++) {
+            if(j >= lineLimit) {
+                break;
+            }
+
+            if(input[IDX2C(i,j,rows)] > 0) {
+                if(input[IDX2C(i,j,rows)] > 0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
+            } else {
+                if(input[IDX2C(i,j,rows)] < -0.00001) {
+                    printf("*");
+                } else {
+                    printf("-");
+                }
+            }
+        }
+
+        printf("\n");
+    }
+
+    printf("\n\n");
+}
+
+void printSparseMatrixArrayConvertedDouble (double* input, int rows, int cols, int lineLimit) {
     int i, j;
     if(lineLimit == 0) {
         lineLimit = 100;
