@@ -3,7 +3,7 @@
 #include <string.h>
 #include "common.h"
 #include <time.h>
-#define MAXCHAR 100000
+#define MAXCHAR 300000
 
 void CreateExecutionLog (double totalTime, double parsingTime, double deviceTime) {
 	FILE *fptr;
@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
 	double time_elapsed_device = 0.0;
 	int i, j;
 	float** inputMatrix;
+	double** inputMatrixDouble;
 	int rows = 0;
 	int cols = 0;
 	int dontPrint = 1;
@@ -105,9 +106,10 @@ int main(int argc, char* argv[]) {
 	}
 	else
 	{
-		FILE *file = fopen( argv[1], "r" );
+		//FILE *file = fopen( argv[1], "r" );
+		FILE *fileDouble = fopen( argv[1], "r" );
 
-		if ( file == 0 )
+		if ( fileDouble == 0 )
 		{
 			printf( "Could not open the file\n" );
 		}
@@ -116,33 +118,37 @@ int main(int argc, char* argv[]) {
 			clock_t begin = clock();
 			clock_t beginParse = clock();
 			
-			inputMatrix = parseInputMatrix(file, MAXCHAR, &rows, &cols);
-			fclose(file);	
+			//inputMatrix = parseInputMatrix(file, MAXCHAR, &rows, &cols);
+			inputMatrixDouble = parseInputMatrixDouble(fileDouble, MAXCHAR, &rows, &cols);
+			//fclose(file);	
+			fclose(fileDouble);	
 
 			clock_t endParse = clock();	
 			clock_t beginDeivce = clock();
 
 			printf("Input:\n");
 			if (sparsePrint == 0) {
-				printMatrixWithLimits(inputMatrix, rows, cols, 16);	
+				printMatrixWithLimitsDouble(inputMatrixDouble, rows, cols, 16);	
 			} else {
-				printSparseMatrixArray(inputMatrix, rows, cols, 160);
+				printSparseMatrixArrayDouble(inputMatrixDouble, rows, cols, 160);
 			}
 
 			if(rrefForm == 1) {
-				GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint, roundFactor);
+				//GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint, roundFactor);
+				printf("Not supported at the moment!\n");
 			} else if(fgl == 1) {
-				FGL_Algorithm(inputMatrix, rows, cols, dontPrint, roundFactor, checkRref);
+				FGL_Algorithm_Double(inputMatrixDouble, rows, cols, dontPrint, roundFactor, checkRref);
 			} else {
-				GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
+				//GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
+				printf("Not supported at the moment!\n");
 			}
 
 			clock_t endDeivce = clock();
 			printf("Output:\n");
 			if (sparsePrint == 0) {
-				printMatrixWithLimits(inputMatrix, rows, cols, 16);	
+				printMatrixWithLimitsDouble(inputMatrixDouble, rows, cols, 16);	
 			} else {
-				printSparseMatrixArray(inputMatrix, rows, cols, 160);
+				printSparseMatrixArrayDouble(inputMatrixDouble, rows, cols, 160);
 			}
 
 			clock_t end = clock();

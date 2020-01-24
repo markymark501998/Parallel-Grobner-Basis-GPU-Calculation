@@ -452,7 +452,7 @@ int FGL_Algorithm (float** inputMatrix, int rows, int cols, int dontPrint, int r
     //float* testVectorHost;
     //float* testVectorDevice;
 
-    int i, j, k, m, n;
+    int i, j, k;
     //int rowColMax = new_max(rows, cols);
     int nPiv = 0;
 
@@ -1392,7 +1392,7 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
     //double* testVectorHost;
     //double* testVectorDevice;
 
-    int i, j, k, m, n;
+    int i, j, k;
     //int rowColMax = new_max(rows, cols);
     int nPiv = 0;
 
@@ -1580,208 +1580,19 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
             return EXIT_FAILURE;
         }
 
-        printf("---------------------------------Culprit Row(31th index row) i = %d, j = %d----------------------------------\n", i, j);
-
-        //cnt3 = 0;
-        for(k = 0; k < cols; k+=60) {
-            printf("[%d, %d]=%f", 31, k, hostMatrix[IDX2C(31,k,rows)]);
-            cnt3++;
-
-            if(cnt3 % 20 == 0) {
-                printf("\n");
-            }
-        }
-
-        printf("\n----------------------------------------------------------------------------------------------\n");
-
-        if(cnt4 >= 0) {
-            printf("Enter negative number to skip printing iterations: ");
-            scanf("%d", &cnt4);
-        } else {
-            cnt4++;
-        }
-        
         for(j = i - 1; j >= 0; j--) {
             if(tempVector[j] != 0.0f) {
                 *tempAxpyScal = -(tempVector[j]);
-                
-                /*
-                if(tempFlag == 0) {
-                    printf("==============================================BEFORE=======================================================\n");
-                    stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
-                    if (stat != CUBLAS_STATUS_SUCCESS) {
-                        printf ("Data upload failed");
-                        cudaFree (deviceMatrix);
-                        cublasDestroy(handle);
-                        return EXIT_FAILURE;
-                    }
-
-                    printf("-----------------------------------------------------------------------------------\n");
-
-                    for (k = 0; k < cols; k+=25) {
-                        printf("[%d,%d]=%f", i, k, hostMatrix[IDX2C(i,k,rows)]);
-
-                        cnt3++;
-                        if(cnt3 % 20 == 0) {
-                            printf("\n");
-                        }
-                    }
-
-                    printf("-----------------------------------------------------------------------------------\n");
-
-                    for (k = 0; k < cols; k+=25) {
-                        printf("[%d,%d]=%f", j, k, hostMatrix[IDX2C(j,k,rows)]); 
-
-                        cnt3++;
-                        if(cnt3 % 20 == 0) {
-                            printf("\n");
-                        }
-                    }
-
-                    printf("-----------------------------------------------------------------------------------\n");
-
-                    printf("=====================================================================================================\n");
-                }
-                */
 
                 stat = cublasDaxpy(handle, cols, tempAxpyScal, &deviceMatrix[IDX2C(i,0,rows)], rows, &deviceMatrix[IDX2C(j,0,rows)], rows);
                 if (stat != CUBLAS_STATUS_SUCCESS) {
                     printf ("Device operation failed (axpy)\n");
                     return EXIT_FAILURE;
                 }
-
-                if(tempFlag == 1) {
-                    int foundFalseValue = 0;
-                    //printf("==============================================AFTER=======================================================\n");
-                    stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
-                    if (stat != CUBLAS_STATUS_SUCCESS) {
-                        printf ("Data upload failed");
-                        cudaFree (deviceMatrix);
-                        cublasDestroy(handle);
-                        return EXIT_FAILURE;
-                    }
-
-                    for (k = 0; k < cols; k++) {
-                        if(!isnan(hostMatrix[IDX2C(j,k,rows)])) {
-                                                                      
-                        } else {
-                            printf("------------------------------------FOUND A BROKEN #-----------------------------------------------\n");
-                            printf("(i = %d)[%d,%d]=%f\n", i, j, k, hostMatrix[IDX2C(j,k,rows)]);
-                            foundFalseValue = 1;
-
-                            printf("---------------------------------------------------------------------------------------------------\n");
-                            break;
-                        }   
-                    }
-
-                    /*
-                    printf("-----------------------------------------------------------------------------------\n");
-
-                    for (k = 0; k < cols; k+=25) {
-                        printf("[%d,%d]=%f", i, k, hostMatrix[IDX2C(i,k,rows)]);
-
-                        cnt3++;
-                        if(cnt3 % 20 == 0) {
-                            printf("\n");
-                        }
-                    }
-
-                    printf("-----------------------------------------------------------------------------------\n");
-
-                    for (k = 0; k < cols; k+=25) {
-                        printf("[%d,%d]=%f", j, k, hostMatrix[IDX2C(j,k,rows)]);
-
-                        cnt3++;
-                        if(cnt3 % 20 == 0) {
-                            printf("\n");
-                        }
-                    }
-
-                    printf("-----------------------------------------------------------------------------------\n");
-
-                    printf("=====================================================================================================\n");
-                    */                    
-                    if(foundFalseValue == 1) {
-                        //scanf("%d", &tempFlag);
-                    }                        
-                }
             }
         }
-
-        printf("i=%d\n", i);
 
         free(tempVector);
-    }
-
-    if(dontPrint == 0) {
-        //Download Matrix from the Device -> Host
-        
-        stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
-        if (stat != CUBLAS_STATUS_SUCCESS) {
-            printf ("Data upload failed");
-            cudaFree (deviceMatrix);
-            cublasDestroy(handle);
-            return EXIT_FAILURE;
-        }
-        
-
-        //printf("Post Scaling - Resultant Matrix:\n");
-        //printSparseMatrixArrayConverted(hostMatrix, rows, cols, 160);
-
-        /*
-        printf("Contents\n");
-        printf("=====================================================================================================\n");
-        int cnt2 = 0;
-        for(i  = 0; i < cols; i++) {
-            cnt2++;
-            if(cnt2 > 200) {
-                break;
-            }
-
-            printf("[%d,%d]=%f ", 4, i, hostMatrix[IDX2C(4,i,rows)]);
-
-            if(cnt2 % 20 == 0) {
-                printf("\n");
-            }
-        }
-        printf("=====================================================================================================\n");
-        */
-        
-        printf("Contents - Post 1st A self reduction\n");
-        printf("=====================================================================================================\n");
-        int cnt2 = 0;
-        for(i  = 0; i < rows; (i+=25)) {
-            printf("=====================================================================================================\n");
-            cnt2 = 0;
-            for(j = 0; j < cols; (j+=25)) {
-                cnt2++;
-                printf("[%d,%d]=%f ", i, j, hostMatrix[IDX2C(i,j,rows)]);
-
-                if(cnt2 % 10 == 0) {
-                    printf("\n");
-                }
-            }
-            printf("=====================================================================================================\n");
-            printf("Enter # to continue or CHAR to break this logic and move on\n");
-            scanf("%d", &cnt2);  
-            
-            if(cnt2 == 66) {
-                while(cnt2 == 66) {
-                    int x, y;
-                    printf("Enter X: ");
-                    scanf("%d", &x);
-                    printf("Enter Y: ");
-                    scanf("%d", &y);
-
-                    printf("[%d,%d]=%f\n", x, y, hostMatrix[IDX2C(x,y,rows)]);
-                    printf("Enter 66 to lookup another value or other # to continue\n");
-                    scanf("%d", &cnt2);
-                }
-                
-            }
-        }
-        printf("=====================================================================================================\n");
-        
     }
 
     if(dontPrint == 0) {
@@ -1990,61 +1801,6 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
 
             printf("Post Scaling - Resultant Matrix:\n");
             printSparseMatrixArrayConvertedDouble(hostMatrix, rows, cols, 160);
-
-            /*
-            printf("Contents\n");
-            printf("=====================================================================================================\n");
-            int cnt2 = 0;
-            for(i  = 0; i < cols; i++) {
-                cnt2++;
-                if(cnt2 > 200) {
-                    break;
-                }
-
-                printf("[%d,%d]=%f ", 4, i, hostMatrix[IDX2C(4,i,rows)]);
-
-                if(cnt2 % 20 == 0) {
-                    printf("\n");
-                }
-            }
-            printf("=====================================================================================================\n");
-            */
-            /*
-            printf("Contents\n");
-            printf("=====================================================================================================\n");
-            int cnt2 = 0;
-            for(i  = 0; i < rows; (i+=25)) {
-                printf("=====================================================================================================\n");
-                cnt2 = 0;
-                for(j = 0; j < cols; (j+=25)) {
-                    cnt2++;
-                    printf("[%d,%d]=%f ", i, j, hostMatrix[IDX2C(i,j,rows)]);
-
-                    if(cnt2 % 10 == 0) {
-                        printf("\n");
-                    }
-                }
-                printf("=====================================================================================================\n");
-                printf("Enter # to continue or CHAR to break this logic and move on\n");
-                scanf("%d", &cnt2);  
-                
-                if(cnt2 == 66) {
-                    while(cnt2 == 66) {
-                        int x, y;
-                        printf("Enter X: ");
-                        scanf("%d", &x);
-                        printf("Enter Y: ");
-                        scanf("%d", &y);
-
-                        printf("[%d,%d]=%f", x, y, hostMatrix[IDX2C(x,y,rows)]);
-                        printf("Enter 66 to lookup another value or other # to continue\n");
-                        scanf("%d", &cnt2);
-                    }
-                    
-                }
-            }
-            printf("=====================================================================================================\n");
-            */
         }
     
         //Reduce submatrix A by itself starting from the bottom up
@@ -2118,114 +1874,11 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
     
         free(tempAxpyScal);
 
-        if(dontPrint == 0) {
-            //Download Matrix from the Device -> Host
-            stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
-            if (stat != CUBLAS_STATUS_SUCCESS) {
-                printf ("Data upload failed");
-                cudaFree (deviceMatrix);
-                cublasDestroy(handle);
-                return EXIT_FAILURE;
-            }
-
-            printf("Finished Iteration Step - Resultant Matrix:\n");
-            printSparseMatrixArrayConvertedDouble(hostMatrix, rows, cols, 160);
-        
-
-            /*
-            //DELETE THIS STUFF
-            int tempCount = 0;
-            for(i = 0; i < rows; i++) {
-                for(j = 0; j < cols; j++) {
-                    tempCount++;
-                    printf("[%d,%d] %f ", i, j, hostMatrix[IDX2C(i,j,rows)]);
-
-                    if(tempCount % 20 == 0) {
-                        printf("\n");
-                    }
-                }
-
-                int test = 0;
-                scanf("%d", &test);
-            }            
-            */
-
-            tempCounter++;
-            
-            if(tempCounter >= 2) {
-                break;
-            }                
-        }
-
         if(doneFlag == 1 || oldNPiv == nPiv) {
         //if(doneFlag == 1) {
             break;
         }
     }
-    
-    //OR since there are no new pivots. Do one iteration
-    
-    
-    
-    /*
-    //Check Last Row and do Final Reductions
-
-    double *tempVector = (double *)malloc(rows * sizeof(double));
-    
-    stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,(aColPivLocations[i]),rows)], 1, tempVector, 1);
-    if (stat != CUBLAS_STATUS_SUCCESS) {
-        printf ("Data Vector download failed");
-        cudaFree (deviceMatrix);
-        cublasDestroy(handle);
-        return EXIT_FAILURE;
-    }
-    */
-
-    
-
-
-
-    
-
-    /*
-    if(dontPrint == 0) {
-        printf("cPiv:\n");
-        printStandardIntArray(cPiv, nPiv + 1);
-        printf("rPiv:\n");
-        printStandardIntArray(rPiv, nPiv + 1);
-    }
-    */
-
-    
-
-    //FGL algorithm here
-    //
-
-
-
-
-
-     
-    /*
-    //Test Vector Download
-    testVectorHost = (double *)malloc(rows * sizeof(double));
-
-    //Download Vector from the Device -> Host
-    stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,6,rows)], 1, testVectorHost, 1);
-    if (stat != CUBLAS_STATUS_SUCCESS) {
-        printf ("Data Vector download failed");
-        cudaFree (deviceMatrix);
-        cublasDestroy(handle);
-        return EXIT_FAILURE;
-    }
-
-    for(i = 0; i < rows; i++) {
-        printf("Vector[%d]: %f\n", i, testVectorHost[i]);
-    }
-    */
-
-
-
 
     //Download Matrix from the Device -> Host
     stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
