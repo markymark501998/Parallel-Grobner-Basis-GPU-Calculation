@@ -1490,8 +1490,8 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
     }
 
     if(dontPrint == 0) {
-        printMatrixWithLimits(abcdMatrixWhole, rows, cols, 16);
-        printSparseMatrixArray(abcdMatrixWhole, rows, cols, 160);
+        printMatrixWithLimitsDouble(abcdMatrixWhole, rows, cols, 16);
+        printSparseMatrixArrayDouble(abcdMatrixWhole, rows, cols, 160);
         printf("A Matrix - Column Pivot Locations: \n");
         printStandardIntArray(aColPivLocations, rows);	
         printf("====================================================================================================================================\n");
@@ -1933,9 +1933,9 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
             printf("A Matrix Column Pivot Locations\n");
             printStandardIntArray(aColPivLocations, rows);
             //printSparseMatrixArray(abcdMatrixWhole, rows, cols, 160);
-            printSparseMatrixArrayConverted(hostMatrix, rows, cols, 160);
+            printSparseMatrixArrayConvertedDouble(hostMatrix, rows, cols, 160);
             printf("ABCD Matrix: \n");
-            printSparseMatrixArray(abcdMatrixWhole, rows, cols, 160);
+            printSparseMatrixArrayDouble(abcdMatrixWhole, rows, cols, 160);
         }
         
         //====================================================================================================================================
@@ -1989,7 +1989,7 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
             }
 
             printf("Post Scaling - Resultant Matrix:\n");
-            printSparseMatrixArrayConverted(hostMatrix, rows, cols, 160);
+            printSparseMatrixArrayConvertedDouble(hostMatrix, rows, cols, 160);
 
             /*
             printf("Contents\n");
@@ -2086,7 +2086,7 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
             }
 
             printf("Post A Submatrix Reduction - Resultant Matrix:\n");
-            printSparseMatrixArrayConverted(hostMatrix, rows, cols, 160);
+            printSparseMatrixArrayConvertedDouble(hostMatrix, rows, cols, 160);
         }
 
         for (i = 0; i < nPiv; i++) {
@@ -2129,7 +2129,7 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
             }
 
             printf("Finished Iteration Step - Resultant Matrix:\n");
-            printSparseMatrixArrayConverted(hostMatrix, rows, cols, 160);
+            printSparseMatrixArrayConvertedDouble(hostMatrix, rows, cols, 160);
         
 
             /*
