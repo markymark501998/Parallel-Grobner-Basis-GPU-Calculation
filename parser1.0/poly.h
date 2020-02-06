@@ -1,22 +1,25 @@
+enum MonomialOrdering {grevlex, grlex, lex};
+
 struct PolynomialSystem {
-	struct Polynomial *head;
-	struct Polynomial *tail;
-	int size;
+	struct Polynomial *head, *tail;
+	int *variables, dimension, degree, size;
+	enum MonomialOrdering order;
 };
 
 struct Polynomial {
-	struct PolyTerm *head;
-	struct PolyTerm *tail;
-	struct Polynomial *next;
-  struct Polynomial *prev;
+	int size;
+	struct PolyTerm *head, *tail;
+	struct Polynomial *next, *prev;
 };
 
 struct PolyTerm {
 	float coeff;
-	int num_vars;
-	struct VarItem **vars;
-	struct PolyTerm *next;
-  struct PolyTerm *prev;
+	struct PolyTerm *next, *prev;
+	struct Monomial *monomial;
+};
+
+struct Monomial {
+	int *exponents, degree;
 };
 
 struct VarItem {
@@ -24,9 +27,8 @@ struct VarItem {
 	int varPow;
 };
 
-void printPolySystem(struct PolynomialSystem *);
-void printTerm(struct PolyTerm *);
-void printPoly(struct Polynomial *);
-int grevlex_cmp(struct PolyTerm *, struct PolyTerm *);
-int grlex_cmp(struct PolyTerm *, struct PolyTerm *);
-int lex_cmp(struct PolyTerm *, struct PolyTerm *);
+void printPolySystem2(struct PolynomialSystem *);
+void printMonomial2(struct PolyTerm *, int *, int);
+void printMonomial(int *, int *, int);
+struct Monomial *mono_copy(struct Monomial *, int);
+int mono_cmp(int *, int *, int, enum MonomialOrdering);
