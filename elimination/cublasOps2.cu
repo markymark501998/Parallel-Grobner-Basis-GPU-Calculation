@@ -12,7 +12,7 @@ extern "C" {
 }
 
 extern "C"
-int F5_GuassianElimination (double ** inputMatrix, int rows, int cols, int dontPrint, int checkRef) {
+int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int dontPrint, int checkRef) {
     double *hostMatrix = 0;
     double *deviceMatrix = 0;
     cudaError_t cudaStat;

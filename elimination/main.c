@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 			fclose(fileDouble);	
 
 			clock_t endParse = clock();	
-			clock_t beginDeivce = clock();
+			clock_t beginDeivce = clock(); 
 
 			printf("Input:\n");
 			if (sparsePrint == 0) {
@@ -139,7 +139,7 @@ int main(int argc, char* argv[]) {
 				printf("Not supported at the moment!\n");
 			} else if(fgl == 1) {
 				//FGL_Algorithm_Double(inputMatrixDouble, rows, cols, dontPrint, roundFactor, checkRref);
-				F5_GuassianElimination(inputMatrixDouble, rows, cols, dontPrint, checkRref);
+				F4_5_GuassianElimination(inputMatrixDouble, rows, cols, dontPrint, checkRref);
 			} else {
 				//GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
 				printf("Not supported at the moment!\n");
