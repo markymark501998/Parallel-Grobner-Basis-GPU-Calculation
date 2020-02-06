@@ -120,6 +120,7 @@ int main(int argc, char* argv[]) {
 			
 			//inputMatrix = parseInputMatrix(file, MAXCHAR, &rows, &cols);
 			inputMatrixDouble = parseInputMatrixDouble(fileDouble, MAXCHAR, &rows, &cols);
+			
 			//fclose(file);	
 			fclose(fileDouble);	
 
@@ -137,7 +138,8 @@ int main(int argc, char* argv[]) {
 				//GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint, roundFactor);
 				printf("Not supported at the moment!\n");
 			} else if(fgl == 1) {
-				FGL_Algorithm_Double(inputMatrixDouble, rows, cols, dontPrint, roundFactor, checkRref);
+				//FGL_Algorithm_Double(inputMatrixDouble, rows, cols, dontPrint, roundFactor, checkRref);
+				F5_GuassianElimination(inputMatrixDouble, rows, cols, dontPrint, checkRref);
 			} else {
 				//GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
 				printf("Not supported at the moment!\n");

@@ -12,6 +12,148 @@ extern "C" {
 }
 
 extern "C"
+int F5_GuassianElimination (double ** inputMatrix, int rows, int cols, int dontPrint, int checkRef) {
+    double *hostMatrix = 0;
+    double *deviceMatrix = 0;
+    cudaError_t cudaStat;
+	cublasStatus_t stat;
+    cublasHandle_t handle;
+
+    int* cPiv;
+    int* rPiv;
+    int* chosenPivots;
+    int* aColPivLocations;
+
+    int i, j, k, c, r;
+    int nPiv = 0;
+
+    cPiv = (int *)malloc(cols * sizeof(int));
+    rPiv = (int *)malloc(cols * sizeof(int));
+    aColPivLocations = (int *)malloc(rows * sizeof(int));
+    chosenPivots = (int *)malloc(rows * sizeof(int)); 
+
+    if(dontPrint == 0) {
+        printf("F4-5 Guassian Elimination\n");
+        printf("====================================================================================================================================\n");
+        printf("                                              Begin Analysis and Construct ABCD Matrix\n");
+        printf("====================================================================================================================================\n");
+    }
+
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    for (i = 0; i < cols; i++) {
+        cPiv[i] = -1;
+        rPiv[i] = -1;
+    }
+
+    for (k = 0; k < rows; k++) {
+        chosenPivots[k] = 0;
+        aColPivLocations[k] = -1;
+    }
+
+    //Identify the pivots in the matrix
+    for (i = 0; i < rows; i++) {
+        for (j = 0; j < cols; j++) {
+            if(inputMatrix[i][j] != 0.0) {
+                if(cPiv[j] == -1) {
+                    //No pivot yet since the entry is -1, make this entry a pivot col/row
+
+                    cPiv[j] = j;
+                    rPiv[j] = i;
+                    chosenPivots[i] = 1;
+
+                    nPiv += 1;
+                }
+
+                //Instead of breaking here...set a flag and check for future pivots
+                break;
+            }
+        }
+    }
+
+    if(dontPrint == 0) {
+        printf("cPiv:\n");
+        printStandardIntArray(cPiv, cols);
+        printf("rPiv:\n");
+        printStandardIntArray(rPiv, cols);
+        printf("nPiv: %d\n\n\n", nPiv);
+        printf("Chosen Pivots: \n");
+        printStandardIntArray(chosenPivots, rows);
+    }
+
+    //Initialize Array for the Host Matrix
+    hostMatrix = (double *)malloc(rows * cols * sizeof(double));
+    if (!hostMatrix) {
+        printf ("host memory allocation failed\n");
+        return EXIT_FAILURE;
+    }
+
+    //Populate the Host Matrix Array in CuBLAS format
+    for(j = 0; j < cols; j++) {
+        for(i = 0; i < rows; i++) {
+            hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
+        }
+    }
+    
+    //Allocate memory for Device Matrix Array
+    cudaStat = cudaMalloc ((void**) &deviceMatrix, rows * cols * sizeof(*hostMatrix));
+    if (cudaStat != cudaSuccess) {
+        printf ("device memory allocation failed\n");
+        return EXIT_FAILURE;
+    }
+    
+    //Initialize CuBLAS object
+    stat = cublasCreate(&handle);
+    if (stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("CUBLAS initialization failed\n");
+        return EXIT_FAILURE;
+    }
+
+    //Push data to the Device
+    stat = cublasSetMatrix (rows, cols, sizeof(*hostMatrix), hostMatrix, rows, deviceMatrix, rows);
+    if (stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("Data download failed\n");
+        cudaFree (deviceMatrix);
+        cublasDestroy(handle);
+        return EXIT_FAILURE;
+    }
+
+    //Algorithm Starts Here
+    double *tempVector = (double *)malloc(rows* sizeof(double));
+
+    for (c = 0; c < cols; c++) {
+        for (r = 0; r < rows; r++) {
+
+        }
+    }
+    
+
+    //Free all the memory used
+    cudaFree (deviceMatrix);
+    cublasDestroy(handle);
+
+    free(hostMatrix);
+    free(cPiv);
+    free(rPiv);
+    free(chosenPivots);
+    free(aColPivLocations);
+
+    return 0;
+}
+
+extern "C"
 int FGL_Algorithm_Double_NewScalingMethod (double** inputMatrix, int rows, int cols, int dontPrint, int roundFactor, int checkRref) {
     double *hostMatrix = 0;
 	double *deviceMatrix = 0;
@@ -31,11 +173,8 @@ int FGL_Algorithm_Double_NewScalingMethod (double** inputMatrix, int rows, int c
 
     int i, j, k;
     //int rowColMax = new_max(rows, cols);
-    int nPiv = 0;
+    int nPiv = 0;   
 
-    //Hojnacki FGL
-    //=============================================================================================================
-    //FGL Analysis Phase (Algorithm 1.5 in the FGL paper)
     cPiv = (int *)malloc(cols * sizeof(int));
     rPiv = (int *)malloc(cols * sizeof(int));
     aColPivLocations = (int *)malloc(rows * sizeof(int));
@@ -192,8 +331,6 @@ int FGL_Algorithm_Double_NewScalingMethod (double** inputMatrix, int rows, int c
     for(i = (nPiv - 1); i > 0; i--) {
         double *tempVector = (double *)malloc(rows* sizeof(double));
 
-        double *tempVector2 = (double *)malloc(cols * sizeof(double));
-
         stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,(aColPivLocations[i]),rows)], 1, tempVector, 1);
         if (stat != CUBLAS_STATUS_SUCCESS) {
             printf ("Data Vector download failed");
@@ -241,8 +378,6 @@ int FGL_Algorithm_Double_NewScalingMethod (double** inputMatrix, int rows, int c
 
     for (i = 0; i < nPiv; i++) {
         double *tempVector = (double *)malloc(rows * sizeof(double));
-
-        double *tempVector2 = (double *)malloc(cols * sizeof(double));
 
         stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,(aColPivLocations[i]),rows)], 1, tempVector, 1);
         if (stat != CUBLAS_STATUS_SUCCESS) {
