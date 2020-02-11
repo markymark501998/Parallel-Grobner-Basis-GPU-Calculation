@@ -19,18 +19,16 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
 	cublasStatus_t stat;
     cublasHandle_t handle;
 
-    int* cPiv;
+    //int* cPiv;
     int* rPiv;
-    int* chosenPivots;
-    int* aColPivLocations;
+    //int* chosenPivots;
 
     int i, j, k, c, r;
     int nPiv = 0;
 
-    cPiv = (int *)malloc(cols * sizeof(int));
+    //cPiv = (int *)malloc(cols * sizeof(int));
     rPiv = (int *)malloc(cols * sizeof(int));
-    aColPivLocations = (int *)malloc(rows * sizeof(int));
-    chosenPivots = (int *)malloc(rows * sizeof(int)); 
+    //chosenPivots = (int *)malloc(rows * sizeof(int)); 
 
     if(dontPrint == 0) {
         printf("F4-5 Guassian Elimination\n");
@@ -38,51 +36,16 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
         printf("                                              Begin Analysis and Construct ABCD Matrix\n");
         printf("====================================================================================================================================\n");
     }
-
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //REDO THE ANALYSIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     for (i = 0; i < cols; i++) {
-        cPiv[i] = -1;
+        //cPiv[i] = -1;
         rPiv[i] = -1;
     }
 
-    for (k = 0; k < rows; k++) {
-        chosenPivots[k] = 0;
-        aColPivLocations[k] = -1;
-    }
-
-    //Identify the pivots in the matrix
-    for (i = 0; i < rows; i++) {
-        for (j = 0; j < cols; j++) {
-            if(inputMatrix[i][j] != 0.0) {
-                if(cPiv[j] == -1) {
-                    //No pivot yet since the entry is -1, make this entry a pivot col/row
-
-                    cPiv[j] = j;
-                    rPiv[j] = i;
-                    chosenPivots[i] = 1;
-
-                    nPiv += 1;
-                }
-
-                //Instead of breaking here...set a flag and check for future pivots
-                break;
-            }
-        }
-    }
-
+    //for (k = 0; k < rows; k++) {
+    //    chosenPivots[k] = 0;
+    //}
+    
     if(dontPrint == 0) {
         printf("cPiv:\n");
         printStandardIntArray(cPiv, cols);
@@ -132,13 +95,86 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
 
     //Algorithm Starts Here
     double *tempVector = (double *)malloc(rows* sizeof(double));
+    double *tempAxpyScal = (double *) malloc (sizeof(double));
+    double *inverseRounder = (double *)malloc(sizeof(double));
+    double scalar = 0.0f;
+    *inverseRounder = 1;
 
     for (c = 0; c < cols; c++) {
         for (r = 0; r < rows; r++) {
+            //Download the Vector
+            stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,c,rows)], 1, tempVector, 1);
+            if (stat != CUBLAS_STATUS_SUCCESS) {
+                printf ("Data Vector download failed");
+                cudaFree (deviceMatrix);
+                cublasDestroy(handle);
+                return EXIT_FAILURE;
+            }
 
+            if(tempVector[r] != 0.0f && rPiv[r] == -1) {
+                rPiv[r] = r;
+
+                scalar = tempVector[r];    
+                scalar = powf(scalar, -1);  
+
+                stat = cublasDscal (handle, cols, &scalar, &deviceMatrix[IDX2C(r,0,rows)], rows);
+                if (stat != CUBLAS_STATUS_SUCCESS) {
+                    printf ("Device operation failed (row scalar * inverse of leading term)\n");
+                    return EXIT_FAILURE;
+                }                
+                
+                //Copy 1 to location where the LT should be 1 because floats/doubles are not accurate enough
+                cudaMemcpy(&deviceMatrix[IDX2C(r,c,rows)], inverseRounder, sizeof(double), cudaMemcpyHostToDevice);
+
+                for (i = r + 1; i < rows; i++) {
+                    if (tempVector[i] != 0.0f) {
+                        *tempAxpyScal = -(tempVector[i]);
+                        stat = cublasDaxpy(handle, cols, tempAxpyScal, &deviceMatrix[IDX2C(r,0,rows)], rows, &deviceMatrix[IDX2C(i,0,rows)], rows);
+                        if (stat != CUBLAS_STATUS_SUCCESS) {
+                            printf ("Device operation failed (dAxpy)\n");
+                            return EXIT_FAILURE;
+                        }
+                    }
+                }
+
+                break;
+            }
         }
     }
-    
+
+    //Download Matrix from the Device -> Host
+    stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
+    if (stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("Data upload failed");
+        cudaFree (deviceMatrix);
+        cublasDestroy(handle);
+        return EXIT_FAILURE;
+    }
+
+    //Sync up the device (not necessary with CuBLAS but here for good measure)
+    cudaDeviceSynchronize();
+
+    //Bring Data back to Main function through inputMatrix variable
+    for(j = 0; j < cols; j++) {
+        for(i = 0; i < rows; i++) {
+            inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];
+        }
+    } 
+
+    //printf("val: %lf\n", inputMatrix[23][34]);
+    //printf("val: %lf\n", inputMatrix[33][34]);
+    //printf("val: %lf\n", inputMatrix[39][34]);
+
+    if(dontPrint == 0) {
+        printf("=============================================================================================\n");
+        printf("cPiv:\n");
+        printStandardIntArray(cPiv, cols);
+        printf("rPiv:\n");
+        printStandardIntArray(rPiv, cols);
+        printf("nPiv: %d\n\n\n", nPiv);
+        printf("Chosen Pivots: \n");
+        printStandardIntArray(chosenPivots, rows);
+    }   
 
     //Free all the memory used
     cudaFree (deviceMatrix);
@@ -148,7 +184,7 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
     free(cPiv);
     free(rPiv);
     free(chosenPivots);
-    free(aColPivLocations);
+    free(inverseRounder);
 
     return 0;
 }
