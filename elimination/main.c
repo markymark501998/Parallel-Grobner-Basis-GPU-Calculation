@@ -3,7 +3,7 @@
 #include <string.h>
 #include "common.h"
 #include <time.h>
-#define MAXCHAR 300000
+#define MAXCHAR 30000
 
 void CreateExecutionLog (double totalTime, double parsingTime, double deviceTime) {
 	FILE *fptr;
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
 		printf("Please enter a filename in the command line: ./main [filename] [other arguments]\n");
 	}
 	else
-	{
+	{		
 		//FILE *file = fopen( argv[1], "r" );
 		FILE *fileDouble = fopen( argv[1], "r" );
 

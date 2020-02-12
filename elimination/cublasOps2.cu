@@ -47,13 +47,9 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
     //}
     
     if(dontPrint == 0) {
-        printf("cPiv:\n");
-        printStandardIntArray(cPiv, cols);
         printf("rPiv:\n");
         printStandardIntArray(rPiv, cols);
         printf("nPiv: %d\n\n\n", nPiv);
-        printf("Chosen Pivots: \n");
-        printStandardIntArray(chosenPivots, rows);
     }
 
     //Initialize Array for the Host Matrix
@@ -101,16 +97,16 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
     *inverseRounder = 1;
 
     for (c = 0; c < cols; c++) {
+        //Download the Vector
+        stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,c,rows)], 1, tempVector, 1);
+        if (stat != CUBLAS_STATUS_SUCCESS) {
+            printf ("Data Vector download failed");
+            cudaFree (deviceMatrix);
+            cublasDestroy(handle);
+            return EXIT_FAILURE;
+        }
+        
         for (r = 0; r < rows; r++) {
-            //Download the Vector
-            stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,c,rows)], 1, tempVector, 1);
-            if (stat != CUBLAS_STATUS_SUCCESS) {
-                printf ("Data Vector download failed");
-                cudaFree (deviceMatrix);
-                cublasDestroy(handle);
-                return EXIT_FAILURE;
-            }
-
             if(tempVector[r] != 0.0f && rPiv[r] == -1) {
                 rPiv[r] = r;
 
@@ -154,36 +150,29 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
     //Sync up the device (not necessary with CuBLAS but here for good measure)
     cudaDeviceSynchronize();
 
+    if (checkRef == 1) {
+        printf("Checking if NaN/Infinite rows are present...\n");
+    }
+
     //Bring Data back to Main function through inputMatrix variable
-    for(j = 0; j < cols; j++) {
-        for(i = 0; i < rows; i++) {
-            inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];
+    for(i = 0; i < rows; i++) {
+        for(j = 0; j < cols; j++) {        
+            inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];            
+
+            if (checkRef == 1) {
+                if(!isfinite(inputMatrix[i][j])) {
+                    printf("NaN/Infinite Value Detected\n");
+                }
+            }
         }
     } 
-
-    //printf("val: %lf\n", inputMatrix[23][34]);
-    //printf("val: %lf\n", inputMatrix[33][34]);
-    //printf("val: %lf\n", inputMatrix[39][34]);
-
-    if(dontPrint == 0) {
-        printf("=============================================================================================\n");
-        printf("cPiv:\n");
-        printStandardIntArray(cPiv, cols);
-        printf("rPiv:\n");
-        printStandardIntArray(rPiv, cols);
-        printf("nPiv: %d\n\n\n", nPiv);
-        printf("Chosen Pivots: \n");
-        printStandardIntArray(chosenPivots, rows);
-    }   
 
     //Free all the memory used
     cudaFree (deviceMatrix);
     cublasDestroy(handle);
 
     free(hostMatrix);
-    free(cPiv);
     free(rPiv);
-    free(chosenPivots);
     free(inverseRounder);
 
     return 0;

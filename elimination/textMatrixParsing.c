@@ -46,7 +46,7 @@ double** parseInputMatrixDouble(FILE *f, int maxLineSize, int* resultRows, int* 
     int j = 0;
     int rows = 0;
     int cols = 0;
-    char str[maxLineSize];
+    char str[maxLineSize];	
 
     if(fgets(str, maxLineSize, f) != NULL) {
         rows = atoi(str);
@@ -60,7 +60,7 @@ double** parseInputMatrixDouble(FILE *f, int maxLineSize, int* resultRows, int* 
 
     for(i = 0; i < rows; i++) {
         resultMatrix[i] = malloc (cols * sizeof(double));        
-    }
+    } 
 
     for(i = 0; i < rows; i ++) {
         for(j = 0; j < cols; j++) {
@@ -70,7 +70,9 @@ double** parseInputMatrixDouble(FILE *f, int maxLineSize, int* resultRows, int* 
     }
 
     *resultRows = rows;
-    *resultCols = cols;
+    *resultCols = cols;    
+
+    printf("Checkpoint D\n");	
 
     return resultMatrix;
 }
