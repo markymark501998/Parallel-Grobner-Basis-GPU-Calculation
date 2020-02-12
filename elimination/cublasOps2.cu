@@ -23,7 +23,8 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
     int* rPiv;
     //int* chosenPivots;
 
-    int i, j, k, c, r;
+    //int i, j, k, c, r;
+    int i, j, c, r;
     int nPiv = 0;
 
     //cPiv = (int *)malloc(cols * sizeof(int));

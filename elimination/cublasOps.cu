@@ -1396,7 +1396,7 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
     //int rowColMax = new_max(rows, cols);
     int nPiv = 0;
 
-    int tempCounter = 0;
+    //int tempCounter = 0;
 
     //Hojnacki FGL
     //=============================================================================================================
@@ -1555,8 +1555,8 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
     }
 
     int tempFlag = 0;
-    int cnt3 = 0;
-    int cnt4 = 0;
+    //int cnt3 = 0;
+    //int cnt4 = 0;
 
     //Reduce submatrix A by itself starting from the bottom up
     double *tempAxpyScal = (double *) malloc (sizeof(double));
@@ -1633,7 +1633,7 @@ int FGL_Algorithm_Double (double** inputMatrix, int rows, int cols, int dontPrin
                 }
 
                 if(tempFlag == 1) {
-                    int foundFalseValue = 0;
+                    //int foundFalseValue = 0;
                     //printf("==============================================AFTER=======================================================\n");
                     /*
                     stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
