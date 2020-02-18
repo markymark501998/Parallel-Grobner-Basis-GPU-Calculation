@@ -19,33 +19,22 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
 	cublasStatus_t stat;
     cublasHandle_t handle;
 
-    //int* cPiv;
     int* rPiv;
-    //int* chosenPivots;
-
-    //int i, j, k, c, r;
-    int i, j, c, r;
+    int i, j, c, r, k;
     int nPiv = 0;
 
-    //cPiv = (int *)malloc(cols * sizeof(int));
     rPiv = (int *)malloc(cols * sizeof(int));
-    //chosenPivots = (int *)malloc(rows * sizeof(int)); 
 
     if(dontPrint == 0) {
         printf("F4-5 Guassian Elimination\n");
         printf("====================================================================================================================================\n");
-        printf("                                              Begin Analysis and Construct ABCD Matrix\n");
+        printf("                                                        Start Algorithm\n");
         printf("====================================================================================================================================\n");
     }
     
     for (i = 0; i < cols; i++) {
-        //cPiv[i] = -1;
         rPiv[i] = -1;
     }
-
-    //for (k = 0; k < rows; k++) {
-    //    chosenPivots[k] = 0;
-    //}
     
     if(dontPrint == 0) {
         printf("rPiv:\n");
@@ -168,6 +157,24 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
         }
     } 
 
+    if (checkRef == 1) {
+        printf("Checking if illogical values are present...\n\n");
+        
+        for (i = 0; i < rows; i++) {
+            for (j = 0; j < cols; j++) {
+                if (inputMatrix[i][j] != 0.0f) {                     
+                    for (k = i + 1; k < rows; k++) {
+                        if (inputMatrix[k][j] != 0.0f) {
+                            printf("Illogical Value Detected\n");
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
     //Free all the memory used
     cudaFree (deviceMatrix);
     cublasDestroy(handle);
@@ -175,6 +182,7 @@ int F4_5_GuassianElimination (double ** inputMatrix, int rows, int cols, int don
     free(hostMatrix);
     free(rPiv);
     free(inverseRounder);
+    free(tempVector);
 
     return 0;
 }
