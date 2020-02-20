@@ -17,7 +17,7 @@ struct VarItem *parseVar(char *str) {
   startSearchIndex = bracketEnd + 1;
   int numLength = bracketEnd - bracketStart - 1;
 
-  buffer = (char*) malloc(numLength * sizeof(char));
+  buffer = (char*) calloc (sizeof(char), numLength);
   substring(str, buffer, (bracketStart + 1), numLength);
   var->varNum = atoi(buffer);
   free(buffer);
@@ -28,7 +28,7 @@ struct VarItem *parseVar(char *str) {
     startSearchIndex = bracketEnd + 1;
     numLength = bracketEnd - bracketStart - 1;
 
-    buffer = (char*) malloc(numLength * sizeof(char));
+    buffer = (char*) calloc (sizeof(char), numLength);
     substring(str, buffer, (bracketStart + 1), numLength);
     var->varPow = atoi(buffer);
     free(buffer);
@@ -61,7 +61,7 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
 
     int coeffLen = indexOfCoeffEnd - indexOfCoeffStart - 1;
 
-    buffer = (char*) malloc(coeffLen * sizeof(char));
+    buffer = (char*) calloc (sizeof(char), coeffLen);
     substring(str, buffer, (indexOfCoeffStart + 1), coeffLen);
 
     term->coeff = strtof(buffer, NULL);
@@ -94,7 +94,7 @@ struct PolyTerm *parseTerm(char *str, int *variables, int dimension, int line_nu
       length = strlen(str)-startIndex;
     else
       length = index-startIndex-1;
-    buffer = (char *) malloc (length*sizeof(char));
+    buffer = (char *) calloc (sizeof(char), length);
     substring(str, buffer, startIndex, length);
     struct VarItem *item = parseVar(buffer);
     free(buffer);
@@ -142,7 +142,7 @@ struct Polynomial *parsePoly(char *str, struct PolynomialSystem *system)
     }else
       termLength = termBreakIndex - startSearchIndex;
 
-    buffer = (char*) malloc(termLength * sizeof(char));
+    buffer = (char*) calloc (sizeof(char), termLength);
     substring(str, buffer, startSearchIndex, termLength);
 
     struct PolyTerm *term = parseTerm(trimwhitespace(buffer), system->variables, system->dimension, line_number);
@@ -257,7 +257,7 @@ struct PolynomialSystem *buildPolySystem(FILE *f, int mono_order) {
         indexOfVarEnd = indexOfStart(str, ']', startSearchIndex);
         varLen = indexOfVarEnd - indexOfVarStart - 1;
 
-        buffer = (char*) malloc(varLen * sizeof(char));
+        buffer = (char*) calloc (sizeof(char), varLen);
         substring(str, buffer, (indexOfVarStart + 1), varLen);
 
         system->variables[i] = atoi(buffer);
