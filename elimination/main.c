@@ -39,7 +39,9 @@ int main(int argc, char* argv[]) {
 	printf("-output                   (outputs execution data to the 'ExecutionLogs' directory)\n");
 	printf("-round [precision(int)]   (floating point precision rounding factor)\n");
 	printf("-sparsePrint              (prints the matrix in a denser form to see structure of matrix)\n");
-	printf("-checkRREF                (checks matrix entry by entry to ensure RREF form [WARNING: may cause severe slowdowns])\n\n");
+	printf("-checkRREF                (checks matrix entry by entry to ensure RREF form [WARNING: may cause severe slowdowns])\n");
+	printf("-cuSparse                 (executes Michael D.'s version of the cuSPARSE F4-5 Guassian Elimination algorithm)\n");
+	printf("-cuSparse2                (executes Mark H.'s version of the cuSPARSE F4-5 Guassian Elimination algorithm)\n\n");
 
 	double time_elapsed = 0.0;
 	double time_elapsed_parse = 0.0;
@@ -56,6 +58,7 @@ int main(int argc, char* argv[]) {
 	int sparsePrint = 0;
 	int roundFactor = 6;
 	int checkRref = 0;
+	int cuSparseFlag = 0;
 
 	printf("------------------------------------------------------------\n");
 
@@ -87,6 +90,14 @@ int main(int argc, char* argv[]) {
 		if(strcmp(argv[i], "-round") == 0) {
 			i++;
 			roundFactor = atoi(argv[i]);			
+		}
+
+		if(strcmp(argv[i], "-cuSparse") == 0) {
+			cuSparseFlag = 1;			
+		}
+
+		if(strcmp(argv[i], "-cuSparse2") == 0) {
+			cuSparseFlag = 2;			
 		}
 	}
 	
@@ -140,6 +151,10 @@ int main(int argc, char* argv[]) {
 			} else if(fgl == 1) {
 				//FGL_Algorithm_Double(inputMatrixDouble, rows, cols, dontPrint, roundFactor, checkRref);
 				F4_5_GuassianElimination(inputMatrixDouble, rows, cols, dontPrint, checkRref);
+			} else if (cuSparseFlag == 1) {
+				F4_5_GuassianEliminationCuSparse(inputMatrixDouble, rows, cols, dontPrint, checkRref);
+			} else if (cuSparseFlag == 2) {
+				F4_5_GuassianEliminationCuSparseMHVersion(inputMatrixDouble, rows, cols, dontPrint, checkRref);
 			} else {
 				//GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
 				printf("Not supported at the moment!\n");
