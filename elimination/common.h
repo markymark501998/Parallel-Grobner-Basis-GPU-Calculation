@@ -7,6 +7,7 @@ int FGL_Algorithm_Double_NewScalingMethod (double**, int, int, int, int, int);
 
 int F4_5_GuassianElimination (double **, int, int, int, int);
 int F4_5_GuassianEliminationCuSparse (double **, int, int, int, int);
+int F4_5_GuassianEliminationCuSparseMHVersion (double **, int, int, int, int);
 
 float** parseInputMatrix(FILE *, int, int*, int*);
 double** parseInputMatrixDouble(FILE *, int, int*, int*);
