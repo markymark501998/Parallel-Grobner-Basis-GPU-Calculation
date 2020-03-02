@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
 
 			if(rrefForm == 1) {
 				//GuassianEliminationV1Rref(inputMatrix, rows, cols, dontPrint, roundFactor);
-				printf("Not supported at the moment!\n");
+				printf("Not supported at the moment...Please use a different option\n");
 			} else if(fgl == 1) {
 				//FGL_Algorithm_Double(inputMatrixDouble, rows, cols, dontPrint, roundFactor, checkRref);
 				F4_5_GuassianElimination(inputMatrixDouble, rows, cols, dontPrint, checkRref);
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]) {
 				F4_5_GuassianEliminationCuSparseMHVersion(inputMatrixDouble, rows, cols, dontPrint, checkRref);
 			} else {
 				//GuassianEliminationV1(inputMatrix, rows, cols, dontPrint);
-				printf("Not supported at the moment!\n");
+				printf("Not supported at the moment...Please use a different option\n");
 			}
 
 			clock_t endDeivce = clock();
