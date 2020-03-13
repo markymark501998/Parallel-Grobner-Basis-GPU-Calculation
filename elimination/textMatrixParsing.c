@@ -181,6 +181,23 @@ void printStandardIntArray(int* input, int length) {
     printf("\n\n");
 }
 
+void printStandardDoubleArray(double* input, int length) {
+    int i;
+    int counter = 0;
+    printf("Double Array: \n");   
+    
+    for(i = 0; i < length; i++) {
+        printf("%-5lf ", input[i]);
+        counter++;
+
+        if((counter % 10) == 0) {
+            printf("\n");
+        }
+    }
+
+    printf("\n\n");
+}
+
 void printCublasMatrixArrayConverted (float* input, int rows, int cols) {
     int i, j;
 

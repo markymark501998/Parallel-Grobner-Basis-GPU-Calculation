@@ -21,6 +21,7 @@ void printCublasMatrixArray(float * , int);
 void printCublasMatrixArrayConverted (float*, int, int);
 
 void printStandardIntArray(int*, int);
+void printStandardDoubleArray(double*, int);
 
 void printSparseMatrixArray (float**, int, int, int);
 void printSparseMatrixArrayConverted (float*, int, int, int);

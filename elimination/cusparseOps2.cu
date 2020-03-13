@@ -6,6 +6,7 @@
 #include "cublas_v2.h"
 #include <cusparse.h>
 #define IDX2C(i,j,ld) (((j)*(ld))+(i))
+#define IDX2C_ROW(i,j,ld) (((i)*(ld))+(j))
 #define new_max(x,y) ((x) >= (y)) ? (x) : (y)
 
 extern "C" {
@@ -16,15 +17,30 @@ extern "C"
 int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, int cols, int dontPrint, int checkRef) {
     double *hostMatrix = 0;
     double *deviceMatrix = 0;
-    cudaError_t cudaStat;
-	cublasStatus_t stat;
-    cublasHandle_t handle;
+    
+    double *cooHostMatrix = 0;
+    int *cooRowIndHost = 0;
+    int *cooColIndHost = 0;
+
+    double *cooDeviceMatrix = 0;
+    int *cooRowIndDevice = 0;
+    int *cooColIndDevice = 0;
+    
+    cudaError_t cudaStat, cudaStat2;
+    cusparseStatus_t status;
+    cusparseHandle_t handle = 0;
+    cusparseMatDescr_t descr = 0;
+
+    cublasHandle_t blas_handle;
+	cublasStatus_t blas_stat;
 
     int* rPiv;
-    int i, j, c, r, k;
-    int nPiv = 0;
+    int* cPiv;
+    int i, j, k, c;
+    int nnz = 0;
 
-    rPiv = (int *)malloc(cols * sizeof(int));
+    rPiv = (int *)malloc(rows * sizeof(int));
+    cPiv = (int *)malloc(cols * sizeof(int));
 
     if(dontPrint == 0) {
         printf("F4-5 Guassian Elimination\n");
@@ -34,112 +50,143 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     }
     
     for (i = 0; i < cols; i++) {
+        cPiv[i] = -1;
+    }
+    
+    for (i = 0; i < rows; i++) {
         rPiv[i] = -1;
+    }
+
+    /* Analysis */
+    for(j = 0; j < cols; j++) {
+        for (i = 0; i < rows; i++) {
+            if (inputMatrix[i][j] != 0.0) {
+                nnz++;
+            }
+            
+            if (inputMatrix[i][j] != 0.0 && rPiv[i] == -1 && cPiv[j] == -1) {
+                cPiv[j] = i;
+                rPiv[i] = j;
+            }
+        }
     }
     
     if(dontPrint == 0) {
         printf("rPiv:\n");
         printStandardIntArray(rPiv, cols);
-        printf("nPiv: %d\n\n\n", nPiv);
+        printf("cPiv:\n");
+        printStandardIntArray(cPiv, cols);
+    }
+
+    /* initialize cusparse library */
+    status = cusparseCreate(&handle);
+    if (status != CUSPARSE_STATUS_SUCCESS) {
+        printf("CUSPARSE Library initialization failed");
+        return 1;
+    }
+    
+    //Initialize CuBLAS object
+    blas_stat = cublasCreate(&blas_handle);
+    if (blas_stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("CUBLAS initialization failed\n");
+        return EXIT_FAILURE;
     }
 
     //Initialize Array for the Host Matrix
     hostMatrix = (double *)malloc(rows * cols * sizeof(double));
     if (!hostMatrix) {
-        printf ("host memory allocation failed\n");
+        printf("host memory allocation failed\n");
         return EXIT_FAILURE;
     }
 
-    //Populate the Host Matrix Array in CuBLAS format
-    for(j = 0; j < cols; j++) {
-        for(i = 0; i < rows; i++) {
-            hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
+    //Initialize Array for the Host Matrix (COO Format)
+    cooHostMatrix = (double *)malloc(nnz * sizeof(double));
+    if (!cooHostMatrix) {
+        printf("host memory allocation failed\n");
+        return EXIT_FAILURE;
+    }
+    cooRowIndHost = (int *)malloc(nnz * sizeof(int));
+    cooColIndHost = (int *)malloc(nnz * sizeof(int));
+
+    printf("Here2\n");
+
+    //Populate the Host Matrix Array in CuSPARSE format
+    c = 0;
+    for(i = 0; i < rows; i++) {
+        for(j = 0; j < cols; j++) {        
+            hostMatrix[IDX2C_ROW(i,j,rows)] = inputMatrix[i][j];
+
+            if(inputMatrix[i][j] != 0.0) {
+                cooHostMatrix[c] = inputMatrix[i][j];
+                cooRowIndHost[c] = i;
+                cooColIndHost[c] = j;
+                c++;
+            }
         }
     }
     
-    //Allocate memory for Device Matrix Array
-    cudaStat = cudaMalloc ((void**) &deviceMatrix, rows * cols * sizeof(*hostMatrix));
-    if (cudaStat != cudaSuccess) {
+    //Allocate memory for Device Matrix Arrays
+    cudaStat = cudaMalloc ((void**) &deviceMatrix, (rows * cols * sizeof(*hostMatrix)));    
+    cudaStat2 = cudaMalloc ((void**) &cooDeviceMatrix, nnz * sizeof(*cooDeviceMatrix));
+    if (cudaStat != cudaSuccess || cudaStat2 != cudaSuccess) {
         printf ("device memory allocation failed\n");
         return EXIT_FAILURE;
     }
     
-    //Initialize CuBLAS object
-    stat = cublasCreate(&handle);
-    if (stat != CUBLAS_STATUS_SUCCESS) {
-        printf ("CUBLAS initialization failed\n");
+    //Allocate memory for Device Matrix Array Indice Pointers(COO Format)
+    cudaStat = cudaMalloc ((void**) &cooRowIndDevice, nnz * sizeof(int));
+    cudaStat2 = cudaMalloc ((void**) &cooColIndDevice, nnz * sizeof(int));
+    if (cudaStat != cudaSuccess || cudaStat2 != cudaSuccess) {
+        printf ("device memory allocation failed\n");
         return EXIT_FAILURE;
     }
+    
+    cudaMemcpy(&deviceMatrix[0], &hostMatrix[0], rows * cols * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(&cooDeviceMatrix[0], &cooHostMatrix[0], nnz * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(&cooRowIndDevice[0], &cooRowIndHost[0], nnz * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(&cooColIndDevice[0], &cooColIndHost[0], nnz * sizeof(double), cudaMemcpyHostToDevice);
 
-    //Push data to the Device
-    stat = cublasSetMatrix (rows, cols, sizeof(*hostMatrix), hostMatrix, rows, deviceMatrix, rows);
-    if (stat != CUBLAS_STATUS_SUCCESS) {
-        printf ("Data download failed\n");
-        cudaFree (deviceMatrix);
-        cublasDestroy(handle);
+
+    printf("cooHostMatrix:\n");
+    printStandardDoubleArray(cooHostMatrix, nnz);
+    printf("cooRowIndHost:\n");
+    printStandardIntArray(cooRowIndHost, nnz);
+    printf("cooRowColHost:\n");
+    printStandardIntArray(cooColIndHost, nnz);
+
+    /*
+    MORE TESTING
+    double scalar = 2.0f;
+    blas_stat = cublasDscal(blas_handle, 10, &scalar, &cooDeviceMatrix[4], 1);
+    if (blas_stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("Device operation failed (row scalar * inverse of leading term)\n");
         return EXIT_FAILURE;
+    }  
+    */
+
+    /*
+    status= cusparseCreateMatDescr(&descr);
+    if (status != CUSPARSE_STATUS_SUCCESS) {
+        printf("Matrix descriptor initialization failed");
+        return 1;
     }
+    
+    cusparseSetMatType(descr,CUSPARSE_MATRIX_TYPE_GENERAL);
+    cusparseSetMatIndexBase(descr,CUSPARSE_INDEX_BASE_ZERO);
+    */
 
-    //Algorithm Starts Here
-    double *tempVector = (double *)malloc(rows* sizeof(double));
-    double *tempAxpyScal = (double *) malloc (sizeof(double));
-    double *inverseRounder = (double *)malloc(sizeof(double));
-    double scalar = 0.0f;
-    *inverseRounder = 1;
 
-    for (c = 0; c < cols; c++) {
-        //Download the Vector
-        stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,c,rows)], 1, tempVector, 1);
-        if (stat != CUBLAS_STATUS_SUCCESS) {
-            printf ("Data Vector download failed");
-            cudaFree (deviceMatrix);
-            cublasDestroy(handle);
-            return EXIT_FAILURE;
-        }
-        
-        for (r = 0; r < rows; r++) {
-            if(tempVector[r] != 0.0f && rPiv[r] == -1) {
-                rPiv[r] = r;
+    //ALGORITHM HERE
 
-                scalar = tempVector[r];    
-                scalar = powf(scalar, -1);  
 
-                stat = cublasDscal (handle, cols, &scalar, &deviceMatrix[IDX2C(r,0,rows)], rows);
-                if (stat != CUBLAS_STATUS_SUCCESS) {
-                    printf ("Device operation failed (row scalar * inverse of leading term)\n");
-                    return EXIT_FAILURE;
-                }                
-                
-                //Copy 1 to location where the LT should be 1 because floats/doubles are not accurate enough
-                cudaMemcpy(&deviceMatrix[IDX2C(r,c,rows)], inverseRounder, sizeof(double), cudaMemcpyHostToDevice);
+    
+    cudaMemcpy(&hostMatrix[0], &deviceMatrix[0], rows * cols * sizeof(double), cudaMemcpyDeviceToHost);
+    
+    //Testing Only
+    //cudaMemcpy(&cooHostMatrix[0], &cooDeviceMatrix[0], nnz * sizeof(double), cudaMemcpyDeviceToHost);
 
-                for (i = r + 1; i < rows; i++) {
-                    if (tempVector[i] != 0.0f) {
-                        *tempAxpyScal = -(tempVector[i]);
-                        stat = cublasDaxpy(handle, cols, tempAxpyScal, &deviceMatrix[IDX2C(r,0,rows)], rows, &deviceMatrix[IDX2C(i,0,rows)], rows);
-                        if (stat != CUBLAS_STATUS_SUCCESS) {
-                            printf ("Device operation failed (dAxpy)\n");
-                            return EXIT_FAILURE;
-                        }
-                    }
-                }
-
-                break;
-            }
-        }
-    }
-
-    //Download Matrix from the Device -> Host
-    stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
-    if (stat != CUBLAS_STATUS_SUCCESS) {
-        printf ("Data upload failed");
-        cudaFree (deviceMatrix);
-        cublasDestroy(handle);
-        return EXIT_FAILURE;
-    }
-
-    //Sync up the device (not necessary with CuBLAS but here for good measure)
-    cudaDeviceSynchronize();
+    printf("cooHostMatrix (AFTER DOWNLOAD):\n");
+    printStandardDoubleArray(cooHostMatrix, nnz);
 
     if (checkRef == 1) {
         printf("Checking if NaN/Infinite rows are present...\n");
@@ -148,7 +195,7 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     //Bring Data back to Main function through inputMatrix variable
     for(i = 0; i < rows; i++) {
         for(j = 0; j < cols; j++) {        
-            inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];            
+            inputMatrix[i][j] = hostMatrix[IDX2C_ROW(i,j,rows)];            
 
             if (checkRef == 1) {
                 if(!isfinite(inputMatrix[i][j])) {
@@ -178,12 +225,16 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
 
     //Free all the memory used
     cudaFree (deviceMatrix);
-    cublasDestroy(handle);
+    cudaFree (cooDeviceMatrix);
+    cudaFree (cooColIndDevice);
+    cudaFree (deviceMatrix);
+    if(handle) { cusparseDestroy(handle); }
 
     free(hostMatrix);
+    free(cooHostMatrix);
+    free(cooRowIndHost);
+    free(cooColIndHost);
     free(rPiv);
-    free(inverseRounder);
-    free(tempVector);
 
     return 0;
 }
