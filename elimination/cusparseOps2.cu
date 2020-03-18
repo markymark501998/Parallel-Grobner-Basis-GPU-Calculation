@@ -13,6 +13,11 @@ extern "C" {
     #include "common.h"
 }
 
+struct cooInfo {
+    int index;
+    int rowNNZ;
+};
+
 extern "C"
 int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, int cols, int dontPrint, int checkRef) {
     double *hostMatrix = 0;
@@ -29,7 +34,7 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     cudaError_t cudaStat, cudaStat2;
     cusparseStatus_t status;
     cusparseHandle_t handle = 0;
-    cusparseMatDescr_t descr = 0;
+    //cusparseMatDescr_t descr = 0;
 
     cublasHandle_t blas_handle;
 	cublasStatus_t blas_stat;
@@ -38,6 +43,9 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     int* cPiv;
     int i, j, k, c;
     int nnz = 0;
+
+    struct cooInfo* cooInfoTable;
+    cooInfoTable = (struct cooInfo *)malloc(rows * sizeof(struct cooInfo));
 
     rPiv = (int *)malloc(rows * sizeof(int));
     cPiv = (int *)malloc(cols * sizeof(int));
@@ -55,6 +63,8 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     
     for (i = 0; i < rows; i++) {
         rPiv[i] = -1;
+        cooInfoTable[i].index = -1;
+        cooInfoTable[i].rowNNZ = 0;
     }
 
     /* Analysis */
@@ -108,8 +118,6 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     cooRowIndHost = (int *)malloc(nnz * sizeof(int));
     cooColIndHost = (int *)malloc(nnz * sizeof(int));
 
-    printf("Here2\n");
-
     //Populate the Host Matrix Array in CuSPARSE format
     c = 0;
     for(i = 0; i < rows; i++) {
@@ -120,9 +128,19 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
                 cooHostMatrix[c] = inputMatrix[i][j];
                 cooRowIndHost[c] = i;
                 cooColIndHost[c] = j;
+
+                if (cooInfoTable[i].index == -1) {
+                    cooInfoTable[i].index = c;
+                }
+                cooInfoTable[i].rowNNZ++;
+
                 c++;
             }
         }
+    }
+    
+    for(i = 0; i < rows; i++) {
+        printf("[%d, %d]\n", cooInfoTable[i].index, cooInfoTable[i].rowNNZ);
     }
     
     //Allocate memory for Device Matrix Arrays
@@ -154,6 +172,8 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     printf("cooRowColHost:\n");
     printStandardIntArray(cooColIndHost, nnz);
 
+
+
     /*
     MORE TESTING
     double scalar = 2.0f;
@@ -164,6 +184,8 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
     }  
     */
 
+
+    //OLD STUFF BELOW
     /*
     status= cusparseCreateMatDescr(&descr);
     if (status != CUSPARSE_STATUS_SUCCESS) {
@@ -177,6 +199,18 @@ int F4_5_GuassianEliminationCuSparseMHVersion (double ** inputMatrix, int rows, 
 
 
     //ALGORITHM HERE
+
+    for (i = (rows-1); i > 0; i--) {
+        int row_nnz = cooInfoTable[i].rowNNZ;
+        int ref_index = cooInfoTable[i].index;
+
+        for (j = ref_index; j < (ref_index + row_nnz); j++) {
+            //int matrix_i = cooRowIndHost[j];
+            //int matrix_j = cooColIndHost[j];
+
+            
+        }
+    }
 
 
     
