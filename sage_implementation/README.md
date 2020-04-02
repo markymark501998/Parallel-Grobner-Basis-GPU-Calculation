@@ -6,11 +6,11 @@ To compile the shared object:
 
 `$ sudo python setup.py install`
 
-Copy the shared object from `build/lib.linux-x86_64-2.7/gpuadder.so` to this directory.
+Copy the shared object `build/lib.linux-x86_64-2.7/gpuadder.so` to this directory.
 
 To run:
 
-`$ sage test.sage`
+`$ sage test.sage` OR `./sage test.sage` (For machines without a link in `/usr/local/bin/`)
 
 The `test.sage` file contains the Sage code required to execute a simple test run. The contents are as follows:
 
