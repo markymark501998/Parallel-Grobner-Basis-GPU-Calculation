@@ -13,9 +13,9 @@ to run:
 "test.sage" contains the Sage code required to execute a simple test run. The contents are as follows:
 
 
-`execfile('f5_2.py');`
-`P = PolynomialRing(GF(32003),4,'x');`
-`print(P);`
-`I = sage.rings.ideal.Cyclic(P).homogenize();`
-`print('=======================================================================')`
+`execfile('f5_2.py');`<br/>
+`P = PolynomialRing(GF(32003),4,'x');`<br/>
+`print(P);`<br/>
+`I = sage.rings.ideal.Cyclic(P).homogenize();`<br/>
+`print('=======================================================================')`<br/>
 `gb = f5_2(I); f5_2.print_stats();`
