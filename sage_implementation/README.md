@@ -12,7 +12,7 @@ To run:
 
 `$ sage test.sage` OR `./sage test.sage` (For machines without a link in `/usr/local/bin/` pointing to sage's executable)
 
-The `test.sage` file contains the Sage code required to execute a simple test run. The contents are as follows:
+The `test.sage` file contains the Sage code required to execute a simple test run. `f5_2.py` is where the algorithm is located. The source code for the GPU guassian elimination algorithm is in the `src` directory. The contents of `test.sage` are as follows:
 
 `execfile('f5_2.py');`<br/>
 `P = PolynomialRing(GF(32003),4,'x');`<br/>
