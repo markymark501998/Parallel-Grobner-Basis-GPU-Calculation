@@ -1,0 +1,14 @@
+MANIFEST.in
+README.md
+setup.py
+test.py
+wrapper.pyx
+gpuadder.egg-info/PKG-INFO
+gpuadder.egg-info/SOURCES.txt
+gpuadder.egg-info/dependency_links.txt
+gpuadder.egg-info/not-zip-safe
+gpuadder.egg-info/top_level.txt
+src/cublasOps2.cu
+src/kernel.cu
+src/manager.cu
+src/manager.hh
