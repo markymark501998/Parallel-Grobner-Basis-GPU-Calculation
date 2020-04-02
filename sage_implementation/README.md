@@ -5,7 +5,8 @@ This code allows for the F4/5 algorithm written by Martin Albrecht and John Perr
 ### Requirements:
 -SageMath 9.0 (compiled with Python 2.7)<br/>
     -m4<br/>
-    -gfortran
+    -gfortran<br/>
+    (m4/gfortran needed to compile Sage)
 
 -CUDA Toolkit (ours was version 10.0 with display driver 431)<br/>
 -The want to give yourself a headache figuring this out on your own
