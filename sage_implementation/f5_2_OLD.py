@@ -232,10 +232,6 @@ elim_run_time = 0.0
 sym_run_time = 0.0
 total_run_time = 0.0
 
-field_size_var = 32003
-print_debug_var = False
-use_cpu_var = False
-
 def idx2c(i,j,ld):
     return ((j*ld)+(i))
 
@@ -270,7 +266,7 @@ class F5_2:
         self.verbose = 0
         self.zero_reductions = 0 # we count reductions to zero
         
-    def __call__(self, F, field_size = 32003, print_debug=False, use_cpu=False, D=None, proof=False):
+    def __call__(self, F, D=None, proof=False):
         """
         Compute a Gröbner basis for the input system ``F``. 
 
@@ -298,18 +294,6 @@ class F5_2:
         global elim_run_time
         global sym_run_time
         global total_run_time
-
-        elim_run_time = 0
-        sym_run_time = 0
-        total_run_time = 0
-
-        global field_size_var
-        global print_debug_var
-        global use_cpu_var
-
-        field_size_var = field_size
-        print_debug_var = print_debug
-        use_cpu_var = use_cpu
 
         tt_start = time.clock()
 
@@ -652,9 +636,6 @@ class F5_2:
         """
         #print('\n\nGuassian Elimination Started')
 
-        global field_size_var
-        global print_debug_var
-
         poly = self.poly
 
         F = [u*poly(k) for u,k in F1]
@@ -665,81 +646,119 @@ class F5_2:
         A,v = Sequence(F).coefficient_matrix()
         #self.zero_reductions += A.nrows()-A.rank()
         
-        if print_debug_var:
-            print(type(A[0,0]))
-            print('\n\nguass_elimination()\n===============================================================================================')
-            print "[%4d x %4d]"%(A.nrows(), A.ncols())
-            print(A)
-            print('===============================================================================================\n\n')
-        
+        """
+        print(type(A[0,0]))
+        print('\n\nguass_elimination()\n===============================================================================================')
+        print "[%4d x %4d]"%(A.nrows(), A.ncols())
+        print(A)
+        print('===============================================================================================\n\n')
+        """
+
+        print "%4d x %4d, %4d, %4d"%(A.nrows(), A.ncols(), A.rank(), A.nrows()-A.rank()),
         nrows, ncols = A.nrows(), A.ncols()
+
+        instance = gpuadder.GPUCublas()
         matrix_gpu_list = range(nrows * ncols)
         
+        #print('\n\nBEFORE')
         for c in xrange(ncols):
             for r in xrange(nrows):
                 temp_var = A[r,c]
                 temp_var = float(temp_var)
                 matrix_gpu_list[idx2c(r,c,nrows)] = temp_var
         
-        if print_debug_var:
-            print('\n\nCUDA Before')
+        """
+        print('\n\nCUDA Before')
+        for r in xrange(nrows):
+            print ('['),
+            for c in xrange(ncols):
+                print "%6f"%(matrix_gpu_list[idx2c(r,c,nrows)]),
+            print (']')
+        """
+
+        #print(matrix_gpu_list)
+        #print('\nCUDA Started')
+        cuda_t_start = time.clock()
+        instance.call_cublas_gpu_finite(matrix_gpu_list, nrows, ncols, 32003)
+        cuda_t_end = time.clock()
+        #print('\nCUDA Ended')
+        #print(matrix_gpu_list)
+
+        """
+        print('\n\nCUDA AFTER')
+        for r in xrange(nrows):
+            print ('['),
+            for c in xrange(ncols):
+                #print "%6f"%(matrix_gpu_list[idx2c(r,c,nrows)]),
+                print "%5s"%(str(
+                    QQ(
+                        float(matrix_gpu_list[idx2c(r,c,nrows)])
+                    )
+                )
+                ),
+            print (']')
+        
+        print('\n\nCUDA AFTER [As is]')
+        for r in xrange(nrows):
+            print ('['),
+            for c in xrange(ncols):
+                #print "%6f"%(matrix_gpu_list[idx2c(r,c,nrows)]),
+                print "%5s"%(str(
+                    float(matrix_gpu_list[idx2c(r,c,nrows)])
+                )
+                ),
+            print (']')
+        """
+
+        R = IntegerModRing(32003)
+        
+        for c in xrange(ncols):
             for r in xrange(nrows):
-                print ('['),
-                for c in xrange(ncols):
-                    print "%6f"%(matrix_gpu_list[idx2c(r,c,nrows)]),
-                print (']') 
+                #A[r,c] = float(matrix_gpu_list[idx2c(r,c,nrows)])        
+                #A[r,c] = QQ(float(matrix_gpu_list[idx2c(r,c,nrows)]))        
+                #A[r,c] = QQ(round(float(matrix_gpu_list[idx2c(r,c,nrows)]), 6))  
+                #A[r,c] = (matrix_gpu_list[idx2c(r,c,nrows)])      
+                #A[r,c] = RDF(matrix_gpu_list[idx2c(r,c,nrows)])  
+                A[r,c] = IntegerMod(R, matrix_gpu_list[idx2c(r,c,nrows)])
         
-        t_start = time.clock()
+                       
+        orig_t_start = time.clock()
 
-        if use_cpu_var:
-            #Original Algorithm Here
-            for c in xrange(ncols):
-                for r in xrange(nrows):
-                    if A[r,c] != 0:
-                        if any(A[r,i] for i in xrange(c)):
-                            continue
-                        a_inverse = ~A[r,c]
-                        #print "A[r,c]: %d, ~A[r,c]: %d\n"%(A[r,c], a_inverse),
-                        A.rescale_row(r, a_inverse, c)
-                        for i in xrange(r+1,nrows):
-                            if A[i,c] != 0:
-                                minus_b = -A[i,c]
-                                A.add_multiple_of_row(i, r, minus_b, c)
-                        break      
-        else:        
-            instance = gpuadder.GPUCublas()
-            instance.call_cublas_gpu_finite(matrix_gpu_list, nrows, ncols, field_size_var)
-            R = IntegerModRing(field_size_var)
-            
-            for c in xrange(ncols):
-                for r in xrange(nrows):
-                    A[r,c] = IntegerMod(R, matrix_gpu_list[idx2c(r,c,nrows)]) 
+        """
+        #Original Algorithm Here
+        for c in xrange(ncols):
+            for r in xrange(nrows):
+                if A[r,c] != 0:
+                    if any(A[r,i] for i in xrange(c)):
+                        continue
+                    a_inverse = ~A[r,c]
+                    #print "A[r,c]: %d, ~A[r,c]: %d\n"%(A[r,c], a_inverse),
+                    A.rescale_row(r, a_inverse, c)
+                    for i in xrange(r+1,nrows):
+                        if A[i,c] != 0:
+                            minus_b = -A[i,c]
+                            A.add_multiple_of_row(i, r, minus_b, c)
+                    break
+        """
 
-        t_end = time.clock()
+        orig_t_end = time.clock()
         
-        total_time = t_end - t_start
+        time_cuda = cuda_t_end - cuda_t_start
+        time_orig = orig_t_end - orig_t_start
 
-        print "%4d x %4d, %4d, %4d"%(A.nrows(), A.ncols(), A.rank(), A.nrows()-A.rank()),
-        print " Guassian Elimination Time(s): [%s]"%(total_time),
+        print " Time(Orig, Cuda): [%s, %s]"%(time_orig, time_cuda),
 
+        #Return the Data
         F = (A*v).list()
 
-        if print_debug_var:            
-            print('\n\nCUDA AFTER [As is]')
-            for r in xrange(nrows):
-                print ('['),
-                for c in xrange(ncols):
-                    #print "%6f"%(matrix_gpu_list[idx2c(r,c,nrows)]),
-                    print "%5s"%(str(
-                        int(matrix_gpu_list[idx2c(r,c,nrows)])
-                    )
-                    ),
-                print (']')
-                
-            print('\n\nOriginal Result\n===============================================================================================')
-            print "[%4d x %4d]"%(A.nrows(), A.ncols())
-            print(A)
-            print('===============================================================================================\n\n')
+        """
+        print('\n\nOriginal Result\n===============================================================================================')
+        print "[%4d x %4d]"%(A.nrows(), A.ncols())
+        print(A)
+        print('===============================================================================================\n\n')
+        """
+
+        #print("Done with Guass Elimination")
 
         return F
 
