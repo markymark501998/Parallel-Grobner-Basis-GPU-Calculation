@@ -1,4 +1,4 @@
-# F4/5 SageMath Grobner Basis Algorithm
+# F4/5 SageMath Grobner Basis Algorithm with GPU
 
 This code allows for the F4/5 algorithm written by Martin Albrecht and John Perry for SageMath to be executed with GPU acceleration for the linear algebra operations. Albrecht's source code was modified to allow for the static CUDA shared object library to be executed within Sage.
 
