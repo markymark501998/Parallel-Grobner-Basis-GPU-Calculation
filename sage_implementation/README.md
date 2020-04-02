@@ -1,17 +1,18 @@
 ## F4/5 SageMath Grobner Basis Algorithm
 
-This code allows for the F4/5 algorithm written by Martin Albrecht and John Perry for SageMath to be executed with GPU acceleration. Albrecht's source code was modified to allow for the static CUDA shared object library to be executed within Sage.
+This code allows for the F4/5 algorithm written by Martin Albrecht and John Perry for SageMath to be executed with GPU acceleration for the linear algebra operations. Albrecht's source code was modified to allow for the static CUDA shared object library to be executed within Sage.
 
-To create shared object:
+To compile the shared object:
 
 `$ sudo python setup.py install`
 
-to run:
+Copy the shared object from `build/lib.linux-x86_64-2.7/gpuadder.so` to this directory.
+
+To run:
 
 `$ sage test.sage`
 
-"test.sage" contains the Sage code required to execute a simple test run. The contents are as follows:
-
+The `test.sage` file contains the Sage code required to execute a simple test run. The contents are as follows:
 
 `execfile('f5_2.py');`<br/>
 `P = PolynomialRing(GF(32003),4,'x');`<br/>
@@ -19,3 +20,4 @@ to run:
 `I = sage.rings.ideal.Cyclic(P).homogenize();`<br/>
 `print('=======================================================================')`<br/>
 `gb = f5_2(I); f5_2.print_stats();`
+
