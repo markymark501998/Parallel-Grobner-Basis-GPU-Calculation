@@ -2,6 +2,14 @@
 
 This code allows for the F4/5 algorithm written by Martin Albrecht and John Perry for SageMath to be executed with GPU acceleration for the linear algebra operations. Albrecht's source code was modified to allow for the static CUDA shared object library to be executed within Sage.
 
+# Requirements:
+-SageMath 9.0 (compiled with Python 2.7)
+    -m4
+    -gfortran
+
+-CUDA Toolkit (ours was version 10.0 with display driver 431)
+-The want to give yourself a headache figuring this out on your own
+
 To compile the shared object:
 
 `$ sudo python setup.py install`
