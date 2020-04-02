@@ -10,7 +10,7 @@ Copy the shared object `build/lib.linux-x86_64-2.7/gpuadder.so` to this director
 
 To run:
 
-`$ sage test.sage` OR `./sage test.sage` (For machines without a link in `/usr/local/bin/`)
+`$ sage test.sage` OR `./sage test.sage` (For machines without a link in `/usr/local/bin/` pointing to sage's executable)
 
 The `test.sage` file contains the Sage code required to execute a simple test run. The contents are as follows:
 
@@ -21,3 +21,4 @@ The `test.sage` file contains the Sage code required to execute a simple test ru
 `print('=======================================================================')`<br/>
 `gb = f5_2(I); f5_2.print_stats();`
 
+The above code sets up a polynomial ring and an ideal of finite size (32003). Then the Grobner Basis is generated.
