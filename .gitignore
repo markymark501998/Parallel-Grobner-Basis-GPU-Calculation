@@ -1,2 +1,3 @@
 sage_implementation/.vscode/settings.json
 sage_implementation/test.sage.py
+sage_implementation/*.sage.py
