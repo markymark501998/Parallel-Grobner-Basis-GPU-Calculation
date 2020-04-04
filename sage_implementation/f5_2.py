@@ -708,7 +708,7 @@ class F5_2:
                         break      
         else:        
             instance = gpuadder.GPUCublas()
-            instance.call_cublas_gpu_finite(matrix_gpu_list, nrows, ncols, field_size_var)
+            instance.call_cublas_gpu_finite_double(matrix_gpu_list, nrows, ncols, field_size_var)
             R = IntegerModRing(field_size_var)
             
             for c in xrange(ncols):

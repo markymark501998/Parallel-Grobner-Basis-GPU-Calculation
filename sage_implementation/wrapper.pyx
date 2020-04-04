@@ -16,6 +16,7 @@ cdef extern from "src/manager.hh":
         C_GPUCublas()
         void F4_5_Elimination(double *, int, int)
         void F4_5_Elimination_Finite(double *, int, int, int)
+        void F4_5_Elimination_Finite_Double(double *, int, int, int)
 
 cdef class GPUAdder:
     cdef C_GPUAdder* g
@@ -66,6 +67,19 @@ cdef class GPUCublas:
             matrix_finite[i] = float(list[i])
     
         self.g.F4_5_Elimination_Finite(matrix_finite, rows, cols, field_size)
+
+        for i in range((rows*cols)):
+            list[i] = float(matrix_finite[i])
+
+    def call_cublas_gpu_finite_double(self, list, rows, cols, field_size):
+        cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
+        if not matrix_finite:
+            raise MemoryError()
+        
+        for i in range((rows*cols)):
+            matrix_finite[i] = float(list[i])
+    
+        self.g.F4_5_Elimination_Finite_Double(matrix_finite, rows, cols, field_size)
 
         for i in range((rows*cols)):
             list[i] = float(matrix_finite[i])

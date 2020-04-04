@@ -1138,8 +1138,8 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "wrapper.pyx":20
- *         void F4_5_Elimination_Finite(double *, int, int, int)
+/* "wrapper.pyx":21
+ *         void F4_5_Elimination_Finite_Double(double *, int, int, int)
  * 
  * cdef class GPUAdder:             # <<<<<<<<<<<<<<
  *     cdef C_GPUAdder* g
@@ -1152,7 +1152,7 @@ struct __pyx_obj_8gpuadder_GPUAdder {
 };
 
 
-/* "wrapper.pyx":41
+/* "wrapper.pyx":42
  *         return a
  * 
  * cdef class GPUCublas:             # <<<<<<<<<<<<<<
@@ -1860,8 +1860,9 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_10__setstate_cython__(CYTHON_UNUSE
 static int __pyx_pf_8gpuadder_9GPUCublas___cinit__(struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, PyObject *__pyx_v_list, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols); /* proto */
 static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, PyObject *__pyx_v_list, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols, PyObject *__pyx_v_field_size); /* proto */
-static PyObject *__pyx_pf_8gpuadder_9GPUCublas_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8gpuadder_9GPUCublas_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_8gpuadder_9GPUCublas_6call_cublas_gpu_finite_double(struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, PyObject *__pyx_v_list, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols, PyObject *__pyx_v_field_size); /* proto */
+static PyObject *__pyx_pf_8gpuadder_9GPUCublas_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8gpuadder_9GPUCublas_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static PyObject *__pyx_tp_new_8gpuadder_GPUAdder(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -1879,7 +1880,7 @@ static PyObject *__pyx_tuple__10;
 static PyObject *__pyx_tuple__11;
 /* Late includes */
 
-/* "wrapper.pyx":24
+/* "wrapper.pyx":25
  *     cdef int dim1
  * 
  *     def __cinit__(self, np.ndarray[ndim=1, dtype=np.int32_t] arr):             # <<<<<<<<<<<<<<
@@ -1913,7 +1914,7 @@ static int __pyx_pw_8gpuadder_8GPUAdder_1__cinit__(PyObject *__pyx_v_self, PyObj
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 24, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 25, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -1924,13 +1925,13 @@ static int __pyx_pw_8gpuadder_8GPUAdder_1__cinit__(PyObject *__pyx_v_self, PyObj
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 24, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 25, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gpuadder.GPUAdder.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(1, 24, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_arr), __pyx_ptype_5numpy_ndarray, 1, "arr", 0))) __PYX_ERR(1, 25, __pyx_L1_error)
   __pyx_r = __pyx_pf_8gpuadder_8GPUAdder___cinit__(((struct __pyx_obj_8gpuadder_GPUAdder *)__pyx_v_self), __pyx_v_arr);
 
   /* function exit code */
@@ -1957,21 +1958,21 @@ static int __pyx_pf_8gpuadder_8GPUAdder___cinit__(struct __pyx_obj_8gpuadder_GPU
   __pyx_pybuffernd_arr.rcbuffer = &__pyx_pybuffer_arr;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(1, 24, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_arr, &__Pyx_TypeInfo_nn___pyx_t_5numpy_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(1, 25, __pyx_L1_error)
   }
   __pyx_pybuffernd_arr.diminfo[0].strides = __pyx_pybuffernd_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_arr.diminfo[0].shape = __pyx_pybuffernd_arr.rcbuffer->pybuffer.shape[0];
 
-  /* "wrapper.pyx":25
+  /* "wrapper.pyx":26
  * 
  *     def __cinit__(self, np.ndarray[ndim=1, dtype=np.int32_t] arr):
  *         self.dim1 = len(arr)             # <<<<<<<<<<<<<<
  *         self.g = new C_GPUAdder(&arr[0], self.dim1)
  * 
  */
-  __pyx_t_1 = PyObject_Length(((PyObject *)__pyx_v_arr)); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(1, 25, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(((PyObject *)__pyx_v_arr)); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(1, 26, __pyx_L1_error)
   __pyx_v_self->dim1 = __pyx_t_1;
 
-  /* "wrapper.pyx":26
+  /* "wrapper.pyx":27
  *     def __cinit__(self, np.ndarray[ndim=1, dtype=np.int32_t] arr):
  *         self.dim1 = len(arr)
  *         self.g = new C_GPUAdder(&arr[0], self.dim1)             # <<<<<<<<<<<<<<
@@ -1986,11 +1987,11 @@ static int __pyx_pf_8gpuadder_8GPUAdder___cinit__(struct __pyx_obj_8gpuadder_GPU
   } else if (unlikely(__pyx_t_2 >= __pyx_pybuffernd_arr.diminfo[0].shape)) __pyx_t_3 = 0;
   if (unlikely(__pyx_t_3 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_3);
-    __PYX_ERR(1, 26, __pyx_L1_error)
+    __PYX_ERR(1, 27, __pyx_L1_error)
   }
   __pyx_v_self->g = new GPUAdder((&(*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_arr.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_arr.diminfo[0].strides))), __pyx_v_self->dim1);
 
-  /* "wrapper.pyx":24
+  /* "wrapper.pyx":25
  *     cdef int dim1
  * 
  *     def __cinit__(self, np.ndarray[ndim=1, dtype=np.int32_t] arr):             # <<<<<<<<<<<<<<
@@ -2018,7 +2019,7 @@ static int __pyx_pf_8gpuadder_8GPUAdder___cinit__(struct __pyx_obj_8gpuadder_GPU
   return __pyx_r;
 }
 
-/* "wrapper.pyx":28
+/* "wrapper.pyx":29
  *         self.g = new C_GPUAdder(&arr[0], self.dim1)
  * 
  *     def increment(self):             # <<<<<<<<<<<<<<
@@ -2044,7 +2045,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_2increment(struct __pyx_obj_8gpuad
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("increment", 0);
 
-  /* "wrapper.pyx":29
+  /* "wrapper.pyx":30
  * 
  *     def increment(self):
  *         self.g.increment()             # <<<<<<<<<<<<<<
@@ -2053,7 +2054,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_2increment(struct __pyx_obj_8gpuad
  */
   __pyx_v_self->g->increment();
 
-  /* "wrapper.pyx":28
+  /* "wrapper.pyx":29
  *         self.g = new C_GPUAdder(&arr[0], self.dim1)
  * 
  *     def increment(self):             # <<<<<<<<<<<<<<
@@ -2068,7 +2069,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_2increment(struct __pyx_obj_8gpuad
   return __pyx_r;
 }
 
-/* "wrapper.pyx":31
+/* "wrapper.pyx":32
  *         self.g.increment()
  * 
  *     def retreive_inplace(self):             # <<<<<<<<<<<<<<
@@ -2094,7 +2095,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_4retreive_inplace(struct __pyx_obj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("retreive_inplace", 0);
 
-  /* "wrapper.pyx":32
+  /* "wrapper.pyx":33
  * 
  *     def retreive_inplace(self):
  *         self.g.retreive()             # <<<<<<<<<<<<<<
@@ -2103,7 +2104,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_4retreive_inplace(struct __pyx_obj
  */
   __pyx_v_self->g->retreive();
 
-  /* "wrapper.pyx":31
+  /* "wrapper.pyx":32
  *         self.g.increment()
  * 
  *     def retreive_inplace(self):             # <<<<<<<<<<<<<<
@@ -2118,7 +2119,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_4retreive_inplace(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "wrapper.pyx":34
+/* "wrapper.pyx":35
  *         self.g.retreive()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
@@ -2159,46 +2160,46 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_6retreive(struct __pyx_obj_8gpuadd
   __pyx_pybuffernd_a.data = NULL;
   __pyx_pybuffernd_a.rcbuffer = &__pyx_pybuffer_a;
 
-  /* "wrapper.pyx":35
+  /* "wrapper.pyx":36
  * 
  *     def retreive(self):
  *         cdef np.ndarray[ndim=1, dtype=np.int32_t] a = np.zeros(self.dim1, dtype=np.int32)             # <<<<<<<<<<<<<<
  * 
  *         self.g.retreive_to(&a[0], self.dim1)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->dim1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->dim1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(1, 35, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 35, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 35, __pyx_L1_error)
+  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 36, __pyx_L1_error)
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_a.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_5numpy_int32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_a = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_a.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 35, __pyx_L1_error)
+      __PYX_ERR(1, 36, __pyx_L1_error)
     } else {__pyx_pybuffernd_a.diminfo[0].strides = __pyx_pybuffernd_a.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_a.diminfo[0].shape = __pyx_pybuffernd_a.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -2206,7 +2207,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_6retreive(struct __pyx_obj_8gpuadd
   __pyx_v_a = ((PyArrayObject *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "wrapper.pyx":37
+  /* "wrapper.pyx":38
  *         cdef np.ndarray[ndim=1, dtype=np.int32_t] a = np.zeros(self.dim1, dtype=np.int32)
  * 
  *         self.g.retreive_to(&a[0], self.dim1)             # <<<<<<<<<<<<<<
@@ -2221,11 +2222,11 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_6retreive(struct __pyx_obj_8gpuadd
   } else if (unlikely(__pyx_t_7 >= __pyx_pybuffernd_a.diminfo[0].shape)) __pyx_t_8 = 0;
   if (unlikely(__pyx_t_8 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_8);
-    __PYX_ERR(1, 37, __pyx_L1_error)
+    __PYX_ERR(1, 38, __pyx_L1_error)
   }
   __pyx_v_self->g->retreive_to((&(*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_int32_t *, __pyx_pybuffernd_a.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_a.diminfo[0].strides))), __pyx_v_self->dim1);
 
-  /* "wrapper.pyx":39
+  /* "wrapper.pyx":40
  *         self.g.retreive_to(&a[0], self.dim1)
  * 
  *         return a             # <<<<<<<<<<<<<<
@@ -2237,7 +2238,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_6retreive(struct __pyx_obj_8gpuadd
   __pyx_r = ((PyObject *)__pyx_v_a);
   goto __pyx_L0;
 
-  /* "wrapper.pyx":34
+  /* "wrapper.pyx":35
  *         self.g.retreive()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
@@ -2377,7 +2378,7 @@ static PyObject *__pyx_pf_8gpuadder_8GPUAdder_10__setstate_cython__(CYTHON_UNUSE
   return __pyx_r;
 }
 
-/* "wrapper.pyx":44
+/* "wrapper.pyx":45
  *     cdef C_GPUCublas* g
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -2406,7 +2407,7 @@ static int __pyx_pf_8gpuadder_9GPUCublas___cinit__(struct __pyx_obj_8gpuadder_GP
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "wrapper.pyx":45
+  /* "wrapper.pyx":46
  * 
  *     def __cinit__(self):
  *         self.g = new C_GPUCublas()             # <<<<<<<<<<<<<<
@@ -2415,7 +2416,7 @@ static int __pyx_pf_8gpuadder_9GPUCublas___cinit__(struct __pyx_obj_8gpuadder_GP
  */
   __pyx_v_self->g = new GPUCublas();
 
-  /* "wrapper.pyx":44
+  /* "wrapper.pyx":45
  *     cdef C_GPUCublas* g
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -2429,7 +2430,7 @@ static int __pyx_pf_8gpuadder_9GPUCublas___cinit__(struct __pyx_obj_8gpuadder_GP
   return __pyx_r;
 }
 
-/* "wrapper.pyx":47
+/* "wrapper.pyx":48
  *         self.g = new C_GPUCublas()
  * 
  *     def call_cublas_gpu(self, list, rows, cols):             # <<<<<<<<<<<<<<
@@ -2471,17 +2472,17 @@ static PyObject *__pyx_pw_8gpuadder_9GPUCublas_3call_cublas_gpu(PyObject *__pyx_
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rows)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu", 1, 3, 3, 1); __PYX_ERR(1, 47, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu", 1, 3, 3, 1); __PYX_ERR(1, 48, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cols)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu", 1, 3, 3, 2); __PYX_ERR(1, 47, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu", 1, 3, 3, 2); __PYX_ERR(1, 48, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "call_cublas_gpu") < 0)) __PYX_ERR(1, 47, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "call_cublas_gpu") < 0)) __PYX_ERR(1, 48, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -2496,7 +2497,7 @@ static PyObject *__pyx_pw_8gpuadder_9GPUCublas_3call_cublas_gpu(PyObject *__pyx_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("call_cublas_gpu", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 47, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("call_cublas_gpu", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 48, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gpuadder.GPUCublas.call_cublas_gpu", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2527,26 +2528,26 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
   int __pyx_t_11;
   __Pyx_RefNannySetupContext("call_cublas_gpu", 0);
 
-  /* "wrapper.pyx":48
+  /* "wrapper.pyx":49
  * 
  *     def call_cublas_gpu(self, list, rows, cols):
  *         cdef double* matrix = <double *>malloc(rows * cols * sizeof(double))             # <<<<<<<<<<<<<<
  *         if not matrix:
  *             raise MemoryError()
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(double))); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(double))); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyInt_As_size_t(__pyx_t_3); if (unlikely((__pyx_t_4 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_size_t(__pyx_t_3); if (unlikely((__pyx_t_4 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 49, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_matrix = ((double *)malloc(__pyx_t_4));
 
-  /* "wrapper.pyx":49
+  /* "wrapper.pyx":50
  *     def call_cublas_gpu(self, list, rows, cols):
  *         cdef double* matrix = <double *>malloc(rows * cols * sizeof(double))
  *         if not matrix:             # <<<<<<<<<<<<<<
@@ -2556,16 +2557,16 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
   __pyx_t_5 = ((!(__pyx_v_matrix != 0)) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "wrapper.pyx":50
+    /* "wrapper.pyx":51
  *         cdef double* matrix = <double *>malloc(rows * cols * sizeof(double))
  *         if not matrix:
  *             raise MemoryError()             # <<<<<<<<<<<<<<
  * 
  *         for i in range((rows*cols)):
  */
-    PyErr_NoMemory(); __PYX_ERR(1, 50, __pyx_L1_error)
+    PyErr_NoMemory(); __PYX_ERR(1, 51, __pyx_L1_error)
 
-    /* "wrapper.pyx":49
+    /* "wrapper.pyx":50
  *     def call_cublas_gpu(self, list, rows, cols):
  *         cdef double* matrix = <double *>malloc(rows * cols * sizeof(double))
  *         if not matrix:             # <<<<<<<<<<<<<<
@@ -2574,25 +2575,25 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
  */
   }
 
-  /* "wrapper.pyx":52
+  /* "wrapper.pyx":53
  *             raise MemoryError()
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
  *             matrix[i] = float(list[i])
  * 
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 52, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 52, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
     __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 52, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 53, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 52, __pyx_L1_error)
+    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 53, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   for (;;) {
@@ -2600,17 +2601,17 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 52, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 53, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 52, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 53, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 52, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 53, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 52, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 53, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       }
@@ -2620,7 +2621,7 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 52, __pyx_L1_error)
+          else __PYX_ERR(1, 53, __pyx_L1_error)
         }
         break;
       }
@@ -2629,21 +2630,21 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "wrapper.pyx":53
+    /* "wrapper.pyx":54
  * 
  *         for i in range((rows*cols)):
  *             matrix[i] = float(list[i])             # <<<<<<<<<<<<<<
  * 
  *         self.g.F4_5_Elimination(matrix, rows, cols)
  */
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_list, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 53, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_list, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_8 = __Pyx_PyObject_AsDouble(__pyx_t_2); if (unlikely(__pyx_t_8 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(1, 53, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_AsDouble(__pyx_t_2); if (unlikely(__pyx_t_8 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(1, 54, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 53, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 54, __pyx_L1_error)
     (__pyx_v_matrix[__pyx_t_9]) = __pyx_t_8;
 
-    /* "wrapper.pyx":52
+    /* "wrapper.pyx":53
  *             raise MemoryError()
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
@@ -2653,36 +2654,36 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "wrapper.pyx":55
+  /* "wrapper.pyx":56
  *             matrix[i] = float(list[i])
  * 
  *         self.g.F4_5_Elimination(matrix, rows, cols)             # <<<<<<<<<<<<<<
  * 
  *         for i in range((rows*cols)):
  */
-  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_v_rows); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 55, __pyx_L1_error)
-  __pyx_t_11 = __Pyx_PyInt_As_int(__pyx_v_cols); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 55, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_v_rows); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 56, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyInt_As_int(__pyx_v_cols); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 56, __pyx_L1_error)
   __pyx_v_self->g->F4_5_Elimination(__pyx_v_matrix, __pyx_t_10, __pyx_t_11);
 
-  /* "wrapper.pyx":57
+  /* "wrapper.pyx":58
  *         self.g.F4_5_Elimination(matrix, rows, cols)
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
  *             list[i] = float(matrix[i])
  * 
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 57, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 57, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
     __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 57, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 58, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 57, __pyx_L1_error)
+    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 58, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   for (;;) {
@@ -2690,17 +2691,17 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 57, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 58, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 57, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 58, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 57, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 58, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 57, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 58, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       }
@@ -2710,7 +2711,7 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 57, __pyx_L1_error)
+          else __PYX_ERR(1, 58, __pyx_L1_error)
         }
         break;
       }
@@ -2719,20 +2720,20 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "wrapper.pyx":58
+    /* "wrapper.pyx":59
  * 
  *         for i in range((rows*cols)):
  *             list[i] = float(matrix[i])             # <<<<<<<<<<<<<<
  * 
  *     def call_cublas_gpu_finite(self, list, rows, cols, field_size):
  */
-    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 58, __pyx_L1_error)
-    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_matrix[__pyx_t_9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 58, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 59, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_matrix[__pyx_t_9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 59, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(PyObject_SetItem(__pyx_v_list, __pyx_v_i, __pyx_t_2) < 0)) __PYX_ERR(1, 58, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_list, __pyx_v_i, __pyx_t_2) < 0)) __PYX_ERR(1, 59, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "wrapper.pyx":57
+    /* "wrapper.pyx":58
  *         self.g.F4_5_Elimination(matrix, rows, cols)
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
@@ -2742,7 +2743,7 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "wrapper.pyx":47
+  /* "wrapper.pyx":48
  *         self.g = new C_GPUCublas()
  * 
  *     def call_cublas_gpu(self, list, rows, cols):             # <<<<<<<<<<<<<<
@@ -2766,7 +2767,7 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_2call_cublas_gpu(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "wrapper.pyx":60
+/* "wrapper.pyx":61
  *             list[i] = float(matrix[i])
  * 
  *     def call_cublas_gpu_finite(self, list, rows, cols, field_size):             # <<<<<<<<<<<<<<
@@ -2811,23 +2812,23 @@ static PyObject *__pyx_pw_8gpuadder_9GPUCublas_5call_cublas_gpu_finite(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rows)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, 1); __PYX_ERR(1, 60, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, 1); __PYX_ERR(1, 61, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cols)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, 2); __PYX_ERR(1, 60, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, 2); __PYX_ERR(1, 61, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_field_size)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, 3); __PYX_ERR(1, 60, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, 3); __PYX_ERR(1, 61, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "call_cublas_gpu_finite") < 0)) __PYX_ERR(1, 60, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "call_cublas_gpu_finite") < 0)) __PYX_ERR(1, 61, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -2844,7 +2845,7 @@ static PyObject *__pyx_pw_8gpuadder_9GPUCublas_5call_cublas_gpu_finite(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 60, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 61, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gpuadder.GPUCublas.call_cublas_gpu_finite", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2876,26 +2877,26 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
   int __pyx_t_12;
   __Pyx_RefNannySetupContext("call_cublas_gpu_finite", 0);
 
-  /* "wrapper.pyx":61
+  /* "wrapper.pyx":62
  * 
  *     def call_cublas_gpu_finite(self, list, rows, cols, field_size):
  *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))             # <<<<<<<<<<<<<<
  *         if not matrix_finite:
  *             raise MemoryError()
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 61, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 62, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(double))); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 61, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(double))); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 62, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 61, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 62, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyInt_As_size_t(__pyx_t_3); if (unlikely((__pyx_t_4 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 61, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_size_t(__pyx_t_3); if (unlikely((__pyx_t_4 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 62, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_matrix_finite = ((double *)malloc(__pyx_t_4));
 
-  /* "wrapper.pyx":62
+  /* "wrapper.pyx":63
  *     def call_cublas_gpu_finite(self, list, rows, cols, field_size):
  *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
  *         if not matrix_finite:             # <<<<<<<<<<<<<<
@@ -2905,16 +2906,16 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
   __pyx_t_5 = ((!(__pyx_v_matrix_finite != 0)) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "wrapper.pyx":63
+    /* "wrapper.pyx":64
  *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
  *         if not matrix_finite:
  *             raise MemoryError()             # <<<<<<<<<<<<<<
  * 
  *         for i in range((rows*cols)):
  */
-    PyErr_NoMemory(); __PYX_ERR(1, 63, __pyx_L1_error)
+    PyErr_NoMemory(); __PYX_ERR(1, 64, __pyx_L1_error)
 
-    /* "wrapper.pyx":62
+    /* "wrapper.pyx":63
  *     def call_cublas_gpu_finite(self, list, rows, cols, field_size):
  *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
  *         if not matrix_finite:             # <<<<<<<<<<<<<<
@@ -2923,25 +2924,25 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
  */
   }
 
-  /* "wrapper.pyx":65
+  /* "wrapper.pyx":66
  *             raise MemoryError()
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
  *             matrix_finite[i] = float(list[i])
  * 
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 65, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 65, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
     __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 65, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 65, __pyx_L1_error)
+    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 66, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   for (;;) {
@@ -2949,17 +2950,17 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 65, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 66, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 65, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 66, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 65, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 66, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 65, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 66, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       }
@@ -2969,7 +2970,7 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 65, __pyx_L1_error)
+          else __PYX_ERR(1, 66, __pyx_L1_error)
         }
         break;
       }
@@ -2978,21 +2979,21 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "wrapper.pyx":66
+    /* "wrapper.pyx":67
  * 
  *         for i in range((rows*cols)):
  *             matrix_finite[i] = float(list[i])             # <<<<<<<<<<<<<<
  * 
  *         self.g.F4_5_Elimination_Finite(matrix_finite, rows, cols, field_size)
  */
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_list, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 66, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_list, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_8 = __Pyx_PyObject_AsDouble(__pyx_t_2); if (unlikely(__pyx_t_8 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(1, 66, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_AsDouble(__pyx_t_2); if (unlikely(__pyx_t_8 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(1, 67, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 66, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 67, __pyx_L1_error)
     (__pyx_v_matrix_finite[__pyx_t_9]) = __pyx_t_8;
 
-    /* "wrapper.pyx":65
+    /* "wrapper.pyx":66
  *             raise MemoryError()
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
@@ -3002,36 +3003,37 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "wrapper.pyx":68
+  /* "wrapper.pyx":69
  *             matrix_finite[i] = float(list[i])
  * 
  *         self.g.F4_5_Elimination_Finite(matrix_finite, rows, cols, field_size)             # <<<<<<<<<<<<<<
  * 
  *         for i in range((rows*cols)):
  */
-  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_v_rows); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 68, __pyx_L1_error)
-  __pyx_t_11 = __Pyx_PyInt_As_int(__pyx_v_cols); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 68, __pyx_L1_error)
-  __pyx_t_12 = __Pyx_PyInt_As_int(__pyx_v_field_size); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 68, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_v_rows); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 69, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyInt_As_int(__pyx_v_cols); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 69, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyInt_As_int(__pyx_v_field_size); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 69, __pyx_L1_error)
   __pyx_v_self->g->F4_5_Elimination_Finite(__pyx_v_matrix_finite, __pyx_t_10, __pyx_t_11, __pyx_t_12);
 
-  /* "wrapper.pyx":70
+  /* "wrapper.pyx":71
  *         self.g.F4_5_Elimination_Finite(matrix_finite, rows, cols, field_size)
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
  *             list[i] = float(matrix_finite[i])
+ * 
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 70, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 70, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
     __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 70, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 71, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 70, __pyx_L1_error)
+    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 71, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   for (;;) {
@@ -3039,17 +3041,17 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 70, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 71, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 70, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 71, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 70, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 71, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 70, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 71, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       }
@@ -3059,7 +3061,7 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 70, __pyx_L1_error)
+          else __PYX_ERR(1, 71, __pyx_L1_error)
         }
         break;
       }
@@ -3068,27 +3070,30 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "wrapper.pyx":71
+    /* "wrapper.pyx":72
  * 
  *         for i in range((rows*cols)):
  *             list[i] = float(matrix_finite[i])             # <<<<<<<<<<<<<<
+ * 
+ *     def call_cublas_gpu_finite_double(self, list, rows, cols, field_size):
  */
-    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 71, __pyx_L1_error)
-    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_matrix_finite[__pyx_t_9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 71, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 72, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_matrix_finite[__pyx_t_9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 72, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(PyObject_SetItem(__pyx_v_list, __pyx_v_i, __pyx_t_2) < 0)) __PYX_ERR(1, 71, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_list, __pyx_v_i, __pyx_t_2) < 0)) __PYX_ERR(1, 72, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "wrapper.pyx":70
+    /* "wrapper.pyx":71
  *         self.g.F4_5_Elimination_Finite(matrix_finite, rows, cols, field_size)
  * 
  *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
  *             list[i] = float(matrix_finite[i])
+ * 
  */
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "wrapper.pyx":60
+  /* "wrapper.pyx":61
  *             list[i] = float(matrix[i])
  * 
  *     def call_cublas_gpu_finite(self, list, rows, cols, field_size):             # <<<<<<<<<<<<<<
@@ -3112,6 +3117,352 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
   return __pyx_r;
 }
 
+/* "wrapper.pyx":74
+ *             list[i] = float(matrix_finite[i])
+ * 
+ *     def call_cublas_gpu_finite_double(self, list, rows, cols, field_size):             # <<<<<<<<<<<<<<
+ *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
+ *         if not matrix_finite:
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8gpuadder_9GPUCublas_7call_cublas_gpu_finite_double(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_8gpuadder_9GPUCublas_7call_cublas_gpu_finite_double(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_list = 0;
+  PyObject *__pyx_v_rows = 0;
+  PyObject *__pyx_v_cols = 0;
+  PyObject *__pyx_v_field_size = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("call_cublas_gpu_finite_double (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_list,&__pyx_n_s_rows,&__pyx_n_s_cols,&__pyx_n_s_field_size,0};
+    PyObject* values[4] = {0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_list)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rows)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite_double", 1, 4, 4, 1); __PYX_ERR(1, 74, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cols)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite_double", 1, 4, 4, 2); __PYX_ERR(1, 74, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_field_size)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite_double", 1, 4, 4, 3); __PYX_ERR(1, 74, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "call_cublas_gpu_finite_double") < 0)) __PYX_ERR(1, 74, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+    }
+    __pyx_v_list = values[0];
+    __pyx_v_rows = values[1];
+    __pyx_v_cols = values[2];
+    __pyx_v_field_size = values[3];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("call_cublas_gpu_finite_double", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 74, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("gpuadder.GPUCublas.call_cublas_gpu_finite_double", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_8gpuadder_9GPUCublas_6call_cublas_gpu_finite_double(((struct __pyx_obj_8gpuadder_GPUCublas *)__pyx_v_self), __pyx_v_list, __pyx_v_rows, __pyx_v_cols, __pyx_v_field_size);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8gpuadder_9GPUCublas_6call_cublas_gpu_finite_double(struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, PyObject *__pyx_v_list, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols, PyObject *__pyx_v_field_size) {
+  double *__pyx_v_matrix_finite;
+  PyObject *__pyx_v_i = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  size_t __pyx_t_4;
+  int __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  PyObject *(*__pyx_t_7)(PyObject *);
+  double __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  int __pyx_t_10;
+  int __pyx_t_11;
+  int __pyx_t_12;
+  __Pyx_RefNannySetupContext("call_cublas_gpu_finite_double", 0);
+
+  /* "wrapper.pyx":75
+ * 
+ *     def call_cublas_gpu_finite_double(self, list, rows, cols, field_size):
+ *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))             # <<<<<<<<<<<<<<
+ *         if not matrix_finite:
+ *             raise MemoryError()
+ */
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(double))); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_4 = __Pyx_PyInt_As_size_t(__pyx_t_3); if (unlikely((__pyx_t_4 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 75, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_matrix_finite = ((double *)malloc(__pyx_t_4));
+
+  /* "wrapper.pyx":76
+ *     def call_cublas_gpu_finite_double(self, list, rows, cols, field_size):
+ *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
+ *         if not matrix_finite:             # <<<<<<<<<<<<<<
+ *             raise MemoryError()
+ * 
+ */
+  __pyx_t_5 = ((!(__pyx_v_matrix_finite != 0)) != 0);
+  if (unlikely(__pyx_t_5)) {
+
+    /* "wrapper.pyx":77
+ *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
+ *         if not matrix_finite:
+ *             raise MemoryError()             # <<<<<<<<<<<<<<
+ * 
+ *         for i in range((rows*cols)):
+ */
+    PyErr_NoMemory(); __PYX_ERR(1, 77, __pyx_L1_error)
+
+    /* "wrapper.pyx":76
+ *     def call_cublas_gpu_finite_double(self, list, rows, cols, field_size):
+ *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
+ *         if not matrix_finite:             # <<<<<<<<<<<<<<
+ *             raise MemoryError()
+ * 
+ */
+  }
+
+  /* "wrapper.pyx":79
+ *             raise MemoryError()
+ * 
+ *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
+ *             matrix_finite[i] = float(list[i])
+ * 
+ */
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 79, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 79, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
+    __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_6 = 0;
+    __pyx_t_7 = NULL;
+  } else {
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 79, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 79, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_7)) {
+      if (likely(PyList_CheckExact(__pyx_t_3))) {
+        if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 79, __pyx_L1_error)
+        #else
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 79, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        #endif
+      } else {
+        if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 79, __pyx_L1_error)
+        #else
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 79, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        #endif
+      }
+    } else {
+      __pyx_t_2 = __pyx_t_7(__pyx_t_3);
+      if (unlikely(!__pyx_t_2)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(1, 79, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "wrapper.pyx":80
+ * 
+ *         for i in range((rows*cols)):
+ *             matrix_finite[i] = float(list[i])             # <<<<<<<<<<<<<<
+ * 
+ *         self.g.F4_5_Elimination_Finite_Double(matrix_finite, rows, cols, field_size)
+ */
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_list, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 80, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_8 = __Pyx_PyObject_AsDouble(__pyx_t_2); if (unlikely(__pyx_t_8 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(1, 80, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 80, __pyx_L1_error)
+    (__pyx_v_matrix_finite[__pyx_t_9]) = __pyx_t_8;
+
+    /* "wrapper.pyx":79
+ *             raise MemoryError()
+ * 
+ *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
+ *             matrix_finite[i] = float(list[i])
+ * 
+ */
+  }
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "wrapper.pyx":82
+ *             matrix_finite[i] = float(list[i])
+ * 
+ *         self.g.F4_5_Elimination_Finite_Double(matrix_finite, rows, cols, field_size)             # <<<<<<<<<<<<<<
+ * 
+ *         for i in range((rows*cols)):
+ */
+  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_v_rows); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyInt_As_int(__pyx_v_cols); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyInt_As_int(__pyx_v_field_size); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_v_self->g->F4_5_Elimination_Finite_Double(__pyx_v_matrix_finite, __pyx_t_10, __pyx_t_11, __pyx_t_12);
+
+  /* "wrapper.pyx":84
+ *         self.g.F4_5_Elimination_Finite_Double(matrix_finite, rows, cols, field_size)
+ * 
+ *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
+ *             list[i] = float(matrix_finite[i])
+ */
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 84, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 84, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
+    __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_6 = 0;
+    __pyx_t_7 = NULL;
+  } else {
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 84, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 84, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_7)) {
+      if (likely(PyList_CheckExact(__pyx_t_3))) {
+        if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 84, __pyx_L1_error)
+        #else
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        #endif
+      } else {
+        if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(1, 84, __pyx_L1_error)
+        #else
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        #endif
+      }
+    } else {
+      __pyx_t_2 = __pyx_t_7(__pyx_t_3);
+      if (unlikely(!__pyx_t_2)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(1, 84, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
+    __pyx_t_2 = 0;
+
+    /* "wrapper.pyx":85
+ * 
+ *         for i in range((rows*cols)):
+ *             list[i] = float(matrix_finite[i])             # <<<<<<<<<<<<<<
+ */
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(1, 85, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble((__pyx_v_matrix_finite[__pyx_t_9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 85, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    if (unlikely(PyObject_SetItem(__pyx_v_list, __pyx_v_i, __pyx_t_2) < 0)) __PYX_ERR(1, 85, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+    /* "wrapper.pyx":84
+ *         self.g.F4_5_Elimination_Finite_Double(matrix_finite, rows, cols, field_size)
+ * 
+ *         for i in range((rows*cols)):             # <<<<<<<<<<<<<<
+ *             list[i] = float(matrix_finite[i])
+ */
+  }
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "wrapper.pyx":74
+ *             list[i] = float(matrix_finite[i])
+ * 
+ *     def call_cublas_gpu_finite_double(self, list, rows, cols, field_size):             # <<<<<<<<<<<<<<
+ *         cdef double* matrix_finite = <double *>malloc(rows * cols * sizeof(double))
+ *         if not matrix_finite:
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("gpuadder.GPUCublas.call_cublas_gpu_finite_double", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_i);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
@@ -3119,19 +3470,19 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_4call_cublas_gpu_finite(struct __
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8gpuadder_9GPUCublas_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_8gpuadder_9GPUCublas_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_8gpuadder_9GPUCublas_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_8gpuadder_9GPUCublas_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8gpuadder_9GPUCublas_6__reduce_cython__(((struct __pyx_obj_8gpuadder_GPUCublas *)__pyx_v_self));
+  __pyx_r = __pyx_pf_8gpuadder_9GPUCublas_8__reduce_cython__(((struct __pyx_obj_8gpuadder_GPUCublas *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8gpuadder_9GPUCublas_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self) {
+static PyObject *__pyx_pf_8gpuadder_9GPUCublas_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3173,19 +3524,19 @@ static PyObject *__pyx_pf_8gpuadder_9GPUCublas_6__reduce_cython__(CYTHON_UNUSED 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8gpuadder_9GPUCublas_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_8gpuadder_9GPUCublas_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_8gpuadder_9GPUCublas_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_8gpuadder_9GPUCublas_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8gpuadder_9GPUCublas_8__setstate_cython__(((struct __pyx_obj_8gpuadder_GPUCublas *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_8gpuadder_9GPUCublas_10__setstate_cython__(((struct __pyx_obj_8gpuadder_GPUCublas *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8gpuadder_9GPUCublas_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_8gpuadder_9GPUCublas_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUCublas *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -5766,8 +6117,9 @@ static void __pyx_tp_dealloc_8gpuadder_GPUCublas(PyObject *o) {
 static PyMethodDef __pyx_methods_8gpuadder_GPUCublas[] = {
   {"call_cublas_gpu", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8gpuadder_9GPUCublas_3call_cublas_gpu, METH_VARARGS|METH_KEYWORDS, 0},
   {"call_cublas_gpu_finite", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8gpuadder_9GPUCublas_5call_cublas_gpu_finite, METH_VARARGS|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_8gpuadder_9GPUCublas_7__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_8gpuadder_9GPUCublas_9__setstate_cython__, METH_O, 0},
+  {"call_cublas_gpu_finite_double", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8gpuadder_9GPUCublas_7call_cublas_gpu_finite_double, METH_VARARGS|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_8gpuadder_9GPUCublas_9__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_8gpuadder_9GPUCublas_11__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
@@ -5928,8 +6280,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 2, __pyx_L1_error)
-  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 50, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 52, __pyx_L1_error)
+  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 51, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 53, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 272, __pyx_L1_error)
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(2, 856, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(2, 1038, __pyx_L1_error)
@@ -6106,25 +6458,25 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_8gpuadder_GPUAdder) < 0) __PYX_ERR(1, 20, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8gpuadder_GPUAdder) < 0) __PYX_ERR(1, 21, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_8gpuadder_GPUAdder.tp_print = 0;
   #endif
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8gpuadder_GPUAdder.tp_dictoffset && __pyx_type_8gpuadder_GPUAdder.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_8gpuadder_GPUAdder.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUAdder, (PyObject *)&__pyx_type_8gpuadder_GPUAdder) < 0) __PYX_ERR(1, 20, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8gpuadder_GPUAdder) < 0) __PYX_ERR(1, 20, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUAdder, (PyObject *)&__pyx_type_8gpuadder_GPUAdder) < 0) __PYX_ERR(1, 21, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8gpuadder_GPUAdder) < 0) __PYX_ERR(1, 21, __pyx_L1_error)
   __pyx_ptype_8gpuadder_GPUAdder = &__pyx_type_8gpuadder_GPUAdder;
-  if (PyType_Ready(&__pyx_type_8gpuadder_GPUCublas) < 0) __PYX_ERR(1, 41, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8gpuadder_GPUCublas) < 0) __PYX_ERR(1, 42, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_8gpuadder_GPUCublas.tp_print = 0;
   #endif
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8gpuadder_GPUCublas.tp_dictoffset && __pyx_type_8gpuadder_GPUCublas.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_8gpuadder_GPUCublas.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUCublas, (PyObject *)&__pyx_type_8gpuadder_GPUCublas) < 0) __PYX_ERR(1, 41, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8gpuadder_GPUCublas) < 0) __PYX_ERR(1, 41, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUCublas, (PyObject *)&__pyx_type_8gpuadder_GPUCublas) < 0) __PYX_ERR(1, 42, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8gpuadder_GPUCublas) < 0) __PYX_ERR(1, 42, __pyx_L1_error)
   __pyx_ptype_8gpuadder_GPUCublas = &__pyx_type_8gpuadder_GPUCublas;
   __Pyx_RefNannyFinishContext();
   return 0;

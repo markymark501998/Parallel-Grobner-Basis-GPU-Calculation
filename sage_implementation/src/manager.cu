@@ -73,3 +73,11 @@ void GPUCublas::F4_5_Elimination_Finite(double * inputMatrix, int rows, int cols
     cerr << msg << endl;
   }
 }
+
+void GPUCublas::F4_5_Elimination_Finite_Double(double * inputMatrix, int rows, int cols, int field_size) {
+  try {
+    F4_5_GuassianElimination_Finite_Double(inputMatrix, rows, cols, 1, 0, field_size);
+  } catch (const char* msg) {
+    cerr << msg << endl;
+  }
+}

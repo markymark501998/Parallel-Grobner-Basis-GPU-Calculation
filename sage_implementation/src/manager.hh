@@ -40,4 +40,5 @@ class GPUCublas {
   ~GPUCublas();
   void F4_5_Elimination(double * inputMatrix, int rows, int cols);
   void F4_5_Elimination_Finite(double * inputMatrix, int rows, int cols, int field_size);
+  void F4_5_Elimination_Finite_Double(double * inputMatrix, int rows, int cols, int field_size);
 };

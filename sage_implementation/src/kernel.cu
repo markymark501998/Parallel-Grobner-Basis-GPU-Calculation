@@ -114,17 +114,6 @@ int F4_5_GuassianElimination_Finite (double * inputMatrix, int rows, int cols, i
         printf ("host memory allocation failed\n");
         return EXIT_FAILURE;
     }
-
-    /*
-    //Populate the Host Matrix Array in CuBLAS format
-    for(j = 0; j < cols; j++) {
-        for(i = 0; i < rows; i++) {
-            hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
-        }
-    }
-    */
-
-    //hostMatrix = inputMatrix;
     
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
@@ -204,53 +193,19 @@ int F4_5_GuassianElimination_Finite (double * inputMatrix, int rows, int cols, i
         return EXIT_FAILURE;
     }
 
-    //Sync up the device (not necessary with CuBLAS but here for good measure)
+    //Sync up the device
     cudaDeviceSynchronize();
 
     if (checkRef == 1) {
         printf("Checking if NaN/Infinite rows are present...\n");
     }
-
-    //inputMatrix = hostMatrix;;
     
+    //Bring data back to input matrix to be passed back to f4/5 algorithm
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
             inputMatrix[IDX2C(i,j,rows)] = hostMatrix[IDX2C(i,j,rows)];
         }
     }
-
-    /*
-    //Bring Data back to Main function through inputMatrix variable
-    for(i = 0; i < rows; i++) {
-        for(j = 0; j < cols; j++) {        
-            inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];            
-
-            if (checkRef == 1) {
-                if(!isfinite(inputMatrix[i][j])) {
-                    printf("NaN/Infinite Value Detected\n");
-                }
-            }
-        }
-    } 
-
-    if (checkRef == 1) {
-        printf("Checking if illogical values are present...\n\n");
-        
-        for (i = 0; i < rows; i++) {
-            for (j = 0; j < cols; j++) {
-                if (inputMatrix[i][j] != 0.0f) {                     
-                    for (k = i + 1; k < rows; k++) {
-                        if (inputMatrix[k][j] != 0.0f) {
-                            printf("Illogical Value Detected\n");
-                        }
-                    }
-
-                    break;
-                }
-            }
-        }
-    }
-    */
 
     //Free all the memory used
     cudaFree (deviceMatrix);
@@ -259,6 +214,168 @@ int F4_5_GuassianElimination_Finite (double * inputMatrix, int rows, int cols, i
     free(hostMatrix);
     free(rPiv);
     free(inverseRounder);
+    free(tempVector);
+
+    return 0;
+}
+
+double __device__ Add_Integer_Mod_Double (double n, double m, int p) {
+    return fmod((n + m), (double)p);
+}
+
+double __device__ Mul_Integer_Mod_Double (double n, double m, int p) {
+    return fmod((n * m), (double)p);
+}
+
+//Call: intModDAXPY <<<(N+255)/256, 256>>> (cols, scalar, devicematrix*, devicematrix*, rows, field_size);
+void __global__ intModDAXPY_Double (int n, double scalar, double* x, double* y, int inc, int p) {
+    int i = blockIdx.x*blockDim.x + threadIdx.x;
+    
+    if (i < n) {
+        int j = i * inc;
+
+        double aX = Mul_Integer_Mod_Double(scalar, x[j], p);
+        y[j] = Add_Integer_Mod_Double(aX, y[j], p);
+    }
+}
+
+//Call: intModDScale <<<(N+255)/256, 256>>> (cols, scalar, devicematrix*, rows, field_size)
+void __global__ intModDScale_Double (int n, double scalar, double* x, int inc, int p) {
+    int i = blockIdx.x*blockDim.x + threadIdx.x;
+    
+    if (i < n) {
+        int j = i * inc;
+
+        x[j] = Mul_Integer_Mod_Double(scalar, x[j], p);
+    }
+}
+
+int F4_5_GuassianElimination_Finite_Double (double * inputMatrix, int rows, int cols, int dontPrint, int checkRef, int field_size) {
+    double *hostMatrix = 0;
+    double *deviceMatrix = 0;
+    cudaError_t cudaStat;
+	cublasStatus_t stat;
+    cublasHandle_t handle;
+
+    int* rPiv;
+    int i, j, c, r;
+
+    rPiv = (int *)malloc(cols * sizeof(int));
+
+    if(dontPrint == 0) {
+        printf("F4-5 Guassian Elimination\n");
+        printf("====================================================================================================================================\n");
+        printf("                                                        Start Algorithm\n");
+        printf("====================================================================================================================================\n");
+    }
+    
+    for (i = 0; i < cols; i++) {
+        rPiv[i] = -1;
+    }
+
+    //Initialize Array for the Host Matrix
+    hostMatrix = (double *)malloc(rows * cols * sizeof(double));
+    if (!hostMatrix) {
+        printf ("host memory allocation failed\n");
+        return EXIT_FAILURE;
+    }
+    
+    //Copy data to Host Matrix
+    for(j = 0; j < cols; j++) {
+        for(i = 0; i < rows; i++) {
+            hostMatrix[IDX2C(i,j,rows)] = inputMatrix[IDX2C(i,j,rows)];
+        }
+    }
+
+    //Allocate memory for Device Matrix Array
+    cudaStat = cudaMalloc ((void**) &deviceMatrix, rows * cols * sizeof(*hostMatrix));
+    if (cudaStat != cudaSuccess) {
+        printf ("device memory allocation failed\n");
+        return EXIT_FAILURE;
+    }
+    
+    //Initialize CuBLAS object
+    stat = cublasCreate(&handle);
+    if (stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("CUBLAS initialization failed\n");
+        return EXIT_FAILURE;
+    }
+
+    //Push data to the Device
+    stat = cublasSetMatrix (rows, cols, sizeof(*hostMatrix), hostMatrix, rows, deviceMatrix, rows);
+    if (stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("Data download failed\n");
+        cudaFree (deviceMatrix);
+        cublasDestroy(handle);
+        return EXIT_FAILURE;
+    }
+    
+    double *tempVector = (double *)malloc(rows* sizeof(double));
+    double *tempAxpyScal = (double *) malloc (sizeof(double));
+    double double_scalar = 0.0f;
+
+    for (c = 0; c < cols; c++) {
+        //Download the Vector
+        stat = cublasGetVector(rows, sizeof(double), &deviceMatrix[IDX2C(0,c,rows)], 1, tempVector, 1);
+        if (stat != CUBLAS_STATUS_SUCCESS) {
+            printf ("Data Vector download failed");
+            cudaFree (deviceMatrix);
+            cublasDestroy(handle);
+            return EXIT_FAILURE;
+        }
+        
+        for (r = 0; r < rows; r++) {
+            if(tempVector[r] != 0.0f && rPiv[r] == -1) {
+                rPiv[r] = r;
+
+                double_scalar = (double)Inverse_Integer_Mod(tempVector[r], field_size);
+                //intModDScale <<<(N+255)/256, 256>>> (cols, scalar, devicematrix*, rows, field_size)
+                intModDScale_Double<<<(cols+255)/256, 256>>>(cols, double_scalar, &deviceMatrix[IDX2C(r,0,rows)], rows, field_size);
+                cudaDeviceSynchronize();
+
+                for (i = r + 1; i < rows; i++) {
+                    if (tempVector[i] != 0.0f) {
+                        double_scalar = field_size - tempVector[i];
+
+                        //intModDAXPY <<<(N+255)/256, 256>>> (cols, scalar, devicematrix*, devicematrix*, rows, field_size);
+                        intModDAXPY_Double<<<(cols+255)/256, 256>>>(cols, double_scalar, &deviceMatrix[IDX2C(r,0,rows)], &deviceMatrix[IDX2C(i,0,rows)], rows, field_size);
+                        cudaDeviceSynchronize();
+                    }
+                }
+
+                break;
+            }
+        }
+    }
+
+    //Download Matrix from the Device -> Host
+    stat = cublasGetMatrix (rows, cols, sizeof(*hostMatrix), deviceMatrix, rows, hostMatrix, rows);
+    if (stat != CUBLAS_STATUS_SUCCESS) {
+        printf ("Data upload failed");
+        cudaFree (deviceMatrix);
+        cublasDestroy(handle);
+        return EXIT_FAILURE;
+    }
+
+    //Sync up the device
+    cudaDeviceSynchronize();
+
+    if (checkRef == 1) {
+        printf("Checking if NaN/Infinite rows are present...\n");
+    }
+    
+    for(j = 0; j < cols; j++) {
+        for(i = 0; i < rows; i++) {
+            inputMatrix[IDX2C(i,j,rows)] = hostMatrix[IDX2C(i,j,rows)];
+        }
+    }
+
+    //Free all the memory used
+    cudaFree (deviceMatrix);
+    cublasDestroy(handle);
+
+    free(hostMatrix);
+    free(rPiv);
     free(tempVector);
 
     return 0;
@@ -293,17 +410,6 @@ int F4_5_GuassianElimination (double * inputMatrix, int rows, int cols, int dont
         printf ("host memory allocation failed\n");
         return EXIT_FAILURE;
     }
-
-    /*
-    //Populate the Host Matrix Array in CuBLAS format
-    for(j = 0; j < cols; j++) {
-        for(i = 0; i < rows; i++) {
-            hostMatrix[IDX2C(i,j,rows)] = inputMatrix[i][j];
-        }
-    }
-    */
-
-    //hostMatrix = inputMatrix;
     
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
@@ -393,53 +499,18 @@ int F4_5_GuassianElimination (double * inputMatrix, int rows, int cols, int dont
         return EXIT_FAILURE;
     }
 
-    //Sync up the device (not necessary with CuBLAS but here for good measure)
+    //Sync up the device
     cudaDeviceSynchronize();
 
     if (checkRef == 1) {
         printf("Checking if NaN/Infinite rows are present...\n");
     }
-
-    //inputMatrix = hostMatrix;;
     
     for(j = 0; j < cols; j++) {
         for(i = 0; i < rows; i++) {
             inputMatrix[IDX2C(i,j,rows)] = hostMatrix[IDX2C(i,j,rows)];
         }
     }
-
-    /*
-    //Bring Data back to Main function through inputMatrix variable
-    for(i = 0; i < rows; i++) {
-        for(j = 0; j < cols; j++) {        
-            inputMatrix[i][j] = hostMatrix[IDX2C(i,j,rows)];            
-
-            if (checkRef == 1) {
-                if(!isfinite(inputMatrix[i][j])) {
-                    printf("NaN/Infinite Value Detected\n");
-                }
-            }
-        }
-    } 
-
-    if (checkRef == 1) {
-        printf("Checking if illogical values are present...\n\n");
-        
-        for (i = 0; i < rows; i++) {
-            for (j = 0; j < cols; j++) {
-                if (inputMatrix[i][j] != 0.0f) {                     
-                    for (k = i + 1; k < rows; k++) {
-                        if (inputMatrix[k][j] != 0.0f) {
-                            printf("Illogical Value Detected\n");
-                        }
-                    }
-
-                    break;
-                }
-            }
-        }
-    }
-    */
 
     //Free all the memory used
     cudaFree (deviceMatrix);
