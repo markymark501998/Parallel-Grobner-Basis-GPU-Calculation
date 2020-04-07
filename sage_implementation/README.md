@@ -17,7 +17,7 @@ To compile the shared object:
 
 `$ sudo python setup.py install`
 
-Copy the shared object `build/lib.linux-x86_64-2.7/gpuadder.so` to this directory.
+Copy the shared object `build/lib.linux-x86_64-2.7/gpuadder.so` to directory where the `f5_2.py` script resides.
 
 To run:
 
