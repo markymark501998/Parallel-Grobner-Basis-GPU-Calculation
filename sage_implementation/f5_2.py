@@ -663,7 +663,7 @@ class F5_2:
             return F
 
         A,v = Sequence(F).coefficient_matrix()
-        #self.zero_reductions += A.nrows()-A.rank()
+        self.zero_reductions += A.nrows()-A.rank()
         
         if print_debug_var:
             print(type(A[0,0]))
@@ -707,6 +707,7 @@ class F5_2:
                                 A.add_multiple_of_row(i, r, minus_b, c)
                         break      
         else:        
+            #GPU Algorithm Here
             instance = gpuadder.GPUCublas()
             instance.call_cublas_gpu_finite_double(matrix_gpu_list, nrows, ncols, field_size_var)
             R = IntegerModRing(field_size_var)
@@ -729,7 +730,6 @@ class F5_2:
             for r in xrange(nrows):
                 print ('['),
                 for c in xrange(ncols):
-                    #print "%6f"%(matrix_gpu_list[idx2c(r,c,nrows)]),
                     print "%5s"%(str(
                         int(matrix_gpu_list[idx2c(r,c,nrows)])
                     )

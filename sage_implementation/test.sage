@@ -1,6 +1,6 @@
 execfile('f5_2.py');
 
-var_count = 8
+var_count = 7
 P = PolynomialRing(GF(65521),var_count,'x');
 I = sage.rings.ideal.Katsura(P).homogenize();
 

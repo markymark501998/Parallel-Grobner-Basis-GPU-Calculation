@@ -1,0 +1,77 @@
+Cyclic
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6 over Finite Field of size 65521
+CPU
+=======================================================================
+ 4    1   10 x   70,   10,    0  Guassian Elimination Time(s): [0.001742]
+ 5    2   20 x  108,   20,    0  Guassian Elimination Time(s): [0.00602]
+ 6    6   53 x  221,   53,    0  Guassian Elimination Time(s): [0.051818]
+ 7   14  104 x  349,  104,    0  Guassian Elimination Time(s): [0.2557]
+ 8   34  186 x  499,  186,    0  Guassian Elimination Time(s): [1.202511]
+ 9   58  286 x  657,  286,    0  Guassian Elimination Time(s): [4.432499]
+10  100  504 x  856,  503,    1  Guassian Elimination Time(s): [12.82174]
+11  137  773 x 1133,  767,    6  Guassian Elimination Time(s): [36.029124]
+12  199  917 x 1262,  897,   20  Guassian Elimination Time(s): [53.863803]
+13  204 1073 x 1426, 1056,   17  Guassian Elimination Time(s): [75.111701]
+14  200 1171 x 1522, 1147,   24  Guassian Elimination Time(s): [106.685796]
+15  155 1011 x 1363, 1004,    7  Guassian Elimination Time(s): [59.853195]
+16   92 1221 x 1583, 1220,    1  Guassian Elimination Time(s): [100.617626]
+17   83  205 x  337,  205,    0  Guassian Elimination Time(s): [1.554562]
+18  131  252 x  384,  252,    0  Guassian Elimination Time(s): [2.645072]
+19  157  143 x  275,  143,    0  Guassian Elimination Time(s): [0.944543]
+20   45
+21   68
+22    6
+                             |L|: 1025
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:   19
+     symbolic processing runtime: 412.184057
+    guassian elimination runtime: 928.367019
+                   total runtime: 1365.738747
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6 over Finite Field of size 65521
+GPU:
+=======================================================================
+ 4    1   10 x   70,   10,    0  Guassian Elimination Time(s): [0.533758]
+ 5    2   20 x  108,   20,    0  Guassian Elimination Time(s): [0.0058610000001]
+ 6    6   53 x  221,   53,    0  Guassian Elimination Time(s): [0.0233189999999]
+ 7   14  104 x  349,  104,    0  Guassian Elimination Time(s): [0.0697790000002]
+ 8   34  186 x  499,  186,    0  Guassian Elimination Time(s): [0.182356]
+ 9   58  286 x  657,  286,    0  Guassian Elimination Time(s): [0.39905]
+10  100  504 x  856,  503,    1  Guassian Elimination Time(s): [1.028048]
+11  137  773 x 1133,  767,    6  Guassian Elimination Time(s): [2.257669]
+12  199  917 x 1262,  897,   20  Guassian Elimination Time(s): [2.783202]
+13  204 1073 x 1426, 1056,   17  Guassian Elimination Time(s): [3.535267]
+14  200 1171 x 1522, 1147,   24  Guassian Elimination Time(s): [4.514787]
+15  155 1011 x 1363, 1004,    7  Guassian Elimination Time(s): [3.405301]
+16   92 1221 x 1583, 1220,    1  Guassian Elimination Time(s): [4.534847]
+17   83  205 x  337,  205,    0  Guassian Elimination Time(s): [0.214395]
+18  131  252 x  384,  252,    0  Guassian Elimination Time(s): [0.258169]
+19  157  143 x  275,  143,    0  Guassian Elimination Time(s): [0.190689]
+20   45
+21   68
+22    6
+                             |L|: 1025
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:   19
+     symbolic processing runtime: 412.760735
+    guassian elimination runtime: 492.668058
+                   total runtime: 931.101576
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6, x7 over Finite Field of size 65521
+CPU
+=======================================================================
+ 4    1   11 x  106,   11,    0  Guassian Elimination Time(s): [0.00311999999985]
+ 5    2   21 x  154,   21,    0  Guassian Elimination Time(s): [0.00959799999964]
+ 6    6   61 x  392,   61,    0  Guassian Elimination Time(s): [0.115793]
+ 7   14  143 x  723,  143,    0  Guassian Elimination Time(s): [0.848935]
+ 8   32  315 x 1224,  315,    0  Guassian Elimination Time(s): [6.389198]
+ 9   78  645 x 1920,  645,    0  Guassian Elimination Time(s): [45.707821]
+10  131  782 x 2243,  781,    1  Guassian Elimination Time(s): [138.626011]
+11  246 1998 x 3705, 1994,    4  Guassian Elimination Time(s): [782.066749]
+12  442 3062 x 4830, 3040,   22  Guassian Elimination Time(s): [3157.486825]
+13  681 5044 x 7010, 4988,   56  Guassian Elimination Time(s): [9982.223912]
+14  882 7149 x 9261, 6978,  171  Guassian Elimination Time(s): [22686.638882]
+15  925 10364 x 12801, 10211,  153  Guassian Elimination Time(s): [50258.932337]
+/home/mahojnac/SageInstall/sage-9.0/src/bin/sage-python: line 2:  9607 Terminated              sage -python "$@"

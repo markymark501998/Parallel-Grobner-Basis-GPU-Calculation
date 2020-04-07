@@ -1,0 +1,61 @@
+Cyclic
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6 over Finite Field of size 32003
+CPU
+=======================================================================
+ 4    1   10 x   70,   10,    0  Guassian Elimination Time(s): [0.001788]
+ 5    2   20 x  108,   20,    0  Guassian Elimination Time(s): [0.006307]
+ 6    6   53 x  221,   53,    0  Guassian Elimination Time(s): [0.059202]
+ 7   14  104 x  349,  104,    0  Guassian Elimination Time(s): [0.306737]
+ 8   34  186 x  499,  186,    0  Guassian Elimination Time(s): [1.406412]
+ 9   58  286 x  657,  286,    0  Guassian Elimination Time(s): [5.187244]
+10  100  504 x  856,  503,    1  Guassian Elimination Time(s): [14.447757]
+11  137  773 x 1133,  767,    6  Guassian Elimination Time(s): [39.006617]
+12  199  917 x 1262,  897,   20  Guassian Elimination Time(s): [57.819938]
+13  204 1073 x 1426, 1056,   17  Guassian Elimination Time(s): [75.5629]
+14  200 1171 x 1522, 1147,   24  Guassian Elimination Time(s): [102.431633]
+15  155 1011 x 1363, 1004,    7  Guassian Elimination Time(s): [62.449552]
+16   92 1221 x 1583, 1220,    1  Guassian Elimination Time(s): [97.106968]
+17   83  205 x  337,  205,    0  Guassian Elimination Time(s): [1.794299]
+18  131  252 x  384,  252,    0  Guassian Elimination Time(s): [3.042802]
+19  157  143 x  275,  143,    0  Guassian Elimination Time(s): [1.13458]
+20   45
+21   68
+22    6
+                             |L|: 1025
+                         L is GB: True
+              reductions to zero:   76
+                     max. degree:   19
+     symbolic processing runtime: 345.161192
+    guassian elimination runtime: 497.165878
+                   total runtime: 861.926061
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6 over Finite Field of size 32003
+GPU:
+=======================================================================
+ 4    1   10 x   70,   10,    0  Guassian Elimination Time(s): [0.18872]
+ 5    2   20 x  108,   20,    0  Guassian Elimination Time(s): [0.004097]
+ 6    6   53 x  221,   53,    0  Guassian Elimination Time(s): [0.0172809999999]
+ 7   14  104 x  349,  104,    0  Guassian Elimination Time(s): [0.049224]
+ 8   34  186 x  499,  186,    0  Guassian Elimination Time(s): [0.131645]
+ 9   58  286 x  657,  286,    0  Guassian Elimination Time(s): [0.288147]
+10  100  504 x  856,  503,    1  Guassian Elimination Time(s): [0.711292]
+11  137  773 x 1133,  767,    6  Guassian Elimination Time(s): [1.498134]
+12  199  917 x 1262,  897,   20  Guassian Elimination Time(s): [1.850722]
+13  204 1073 x 1426, 1056,   17  Guassian Elimination Time(s): [2.383209]
+14  200 1171 x 1522, 1147,   24  Guassian Elimination Time(s): [2.990208]
+15  155 1011 x 1363, 1004,    7  Guassian Elimination Time(s): [2.079351]
+16   92 1221 x 1583, 1220,    1  Guassian Elimination Time(s): [2.929621]
+17   83  205 x  337,  205,    0  Guassian Elimination Time(s): [0.132403]
+18  131  252 x  384,  252,    0  Guassian Elimination Time(s): [0.189391]
+19  157  143 x  275,  143,    0  Guassian Elimination Time(s): [0.0869789999999]
+20   45
+21   68
+22    6
+                             |L|: 1025
+                         L is GB: True
+              reductions to zero:   76
+                     max. degree:   19
+     symbolic processing runtime: 334.85076
+    guassian elimination runtime: 49.844101
+                   total runtime: 403.839109

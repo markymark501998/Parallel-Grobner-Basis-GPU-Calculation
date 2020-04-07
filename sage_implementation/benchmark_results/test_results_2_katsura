@@ -1,0 +1,109 @@
+Katsura
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6 over Finite Field of size 65521
+CPU
+=======================================================================
+ 3    7   39 x   80,   39,    0  Guassian Elimination Time(s): [0.020104]
+ 4   12   99 x  155,   99,    0  Guassian Elimination Time(s): [0.14198]
+ 5   12  234 x  296,  234,    0  Guassian Elimination Time(s): [0.779036]
+ 6    7  306 x  369,  306,    0  Guassian Elimination Time(s): [1.441632]
+ 7    3  111 x  174,  111,    0  Guassian Elimination Time(s): [0.194499]
+                             |L|:   74
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:    7
+     symbolic processing runtime: 2.789796
+    guassian elimination runtime: 5.407961
+                   total runtime: 8.280014
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6 over Finite Field of size 65521
+GPU:
+=======================================================================
+ 3    7   39 x   80,   39,    0  Guassian Elimination Time(s): [0.52013]
+ 4   12   99 x  155,   99,    0  Guassian Elimination Time(s): [0.045924]
+ 5   12  234 x  296,  234,    0  Guassian Elimination Time(s): [0.170903]
+ 6    7  306 x  369,  306,    0  Guassian Elimination Time(s): [0.257183]
+ 7    3  111 x  174,  111,    0  Guassian Elimination Time(s): [0.051205]
+                             |L|:   74
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:    7
+     symbolic processing runtime: 2.877
+    guassian elimination runtime: 3.730941
+                   total runtime: 6.692039
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6, x7 over Finite Field of size 65521
+CPU
+=======================================================================
+ 3    8   52 x  115,   52,    0  Guassian Elimination Time(s): [0.045484]
+ 4   18  173 x  271,  173,    0  Guassian Elimination Time(s): [0.571353]
+ 5   22  406 x  525,  406,    0  Guassian Elimination Time(s): [4.414707]
+ 6   24  803 x  929,  803,    0  Guassian Elimination Time(s): [21.313008]
+ 7   14  958 x 1085,  958,    0  Guassian Elimination Time(s): [32.243858]
+ 8    6  699 x  826,  699,    0  Guassian Elimination Time(s): [14.421432]
+ 9    1  356 x  483,  356,    0  Guassian Elimination Time(s): [2.861576]
+                             |L|:  183
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:    9
+     symbolic processing runtime: 56.797257
+    guassian elimination runtime: 161.672566
+                   total runtime: 219.023626
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6, x7 over Finite Field of size 65521
+GPU:
+=======================================================================
+ 3    8   52 x  115,   52,    0  Guassian Elimination Time(s): [0.036793]
+ 4   18  173 x  271,  173,    0  Guassian Elimination Time(s): [0.123324]
+ 5   22  406 x  525,  406,    0  Guassian Elimination Time(s): [0.587077]
+ 6   24  803 x  929,  803,    0  Guassian Elimination Time(s): [1.854316]
+ 7   14  958 x 1085,  958,    0  Guassian Elimination Time(s): [2.495321]
+ 8    6  699 x  826,  699,    0  Guassian Elimination Time(s): [1.519478]
+ 9    1  356 x  483,  356,    0  Guassian Elimination Time(s): [0.396484]
+                             |L|:  183
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:    9
+     symbolic processing runtime: 56.800967
+    guassian elimination runtime: 91.840334
+                   total runtime: 149.282002
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6, x7, x8 over Finite Field of size 65521
+CPU
+=======================================================================
+ 3   10   68 x  160,   68,    0  Guassian Elimination Time(s): [0.103035]
+ 4   26  262 x  424,  262,    0  Guassian Elimination Time(s): [1.884344]
+ 5   41  751 x  969,  751,    0  Guassian Elimination Time(s): [24.605301]
+ 6   45 1714 x 1960, 1714,    0  Guassian Elimination Time(s): [188.836209]
+ 7   31 3098 x 3352, 3098,    0  Guassian Elimination Time(s): [853.32241]
+ 8   22 3570 x 3825, 3570,    0  Guassian Elimination Time(s): [1337.28559]
+ 9    7 3414 x 3669, 3414,    0  Guassian Elimination Time(s): [859.504163]
+10    4 4109 x 4364, 4109,    0  Guassian Elimination Time(s): [1206.189841]
+11    1 1521 x 1776, 1521,    0  Guassian Elimination Time(s): [109.21234]
+                             |L|:  418
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:   11
+     symbolic processing runtime: 2156.167808
+    guassian elimination runtime: 10312.778986
+                   total runtime: 12473.11817
+
+Multivariate Polynomial Ring in x0, x1, x2, x3, x4, x5, x6, x7, x8 over Finite Field of size 65521
+GPU:
+=======================================================================
+ 3   10   68 x  160,   68,    0  Guassian Elimination Time(s): [0.0496839999996]
+ 4   26  262 x  424,  262,    0  Guassian Elimination Time(s): [0.288092999999]
+ 5   41  751 x  969,  751,    0  Guassian Elimination Time(s): [1.889676]
+ 6   45 1714 x 1960, 1714,    0  Guassian Elimination Time(s): [8.361461]
+ 7   31 3098 x 3352, 3098,    0  Guassian Elimination Time(s): [25.994656]
+ 8   22 3570 x 3825, 3570,    0  Guassian Elimination Time(s): [33.948645]
+ 9    7 3414 x 3669, 3414,    0  Guassian Elimination Time(s): [29.210188]
+10    4 4109 x 4364, 4109,    0  Guassian Elimination Time(s): [40.104797]
+11    1 1521 x 1776, 1521,    0  Guassian Elimination Time(s): [5.941642]
+                             |L|:  418
+                         L is GB: True
+              reductions to zero:    0
+                     max. degree:   11
+     symbolic processing runtime: 2196.910109
+    guassian elimination runtime: 5856.564715
+                   total runtime: 8059.630634
+
