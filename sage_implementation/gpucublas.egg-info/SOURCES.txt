@@ -1,0 +1,14 @@
+MANIFEST.in
+README.md
+setup.py
+test.py
+wrapper.pyx
+gpucublas.egg-info/PKG-INFO
+gpucublas.egg-info/SOURCES.txt
+gpucublas.egg-info/dependency_links.txt
+gpucublas.egg-info/not-zip-safe
+gpucublas.egg-info/top_level.txt
+src/cublasOps2.cu
+src/kernel.cu
+src/manager.cu
+src/manager.hh
