@@ -1,4 +1,4 @@
-# F4/5 SageMath Grobner Basis Algorithm with GPU
+# F4/5 SageMath Grobner Basis Algorithm with Nvidia GPU
 
 This code allows for the F4/5 algorithm written by Martin Albrecht and John Perry for SageMath to be executed with GPU acceleration for the linear algebra operations. Albrecht's source code was modified to allow for the static CUDA shared object library to be executed within Sage. It has been tested for finite field sizes of 32003 & 65521.
 
@@ -13,6 +13,7 @@ Our implementation is able to utilize CUDA because the field sizes are small eno
     (m4/gfortran needed to compile Sage)
 
 -CUDA Toolkit (ours was version 10.0 with display driver version 431.XXX)<br/>
+    -We ran into issues with 10.2, give it a try if you would like
 -The want to give yourself a headache figuring this out on your own
 
 ### Execution:
