@@ -7,7 +7,7 @@ Martin Albrecht's bitbucket: [https://bitbucket.org/malb/research-snippets/src/m
 Our implementation is able to utilize CUDA because the field sizes are small enough for a double floating point number to represent the full integer with 100% accuracy.
 
 ### Requirements:
--SageMath 9.0 (compiled with Python 2.7)<br/>
+-SageMath 9.0 (compiled with Python 2.7) [https://www.sagemath.org/](https://www.sagemath.org/)<br/>
     -m4<br/>
     -gfortran<br/>
     (m4/gfortran needed to compile Sage)
@@ -16,7 +16,7 @@ Our implementation is able to utilize CUDA because the field sizes are small eno
 -The want to give yourself a headache figuring this out on your own
 
 ### Execution:
-To compile the shared object (big thanks to Robert T. McGibbon's source code for this):
+To compile the shared object (big thanks to Robert T. McGibbon's source code for helping us understand how do this):
 
 `$ sudo python setup.py install`
 
