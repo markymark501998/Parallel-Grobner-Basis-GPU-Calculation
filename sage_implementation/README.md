@@ -2,6 +2,8 @@
 
 This code allows for the F4/5 algorithm written by Martin Albrecht and John Perry for SageMath to be executed with GPU acceleration for the linear algebra operations. Albrecht's source code was modified to allow for the static CUDA shared object library to be executed within Sage. It has been tested for finite field sizes of 32003 & 65521.
 
+Martin Albrecht's bitbucket: [https://bitbucket.org/malb/research-snippets/src/master/](https://bitbucket.org/malb/research-snippets/src/master/)
+
 Our implementation is able to utilize CUDA because the field sizes are small enough for a double floating point number to represent the full integer with 100% accuracy.
 
 ### Requirements:
