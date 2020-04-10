@@ -1,8 +1,8 @@
 execfile('f5_2.py');
 
-var_count = 8
+var_count = 7
 P = PolynomialRing(GF(32003),var_count,'x');
-I = sage.rings.ideal.Katsura(P).homogenize();
+I = sage.rings.ideal.Cyclic(P).homogenize();
 
 print(P);
 print('CPU\n=======================================================================')
