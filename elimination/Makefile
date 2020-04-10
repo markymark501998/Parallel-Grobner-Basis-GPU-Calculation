@@ -14,4 +14,3 @@ debug:
 clean:
 	rm $(TARGET)
 	rm $(TARGET_UTILITY)
-
