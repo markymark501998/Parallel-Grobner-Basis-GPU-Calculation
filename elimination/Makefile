@@ -1,4 +1,4 @@
-CC=nvcc
+CC=nvcc 
 CC2=gcc
 TARGET=elim
 TARGET_UTILITY=util
