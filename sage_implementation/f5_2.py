@@ -337,6 +337,7 @@ class F5_2:
 
         d = 0
         while P: # as long as we have S-polynomials
+            iteration_s_time = time.clock()
             # TODO: this is a technicality, get rid of this
             P = set([p for p in P if p != tuple()])
 
@@ -360,7 +361,6 @@ class F5_2:
 
             # and perform top-reductions
             Stilde = self.reduction(S, G)
-            print
 
             # we add each new polynomial, and repeat
             for h in Stilde:
@@ -372,7 +372,16 @@ class F5_2:
 
             sys.stdout.flush()
             if proof and self.terminate(P, G):
+                iteration_e_time = time.clock()
+                iter_time = iteration_e_time - iteration_s_time
+                print (' Iteration Time: [%6f]')%iter_time,
+                print
                 break
+
+            iteration_e_time = time.clock()
+            iter_time = iteration_e_time - iteration_s_time
+            print (' Iteration Time: [%6f]')%iter_time,
+            print
         
         tt_end = time.clock()
         total_run_time = tt_end - tt_start
@@ -506,7 +515,7 @@ class F5_2:
         Ft = self.gauss_elimination(F)
         end = time.clock()
         tt = end - start
-        #print("\nGuassian Elimination Runtime: " + str(tt))
+        print(" G. Elimination Func. Time: [%6f]")%tt,
         elim_run_time += tt
 
         Ret = []
@@ -721,7 +730,7 @@ class F5_2:
         total_time = t_end - t_start
 
         print "%4d x %4d, %4d, %4d"%(A.nrows(), A.ncols(), A.rank(), A.nrows()-A.rank()),
-        print " Guassian Elimination Time(s): [%s]"%(total_time),
+        print " Guassian Elimination Time(s): [%6f]"%(total_time),
 
         F = (A*v).list()
 

@@ -1,1 +1,1 @@
-nohup ./sage cpu_v_gpu.sage > test_results_sage 2>&1 &
+nohup ./sage test_katsura_cyclic.sage > test_results_sage 2>&1 &
