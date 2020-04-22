@@ -48,7 +48,7 @@ ax.plot_trisurf(x_points, y_points, z_points, linewidth=0.2, antialiased=False, 
 
 ax.set_xlabel('Iteration Time')
 ax.set_ylabel('Pairs')
-ax.set_zlabel('Max Degree')
+ax.set_zlabel('Min Degree')
 ax.set_title('Iteration Statistics - Katsura-8 - 32003')
 
 
@@ -79,7 +79,7 @@ ax.plot_trisurf(x_points, y_points, z_points, linewidth=0.2, antialiased=False, 
 
 ax.set_xlabel('Iteration Time')
 ax.set_ylabel('Pairs')
-ax.set_zlabel('Max Degree')
+ax.set_zlabel('Min Degree')
 ax.set_title('Iteration Statistics - Cyclic-7 - 32003')
 
 plt.show()
